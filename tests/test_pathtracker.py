@@ -36,7 +36,7 @@ class TrackerTest(unittest.TestCase):
         )
         for pshort, pfull in progression:
             self.trkr.cd(pshort)
-            self.assertEqual(self.trkr.fullpath(), pfull)
+            assert self.trkr.fullpath() == pfull
 
     def test_pushpop(self):
         self.trkr.cd('/themoon')
@@ -58,7 +58,7 @@ class TrackerTest(unittest.TestCase):
             (a_popd, None, city),
             (a_popd, None, home)
         )
-        self.assertEqual(self.trkr.fullpath(), home)
+        assert self.trkr.fullpath() == home
         for action, pshort, pfull in progression:
             if action == a_pushd:
                 self.trkr.pushd(pshort)
@@ -67,7 +67,7 @@ class TrackerTest(unittest.TestCase):
                 self.trkr.popd()
             else:
                 assert False
-            self.assertEqual(self.trkr.fullpath(), pfull)
+            assert self.trkr.fullpath() == pfull
 
     def test_reset(self):
         self.trkr.cd('/solarsystems/milkyway')
