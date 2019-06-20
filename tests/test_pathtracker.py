@@ -23,6 +23,7 @@ import opsramp.binding
 class TrackerTest(unittest.TestCase):
     def setUp(self):
         self.trkr = opsramp.binding.PathTracker()
+        assert 'PathTracker' in str(self.trkr)
 
     def test_cd(self):
         progression = (
@@ -67,3 +68,32 @@ class TrackerTest(unittest.TestCase):
             else:
                 assert False
             self.assertEqual(self.trkr.fullpath(), pfull)
+
+    def test_reset(self):
+        self.trkr.cd('/solarsystems/milkyway')
+        self.trkr.reset()
+        assert self.trkr.fullpath() == ''
+
+    def test_clone(self):
+        place1 = '/saturn/atmosphere'
+        self.trkr.cd(place1)
+        # check that cd in a clone doesn't affect the original.
+        other = self.trkr.clone()
+        place2 = '/jupiter/satellites/moons/ganymede'
+        other.cd(place2)
+        assert self.trkr.fullpath() == place1
+        assert other.fullpath() == place2
+
+    def test_fullpath(self):
+        # check that it doesn't "cd" to the specified suffix, just appends it.
+        self.trkr.cd('my/hovercraft')
+        original = self.trkr.fullpath()
+        suffix = 'is/full/of/eels'
+        other = self.trkr.fullpath(suffix)
+        assert other == original + '/' + suffix
+        assert self.trkr.fullpath() == original
+        # test with a / at the start, which should not append (nor cd there).
+        suffix = '/full/path/not/relative'
+        other = self.trkr.fullpath(suffix)
+        assert other == suffix
+        assert self.trkr.fullpath() == original
