@@ -118,7 +118,11 @@ instance that you want to access, and make a series of calls that return progres
 lower level information from OpsRamp. For clarity in these end-user instructions I have omitted several Python
 classes that are internal implementation detail in the module and not intended for direct use by external callers.
 
-- class Opsramp(url, key, secret) _an object representing the complete API tree of one OpsRamp instance_
+- def connect(url, key, secret) _returns an instance of the class Opsramp that is connected to the specified API endpoint_
+  This function posts a login request to the specified endpoint URL using the key and secret given. This post
+  returns an access token, which the function uses to construct an Opsramp object and returns that.
+
+- class Opsramp(url, token) _an object representing the complete API tree of one OpsRamp instance_
   - get\_alert\_types() -> returns a list of the global alert types that are defined on this OpsRamp instance.
   - tenant(uuid) -> returns a Tenant object representing the API subtree for one specific tenant.
 
