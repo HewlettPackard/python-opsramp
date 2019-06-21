@@ -134,7 +134,8 @@ class ApiObject(object):
         hdr.update(headers)
         return hdr
 
-    def process_result(self, url, resp):
+    @staticmethod
+    def process_result(url, resp):
         if resp.status_code != requests.codes.OK:
             msg = '%s %s %s' % (resp, url, resp.content)
             raise RuntimeError(msg)
