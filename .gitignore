@@ -23,3 +23,6 @@ htmlcov/
 cover/*
 .scannerwork
 tags
+.eggs/
+build/
+dist/

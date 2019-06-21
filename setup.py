@@ -21,6 +21,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='python-opsramp',
+    setup_requires=['setuptools_scm'],
     use_scm_version=True,
     author='HPE Greenlake Talos',
     author_email='mercury.opsauto@hpe.com',
