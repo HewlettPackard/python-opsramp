@@ -31,7 +31,7 @@ def main():
     KEY = os.environ.get('OPSRAMP_KEY')
     SECRET = os.environ.get('OPSRAMP_SECRET')
 
-    ormp = opsramp.binding.Opsramp(OPSRAMP_URL, KEY, SECRET)
+    ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
 
     # Print some random global "stuff" just to show that we can.
     print('global alert types')

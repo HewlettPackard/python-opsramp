@@ -21,6 +21,24 @@ import requests
 import base64
 
 
+def connect(url, key, secret):
+    auth_url = url + '/auth/oauth/token'
+    auth_hdrs = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+    }
+    body = 'grant_type=client_credentials&' \
+           'client_id=%s&' \
+           'client_secret=%s' % (key, secret)
+    resp = requests.post(auth_url, headers=auth_hdrs, data=body)
+    if resp.status_code != requests.codes.OK:
+        msg = '%s %s %s' % (str(resp), url, resp.text)
+        raise RuntimeError(msg)
+    auth_resp = resp.json()
+    token = auth_resp['access_token']
+    return Opsramp(url, token)
+
+
 class PathTracker(object):
     def __init__(self):
         self.reset()
@@ -149,21 +167,7 @@ class ApiWrapper(object):
 
 
 class Opsramp(ApiWrapper):
-    def __init__(self, url, key, secret):
-        auth_url = url + '/auth/oauth/token'
-        auth_hdrs = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-        }
-        body = 'grant_type=client_credentials&' \
-               'client_id=%s&' \
-               'client_secret=%s' % (key, secret)
-        resp = requests.post(auth_url, headers=auth_hdrs, data=body)
-        if resp.status_code != requests.codes.OK:
-            msg = '%s %s %s' % (str(resp), url, resp.text)
-            raise RuntimeError(msg)
-        auth_resp = resp.json()
-        token = auth_resp['access_token']
+    def __init__(self, url, token):
         self.auth = {
             'Authorization': 'Bearer ' + token,
             'Accept': 'application/json'

@@ -33,7 +33,7 @@ OPSRAMP_TENANT_ID = os.environ.get('OPSRAMP_TENANT_ID')
 
 
 def do_auth():
-    return opsramp.binding.Opsramp(OPSRAMP_URL, OPSRAMP_KEY, OPSRAMP_SECRET)
+    return opsramp.binding.connect(OPSRAMP_URL, OPSRAMP_KEY, OPSRAMP_SECRET)
 
 
 # Ideas for the cli syntax:
