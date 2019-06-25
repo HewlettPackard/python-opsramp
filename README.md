@@ -141,6 +141,7 @@ classes that are internal implementation detail in the module and not intended f
 - class Templates() _the set of monitoring templates for one Tenant_
   - search(pattern) -> returns a list of templates that match the pattern. See the OpsRamp API docs for details
   on the format of the pattern string.
+
 - class Rba() _the runbook automation subtree of one specific Tenant_
   - get\_categories() -> Return a list of all the script categories in this subtree.
   - category(uuid) -> returns a Category object representing one specific script category on this Tenant.
@@ -161,6 +162,18 @@ classes that are internal implementation detail in the module and not intended f
   - @staticmethod mkscript(name, description, platforms, execution\_type, payload, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
   a Python dict describing a proposed new script. Some of the parameters are only applicable on Linux,
   some only on Windows, and the function contains `assert` statements to flag violations of those rules.
+
+- class Clients() _the subtree containing all clients_
+  This call is only supported on Tenants that are at MSP or Partner level or higher because a Client
+  cannot contain other clients.
+  - get\_list() -> returns a list of dicts, each one containing minimal details for one client. It's worth
+  noting that the main ID field in the summary objects that get returned is called *uniqueId* and this is the
+  value you need to use everywhere in this binding that a client ID is required.
+  - client(uuid) -> returns a Client object representing the API subtree for one specific client. The uuid
+  is one of the uniqueId values that would be returned by `get\_list()`
+  - create\_client(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
+  specifying details of the client to be created. Helper functions for creating these dicts will be added
+  in the Client class in a later commit.
 
 ## The API objects and direct REST calls
 
