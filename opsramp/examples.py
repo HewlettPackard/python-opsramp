@@ -40,24 +40,24 @@ def main():
     # Focus on a specific tenant.
     tenant = ormp.tenant(TENANT_ID)
 
-    # Retrieve the agent installation script for this tenant. The string
-    # that OpsRamp returns will contain keys for the tenant so just print
+    # Retrieve the agent installation script for this client. The string
+    # that OpsRamp returns will contain keys for the client so just print
     # its length and first line to show that we got something.
-    print('agent installation script for tenant', TENANT_ID)
-    agent_script = tenant.get_agent_script()
-    print('length', len(agent_script))
-    print(agent_script.split('\n')[0])
+    if tenant.is_client():
+        print('agent installation script for client', TENANT_ID)
+        agent_script = tenant.get_agent_script()
+        print('length', len(agent_script))
+        print(agent_script.split('\n')[0])
 
-    # list the monitoring templates available on this client.
+    print('List the monitoring templates on tenant', TENANT_ID)
     monitoring = tenant.monitoring()
     templates = monitoring.templates()
-    print('Monitoring templates on tenant', TENANT_ID)
     resp = templates.search()
     print(resp['totalResults'], 'templates')
     for t in resp['results']:
         print('...', t['name'])
 
-    print('Open alerts on tenant', TENANT_ID)
+    print('Search for open alerts on tenant', TENANT_ID)
     open_alerts = tenant.get_alerts('actions:OPEN')
     # there might be thousands so only print the first one.
     print(open_alerts['totalResults'], 'open alerts')
@@ -66,7 +66,7 @@ def main():
         print('>', key, value)
 
     # list the RBA script categories and find or create the one we want.
-    print('RBA categories on tenant', TENANT_ID)
+    print('List the RBA categories on tenant', TENANT_ID)
     rba = tenant.rba()
     clist = rba.get_categories()
     print(len(clist), 'categories')

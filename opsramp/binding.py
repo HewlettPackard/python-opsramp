@@ -186,6 +186,10 @@ class Opsramp(ApiWrapper):
 class Tenant(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Tenant, self).__init__(parent.api, 'tenants/%s' % uuid)
+        self.uuid = uuid
+
+    def is_client(self):
+        return self.uuid[:7] == 'client_'
 
     def rba(self):
         return Rba(self)
@@ -197,6 +201,7 @@ class Tenant(ApiWrapper):
         return self.api.get('/alerts/search?queryString=%s' % searchpattern)
 
     def get_agent_script(self):
+        assert self.is_client()
         hdr = {'Accept': 'application/octet-stream,application/xml'}
         return self.api.get('agents/deployAgentsScript', headers=hdr)
 
