@@ -48,6 +48,14 @@ def main():
         agent_script = tenant.get_agent_script()
         print('length', len(agent_script))
         print(agent_script.split('\n')[0])
+    else:
+        print('List the clients of tenant', TENANT_ID)
+        cs = tenant.clients()
+        for c in cs.get_list():
+            print(c)
+            cobj = cs.client(c['uniqueId'])
+            resp = cobj.get()
+            print('createdBy', resp['createdBy'])
 
     print('List the monitoring templates on tenant', TENANT_ID)
     monitoring = tenant.monitoring()

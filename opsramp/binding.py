@@ -197,6 +197,10 @@ class Tenant(ApiWrapper):
     def monitoring(self):
         return Monitoring(self)
 
+    def clients(self):
+        assert not self.is_client()
+        return Clients(self)
+
     def get_alerts(self, searchpattern):
         return self.api.get('/alerts/search?queryString=%s' % searchpattern)
 
@@ -358,3 +362,26 @@ class Templates(ApiWrapper):
         if pattern:
             suffix += '?' + pattern
         return self.api.get(suffix)
+
+
+class Clients(ApiWrapper):
+    def __init__(self, parent):
+        super(Clients, self).__init__(parent.api, 'clients')
+
+    def get_list(self):
+        return self.api.get('/minimal')
+
+    def client(self, uuid):
+        return Client(self, uuid)
+
+    def create_client(self, client_definition):
+        return self.api.post('', json=client_definition)
+
+
+class Client(ApiWrapper):
+    def __init__(self, parent, uuid):
+        assert uuid[:7] == 'client_'
+        super(Client, self).__init__(parent.api, '%s' % uuid)
+
+    def get(self):
+        return self.api.get()
