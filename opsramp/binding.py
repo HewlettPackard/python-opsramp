@@ -25,16 +25,13 @@ def connect(url, key, secret):
     auth_url = url + '/auth/oauth/token'
     auth_hdrs = {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
+        'Accept': 'application/json,application/xml'
     }
     body = 'grant_type=client_credentials&' \
            'client_id=%s&' \
            'client_secret=%s' % (key, secret)
-    resp = requests.post(auth_url, headers=auth_hdrs, data=body)
-    if resp.status_code != requests.codes.OK:
-        msg = '%s %s %s' % (str(resp), url, resp.text)
-        raise RuntimeError(msg)
-    auth_resp = resp.json()
+    ao = ApiObject(auth_url, auth_hdrs)
+    auth_resp = ao.post(data=body)
     token = auth_resp['access_token']
     return Opsramp(url, token)
 
@@ -171,7 +168,7 @@ class Opsramp(ApiWrapper):
     def __init__(self, url, token):
         self.auth = {
             'Authorization': 'Bearer ' + token,
-            'Accept': 'application/json'
+            'Accept': 'application/json,application/xml'
         }
         apiobject = ApiObject(url + '/api/v2', self.auth)
         super(Opsramp, self).__init__(apiobject)
@@ -200,7 +197,7 @@ class Tenant(ApiWrapper):
         return self.api.get('/alerts/search?queryString=%s' % searchpattern)
 
     def get_agent_script(self):
-        hdr = {'Accept': 'application/octet-stream'}
+        hdr = {'Accept': 'application/octet-stream,application/xml'}
         return self.api.get('agents/deployAgentsScript', headers=hdr)
 
 
