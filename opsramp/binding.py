@@ -153,6 +153,19 @@ class ApiObject(object):
         resp = requests.post(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
+    def put(self, suffix='', headers={}, data=None, json=None):
+        url = self.compute_url(suffix)
+        hdr = self.prep_headers(headers)
+        resp = requests.put(url, headers=hdr, data=data, json=json)
+        print("DEBUG::: put(): resp is " + str(resp.text))
+        return self.process_result(url, resp)
+
+    def delete(self, suffix='', headers={}):
+        url = self.compute_url(suffix)
+        hdr = self.prep_headers(headers)
+        resp = requests.delete(url, headers=hdr)
+        return self.process_result(url, resp)
+
 
 class ApiWrapper(object):
     def __init__(self, apiobject, suffix=''):
@@ -209,6 +222,8 @@ class Tenant(ApiWrapper):
         hdr = {'Accept': 'application/octet-stream,application/xml'}
         return self.api.get('agents/deployAgentsScript', headers=hdr)
 
+    def policies(self):
+        return Policies(self)
 
 class Rba(ApiWrapper):
     def __init__(self, parent):
@@ -385,3 +400,26 @@ class Client(ApiWrapper):
 
     def get(self):
         return self.api.get()
+
+class Policies(ApiWrapper):
+    def __init__(self, parent):
+        super(Policies, self).__init__(parent.api, 'policies/management')
+
+    def get(self, id=''):
+        if id:
+            suffix = '/' + id
+        else:
+            suffix=''
+        return self.api.get(suffix)
+
+    def create(self, definition):
+        return self.api.put('', json=definition)
+
+    def search(self, pattern=''):
+        return self.api.get('/search?name=%s' % pattern)
+
+    def run(self, id=''):
+        return self.api.get('/%s/action/run' % id)
+
+    def delete(self, id=''):
+        return self.api.delete('/%s' % id)
