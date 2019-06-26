@@ -225,6 +225,7 @@ class Tenant(ApiWrapper):
     def policies(self):
         return Policies(self)
 
+
 class Rba(ApiWrapper):
     def __init__(self, parent):
         super(Rba, self).__init__(parent.api, 'rba')
@@ -401,25 +402,36 @@ class Client(ApiWrapper):
     def get(self):
         return self.api.get()
 
+
 class Policies(ApiWrapper):
     def __init__(self, parent):
         super(Policies, self).__init__(parent.api, 'policies/management')
 
-    def get(self, id=''):
-        if id:
-            suffix = '/' + id
-        else:
-            suffix=''
-        return self.api.get(suffix)
-
-    def create(self, definition):
-        return self.api.put('', json=definition)
+    def get_list(self):
+        return self.api.get()
 
     def search(self, pattern=''):
         return self.api.get('/search?name=%s' % pattern)
 
-    def run(self, id=''):
-        return self.api.get('/%s/action/run' % id)
+    def policy(self, uuid):
+        return Policy(self, uuid)
 
-    def delete(self, id=''):
-        return self.api.delete('/%s' % id)
+    def create_policy(self, policy_definition):
+        return self.api.post('', json=policy_definition)
+
+    def update_policy(self, policy_definition):
+        return self.api.put('', json=policy_definition)
+
+
+class Policy(ApiWrapper):
+    def __init__(self, parent, uuid):
+        super(Policy, self).__init__(parent.api, '%s' % uuid)
+
+    def get(self):
+        return self.api.get()
+
+    def run(self):
+        return self.api.get('/action/run')
+
+    def delete(self):
+        return self.api.delete()
