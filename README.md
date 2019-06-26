@@ -175,6 +175,13 @@ classes that are internal implementation detail in the module and not intended f
   specifying details of the client to be created. Helper functions for creating these dicts will be added
   in the Client class in a later commit.
 
+- class Policies() _the policies subtree of one specific Tenant_
+  - get() -> returns a list of dicts, each containing a single policy
+  - create(definition) -> Create a policy for specfic Tenant
+  - search(pattern) -> Search for a policy with name of name pattern
+  - run(id) -> Run policy of ID id
+  - delete(id) -> Delete policy of ID id
+
 ## The API objects and direct REST calls
 
 If we don't have a class that exposes the piece of the API that you want to use, then you can use the `ApiObject` base

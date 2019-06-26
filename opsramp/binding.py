@@ -153,6 +153,18 @@ class ApiObject(object):
         resp = requests.post(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
+    def put(self, suffix='', headers={}, data=None, json=None):
+        url = self.compute_url(suffix)
+        hdr = self.prep_headers(headers)
+        resp = requests.put(url, headers=hdr, data=data, json=json)
+        return self.process_result(url, resp)
+
+    def delete(self, suffix='', headers={}):
+        url = self.compute_url(suffix)
+        hdr = self.prep_headers(headers)
+        resp = requests.delete(url, headers=hdr)
+        return self.process_result(url, resp)
+
 
 class ApiWrapper(object):
     def __init__(self, apiobject, suffix=''):
@@ -208,6 +220,9 @@ class Tenant(ApiWrapper):
         assert self.is_client()
         hdr = {'Accept': 'application/octet-stream,application/xml'}
         return self.api.get('agents/deployAgentsScript', headers=hdr)
+
+    def policies(self):
+        return Policies(self)
 
 
 class Rba(ApiWrapper):
@@ -385,3 +400,37 @@ class Client(ApiWrapper):
 
     def get(self):
         return self.api.get()
+
+
+class Policies(ApiWrapper):
+    def __init__(self, parent):
+        super(Policies, self).__init__(parent.api, 'policies/management')
+
+    def get_list(self):
+        return self.api.get()
+
+    def search(self, pattern=''):
+        return self.api.get('/search?name=%s' % pattern)
+
+    def policy(self, uuid):
+        return Policy(self, uuid)
+
+    def create_policy(self, policy_definition):
+        return self.api.post('', json=policy_definition)
+
+    def update_policy(self, policy_definition):
+        return self.api.put('', json=policy_definition)
+
+
+class Policy(ApiWrapper):
+    def __init__(self, parent, uuid):
+        super(Policy, self).__init__(parent.api, '%s' % uuid)
+
+    def get(self):
+        return self.api.get()
+
+    def run(self):
+        return self.api.get('/action/run')
+
+    def delete(self):
+        return self.api.delete()

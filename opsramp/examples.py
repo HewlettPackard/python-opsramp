@@ -122,6 +122,27 @@ def main():
     # resp = cobj.create_script(s1)
     # print(resp)
 
+    print('Management policies on tenant', TENANT_ID)
+    policies = tenant.policies()
+    plist = policies.get_list()
+    print(len(plist), 'policies')
+    for p in plist:
+        rules = p['rules']
+        actions = p['actions']
+        print('...', p['id'], p['uid'], p['name'],
+              'rules', len(rules),
+              'actions', len(actions))
+        for r in rules:
+            print('...... rule', r)
+        for a in actions:
+            print('...... action', a['action'])
+        # plist contains a complete description of each policy
+        # but let's pull them individually anyway and assert that
+        # this gives the same result.
+        pobj = policies.policy(p['id'])
+        direct = pobj.get()
+        assert p == direct
+
 
 if __name__ == "__main__":
     main()
