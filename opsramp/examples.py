@@ -130,9 +130,8 @@ def main():
         rules = p['rules']
         actions = p['actions']
         print('...', p['id'], p['uid'], p['name'],
-            'rules', len(rules),
-            'actions', len(actions)
-        )
+              'rules', len(rules),
+              'actions', len(actions))
         for r in rules:
             print('...... rule', r)
         for a in actions:
@@ -143,6 +142,7 @@ def main():
         pobj = policies.policy(p['id'])
         direct = pobj.get()
         assert p == direct
+
 
 if __name__ == "__main__":
     main()

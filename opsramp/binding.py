@@ -157,7 +157,6 @@ class ApiObject(object):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = requests.put(url, headers=hdr, data=data, json=json)
-        print("DEBUG::: put(): resp is " + str(resp.text))
         return self.process_result(url, resp)
 
     def delete(self, suffix='', headers={}):
