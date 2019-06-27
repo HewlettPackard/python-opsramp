@@ -21,6 +21,7 @@ import os
 
 import opsramp.binding
 import opsramp.rba
+import opsramp.msp
 
 
 CATEGORY_NAME = 'Testing 123'
@@ -63,6 +64,16 @@ def main():
             cobj = cs.client(c['uniqueId'])
             resp = cobj.get()
             print('createdBy', resp['createdBy'])
+        print('Exercise the create-client code')
+        cdef = opsramp.msp.Client.mkclient(
+            name='test client 93',
+            address='Death Valley',
+            time_zone='America/Los_Angeles',
+            country='United States')
+        print(cdef)
+        # uncomment these lines to actually create the client.
+        # resp = cs.create_client(cdef)
+        # print(resp)
 
     print('List the monitoring templates on tenant', TENANT_ID)
     monitoring = tenant.monitoring()

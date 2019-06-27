@@ -20,6 +20,7 @@
 # limitations under the License.
 
 from __future__ import print_function
+import datetime
 from opsramp.base import ApiWrapper
 
 
@@ -44,3 +45,37 @@ class Client(ApiWrapper):
 
     def get(self):
         return self.api.get()
+
+    @staticmethod
+    def mkhours(day_start=datetime.time(9, 0),
+                day_end=datetime.time(17, 0),
+                week_start=2, week_end=6,
+                sms_voice_notification=False):
+        retval = {
+            'businessStartHour': day_start.hour,
+            'businessStartMin': day_start.minute,
+            'businessEndHour': day_end.hour,
+            'businessEndMin': day_end.minute,
+            'businessDayStart': int(week_start),
+            'businessDayEnd': int(week_end),
+            'smsVoiceNotification': bool(sms_voice_notification)
+        }
+        return retval
+
+    # A helper function to create the complex structures that OpsRamp
+    # uses to define a new client. There are lots of optional fields and
+    # potential gotchas here and we guard against *some* of them.
+    @staticmethod
+    def mkclient(name, address, time_zone, country,
+                 hours=None):
+        retval = {
+            'name': name,
+            'address': address,
+            'timeZone': time_zone,
+            'country': country
+        }
+        if hours:
+            retval['clientDetails'] = hours
+        # TODO there are lots and lots more optional fields that we
+        # will probably need to cater for in the fullness of time.
+        return retval
