@@ -17,12 +17,12 @@
 from __future__ import print_function
 import unittest
 
-import opsramp.binding
+from opsramp.base import PathTracker
 
 
 class TrackerTest(unittest.TestCase):
     def setUp(self):
-        self.trkr = opsramp.binding.PathTracker()
+        self.trkr = PathTracker()
         assert 'PathTracker' in str(self.trkr)
 
     def test_cd(self):
