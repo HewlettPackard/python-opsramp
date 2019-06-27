@@ -24,11 +24,10 @@ I have also added "assert" statements in various places to guard against pitfall
 that I ran into that are not obvious from the API docs.
 
 ### Scope
-At this time (June 2019) the scope of this binding is very narrow, mostly around the RBA automation
-functionality of OpsRamp, but the basic framework is here and the scope will increase incrementally
-over time.
+At this time (June 2019) the basic framework of this library is in place and the
+scope will increase incrementally over time.
 
-Note however that all of our wrapper objects provide an `api()` callable that
+Note however that all of our wrapper objects provide an `api` property that
 returns an object that can be used to access REST URLs further down the API tree
 where we have not written a specific wrapper class here yet.
 
@@ -230,18 +229,18 @@ import opsramp.devmgmt
 
 If we don't have a class that exposes the piece of the API that you want to use, then you can use the `ApiObject` base
 class to make REST calls to that part directly while still using the correct wrapper classes for everything else.
-The general idea would be to navigate to the nearest object for which we do have a wrapper and call its `api()` method
+The general idea would be to navigate to the nearest object for which we do have a wrapper and use its `api` property
 to get an instance of the `ApiObject` class that you can then use to make direct REST calls to the tree below that point.
 
 For example:
 ```
-capi = ormp.tenant('client_9234').monitoring().api()
-result = capi.get('/templates')
+monitoring_api = ormp.tenant('client_9234').monitoring().api
+result = monitoring_api.get('/templates')
 print(result)
 ```
 This uses a REST get() to retrieve the list of templates directly from OpsRamp, by starting from the api object
 of a Monitoring object. The Monitoring object will have already done all the work to set up the correct tenant,
-credentials and other context for that call so it's still much easier than making httplib, requests or curlxi
+credentials and other context for that call so it's still much easier than making httplib, requests or curl
 calls yourself.
 
 - ApiObject() _an object representing some subtree of a REST API_
@@ -251,6 +250,13 @@ calls yourself.
   - post(suffix='', headers={}, data=None, json=None) -> performs a POST to the specified REST endpoint and
   returns the body of the server's reply. "headers" is an optional dict containing any additional HTTP headers
   that you want to send, "data" is the text body, or "json" is a Python struct to be converted to a JSON
-  string and sent as a body. Specifying both "data" and "json" in the same call results in undefined behavior
-  and should be avoided.
+  string and sent as a body. _Specifying both "data" and "json" in the same call results in undefined behavior
+  and should be avoided._
+  - put(suffix='', headers={}, data=None, json=None) -> performs a PUT to the specified REST endpoint and
+  returns the body of the server's reply. "headers" is an optional dict containing any additional HTTP headers
+  that you want to send, "data" is the text body, or "json" is a Python struct to be converted to a JSON
+  string and sent as a body. _Specifying both "data" and "json" in the same call results in undefined behavior
+  and should be avoided._
+  - delete(suffix='', headers={}) -> performs a DELETE to the specified REST endpoint and returns the body of
+  the server's reply. "headers" is an optional dict containing any additional HTTP headers that you want to send.
   - _we will add other http actions if/when a specific need for them arises_
