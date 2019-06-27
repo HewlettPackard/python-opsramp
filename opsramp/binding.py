@@ -24,6 +24,7 @@ from __future__ import print_function
 from opsramp.base import ApiObject, ApiWrapper
 from opsramp.globalconfig import GlobalConfig
 from opsramp.rba import Rba
+from opsramp.monitoring import Monitoring
 
 
 def connect(url, key, secret):
@@ -88,25 +89,6 @@ class Tenant(ApiWrapper):
 
     def policies(self):
         return Policies(self)
-
-
-class Monitoring(ApiWrapper):
-    def __init__(self, parent):
-        super(Monitoring, self).__init__(parent.api, 'monitoring')
-
-    def templates(self):
-        return Templates(self)
-
-
-class Templates(ApiWrapper):
-    def __init__(self, parent):
-        super(Templates, self).__init__(parent.api, 'templates')
-
-    def search(self, pattern=''):
-        suffix = '/search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
 
 
 class Clients(ApiWrapper):
