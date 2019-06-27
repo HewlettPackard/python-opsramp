@@ -123,8 +123,17 @@ classes that are internal implementation detail in the module and not intended f
   returns an access token, which the function uses to construct an Opsramp object and returns that.
 
 - class Opsramp(url, token) _an object representing the complete API tree of one OpsRamp instance_
-  - get\_alert\_types() -> returns a list of the global alert types that are defined on this OpsRamp instance.
+  - config() -> returns a GlobalConfig object that can be used to access global settings for this OpsRamp instance.
   - tenant(uuid) -> returns a Tenant object representing the API subtree for one specific tenant.
+
+- class GlobalConfig() _read-only access to global settings on this OpsRamp instance_
+  - get\_alert\_types() -> returns a list of the global alert types that are defined on this OpsRamp instance.
+  - get\_channels() -> returns a list of the "channels" that are defined on this OpsRamp instance. See the OpsRamp docs for details.
+  - get\_countries() -> a list of dicts each describing one country known to this OpsRamp instance.
+  - get\_timezones() -> a list of dicts each describing one timezone known to this OpsRamp instance.
+  - get\_alert\_technologies() -> a list of dicts each describing one alert technology known to this OpsRamp instance.
+  - get\_nocs() -> a list of dicts each describing one NOC known to this OpsRamp instance.
+  - get\_device\_types() -> a list of dicts each describing device type known to this OpsRamp instance.
 
 - class Tenant(uuid) _the API subtree for one specific tenant_
   - get\_alert\_script() -> Returns a string containing the appropriate Python script to run on a Linux node
