@@ -20,6 +20,7 @@
 # limitations under the License.
 
 from __future__ import print_function
+import datetime
 from opsramp.base import ApiWrapper
 
 
@@ -44,3 +45,24 @@ class Client(ApiWrapper):
 
     def get(self):
         return self.api.get()
+
+    @staticmethod
+    def mkhours(day_start=datetime.time(9, 0),
+                day_end=datetime.time(17, 0),
+                week_start=2, week_end=6,
+                sms_voice_notification=False):
+        assert type(day_start) is datetime.time
+        assert type(day_end) is datetime.time
+        assert type(week_start) is int
+        assert type(week_end) is int
+        assert type(sms_voice_notification) is bool
+        retval = {
+            'businessStartHour': day_start.hour,
+            'businessStartMin': day_start.minute,
+            'businessEndHour': day_end.hour,
+            'businessEndMin': day_end.minute,
+            'businessDayStart': week_start,
+            'businessDayEnd': week_end,
+            'smsVoiceNotification': sms_voice_notification
+        }
+        return retval
