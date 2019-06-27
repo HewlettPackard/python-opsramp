@@ -188,11 +188,46 @@ class Opsramp(ApiWrapper):
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
 
+    def config(self):
+        return GlobalConfig(self)
+
     def tenant(self, name):
         return Tenant(self, name)
 
+
+class GlobalConfig(ApiWrapper):
+    def __init__(self, parent):
+        super(GlobalConfig, self).__init__(parent.api, '')
+
     def get_alert_types(self):
         return self.api.get('/alertTypes')
+
+    def get_countries(self):
+        return self.api.get('/cfg/countries')
+
+    def get_timezones(self):
+        return self.api.get('/cfg/timezones')
+
+    def get_alert_technologies(self):
+        return self.api.get('/cfg/alertTechnologies')
+
+    def get_channels(self):
+        return self.api.get('/cfg/tenants/channels')
+
+    def get_nocs(self):
+        # Bizarrely this API call throws a 500 error if there are
+        # no NOCs defined. Handle it gracefully.
+        try:
+            retval = self.api.get('/cfg/tenants/nocs')
+        except RuntimeError as e:
+            if '"code":"0005"' in str(e):
+                retval = []
+            else:
+                raise
+        return retval
+
+    def get_device_types(self):
+        return self.api.get('/cfg/devices/types')
 
 
 class Tenant(ApiWrapper):

@@ -34,8 +34,14 @@ def main():
     ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
 
     # Print some random global "stuff" just to show that we can.
-    print('global alert types')
-    print(ormp.get_alert_types())
+    cfg = ormp.config()
+    print('alert types', cfg.get_alert_types())
+    print('channels', cfg.get_channels())
+    print('countries', len(cfg.get_countries()))
+    print('timezones', len(cfg.get_timezones()))
+    print('alert technologies', len(cfg.get_alert_technologies()))
+    print('nocs', len(cfg.get_nocs()))
+    print('device types', len(cfg.get_device_types()))
 
     # Focus on a specific tenant.
     tenant = ormp.tenant(TENANT_ID)
