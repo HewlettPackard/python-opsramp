@@ -118,6 +118,17 @@ instance that you want to access, and make a series of calls that return progres
 lower level information from OpsRamp. For clarity in these end-user instructions I have omitted several Python
 classes that are internal implementation detail in the module and not intended for direct use by external callers.
 
+Here's an illustration of a simple use of the binding. See examples.py for a much more comprehensive one.
+```
+import opsramp.binding
+
+ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
+cfg = ormp.config()
+print('alert types', cfg.get_alert_types())
+```
+
+import opsramp.binding
+
 - def connect(url, key, secret) _returns an instance of the class Opsramp that is connected to the specified API endpoint_
   This function posts a login request to the specified endpoint URL using the key and secret given. This post
   returns an access token, which the function uses to construct an Opsramp object and returns that.
@@ -125,6 +136,8 @@ classes that are internal implementation detail in the module and not intended f
 - class Opsramp(url, token) _an object representing the complete API tree of one OpsRamp instance_
   - config() -> returns a GlobalConfig object that can be used to access global settings for this OpsRamp instance.
   - tenant(uuid) -> returns a Tenant object representing the API subtree for one specific tenant.
+
+import opsramp.globalconfig
 
 - class GlobalConfig() _read-only access to global settings on this OpsRamp instance_
   - get\_alert\_types() -> returns a list of the global alert types that are defined on this OpsRamp instance.
@@ -135,6 +148,8 @@ classes that are internal implementation detail in the module and not intended f
   - get\_nocs() -> a list of dicts each describing one NOC known to this OpsRamp instance.
   - get\_device\_types() -> a list of dicts each describing device type known to this OpsRamp instance.
 
+import opsramp.tenant
+
 - class Tenant(uuid) _the API subtree for one specific tenant_
   - get\_alert\_script() -> Returns a string containing the appropriate Python script to run on a Linux node
   to install the OpsRamp agent there and connect it to this Tenant. This text contains the tenant's access keys
@@ -144,12 +159,16 @@ classes that are internal implementation detail in the module and not intended f
   - monitoring() -> returns a Monitoring object representing all monitoring information for this Tenant.
   - rba() -> returns an Rba object representing all runbook automation information for this Tenant.
 
+import opsramp.monitoring
+
 - class Monitoring() _the monitoring information subtree for one specific Tenant_
   - templates() -> returns a Templates object representing the set of monitoring templates on this Tenant.
 
 - class Templates() _the set of monitoring templates for one Tenant_
   - search(pattern) -> returns a list of templates that match the pattern. See the OpsRamp API docs for details
   on the format of the pattern string.
+
+import opsramp.rba
 
 - class Rba() _the runbook automation subtree of one specific Tenant_
   - get\_categories() -> Return a list of all the script categories in this subtree.
@@ -172,6 +191,8 @@ classes that are internal implementation detail in the module and not intended f
   a Python dict describing a proposed new script. Some of the parameters are only applicable on Linux,
   some only on Windows, and the function contains `assert` statements to flag violations of those rules.
 
+import opsramp.msp
+
 - class Clients() _the subtree containing all clients_
   This call is only supported on Tenants that are at MSP or Partner level or higher because a Client
   cannot contain other clients.
@@ -186,6 +207,8 @@ classes that are internal implementation detail in the module and not intended f
 
 - class Client() _a single client_
   - get() -> returns the definition of this client as a Python dict. See the OpsRamp API docs for detailed contents.
+
+import opsramp.devmgmt
 
 - class Policies() _the policies subtree of one specific Tenant_
   - get\_list() -> returns a list of dicts, each containing a single policy definition.
