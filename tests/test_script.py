@@ -18,7 +18,7 @@ from __future__ import print_function
 import unittest
 import base64
 
-import opsramp.binding
+from opsramp.rba import Script
 
 
 class StaticsTest(unittest.TestCase):
@@ -26,7 +26,7 @@ class StaticsTest(unittest.TestCase):
         testfile = 'README.md'
         with open(testfile, 'rb') as f:
             expected = f.read()
-        actual64 = opsramp.binding.Script.encode_payload(testfile)
+        actual64 = Script.encode_payload(testfile)
         actual = base64.b64decode(actual64)
         assert actual == expected
 
@@ -35,7 +35,7 @@ class StaticsTest(unittest.TestCase):
             'name': 'whatever.sh',
             'content': 'random stuff'
         }
-        actual = opsramp.binding.Script.mkattachment(
+        actual = Script.mkattachment(
             name=tvalues['name'],
             payload=tvalues['content']
         )
@@ -51,7 +51,7 @@ class StaticsTest(unittest.TestCase):
             'description': 'Where am I today?',
             'type': 'STRING'
         }
-        actual = opsramp.binding.Script.mkparameter(
+        actual = Script.mkparameter(
             name=tvalues['name'],
             description=tvalues['description'],
             datatype=tvalues['type']
@@ -66,7 +66,7 @@ class StaticsTest(unittest.TestCase):
         assert actual == expected
 
     def test_mkscript(self):
-        p1 = opsramp.binding.Script.mkparameter(
+        p1 = Script.mkparameter(
             name='venue',
             description='Where am I today?',
             datatype='STRING'
@@ -79,7 +79,7 @@ class StaticsTest(unittest.TestCase):
             'payload': 'echo "hello $1"',
             'parameters': [p1]
         }
-        actual = opsramp.binding.Script.mkscript(
+        actual = Script.mkscript(
             name=tvalues['name'],
             description=tvalues['description'],
             platforms=tvalues['platforms'],

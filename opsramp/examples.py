@@ -20,6 +20,7 @@ from __future__ import print_function
 import os
 
 import opsramp.binding
+import opsramp.rba
 
 
 CATEGORY_NAME = 'Testing 123'
@@ -107,14 +108,14 @@ def main():
 
     # Create a new RBA script in this category, with one parameter. You can
     # see from the "payload" that this gets passed to the script as $1
-    p1 = opsramp.binding.Script.mkparameter(
+    p1 = opsramp.rba.Script.mkparameter(
         name='venue',
         description='Where am I today?',
         datatype='STRING'
     )
     print('Parameter definition struct')
     print(p1)
-    s1 = opsramp.binding.Script.mkscript(
+    s1 = opsramp.rba.Script.mkscript(
         name='Hello <venue>',
         description='Stereotypical rock star intro',
         platforms=['LINUX'],
