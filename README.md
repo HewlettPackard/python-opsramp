@@ -170,17 +170,29 @@ classes that are internal implementation detail in the module and not intended f
   noting that the main ID field in the summary objects that get returned is called *uniqueId* and this is the
   value you need to use everywhere in this binding that a client ID is required.
   - client(uuid) -> returns a Client object representing the API subtree for one specific client. The uuid
-  is one of the uniqueId values that would be returned by `get\_list()`
+  is one of the uniqueId values that would be returned by `get_list()`
   - create\_client(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
-  specifying details of the client to be created. Helper functions for creating these dicts will be added
-  in the Client class in a later commit.
+  specifying details of the client to be created. The contents are described in the OpsRamp docs and helper
+  functions for creating these dicts will be added in a later commit.
+
+- class Client() _a single client_
+  - get() -> returns the definition of this client as a Python dict. See the OpsRamp API docs for detailed contents.
 
 - class Policies() _the policies subtree of one specific Tenant_
-  - get() -> returns a list of dicts, each containing a single policy
-  - create(definition) -> Create a policy for specfic Tenant
-  - search(pattern) -> Search for a policy with name of name pattern
-  - run(id) -> Run policy of ID id
-  - delete(id) -> Delete policy of ID id
+  - get\_list() -> returns a list of dicts, each containing a single policy definition.
+  - search(pattern) -> Search for a policy with a specific name. The syntax is defined in the OpsRamp docs.
+  - policy(uuid) -> returns a Policy object representing the API subtree for one specific policy.
+  - create\_policy(definition) -> creates a new policy in this Tenant. "definition" is a Python dict
+  specifying details of the policy to be created. The contents are described in the OpsRamp docs and helper
+  functions for creating these dicts will be added in the Policy class in a later commit.
+  - update\_policy(definition) -> updates an existing policy in this Tenant. "definition" is a Python dict
+  specifying details of the changes to the policy. The contents are described in the OpsRamp docs and helper
+  functions for creating these dicts will be added in a later commit.
+
+- class Policy() _a single policy_
+  - get() -> returns the definition of this policy as a Python dict. See the OpsRamp API docs for detailed contents.
+  - run() -> sends a request to the OpsRamp server to run this policy now. The actual run is asynchronous.
+  - delete() -> deletes this policy
 
 ## The API objects and direct REST calls
 
