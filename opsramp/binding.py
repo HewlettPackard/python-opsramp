@@ -25,6 +25,7 @@ from opsramp.base import ApiObject, ApiWrapper
 from opsramp.globalconfig import GlobalConfig
 from opsramp.rba import Rba
 from opsramp.monitoring import Monitoring
+from opsramp.msp import Clients
 
 
 def connect(url, key, secret):
@@ -89,29 +90,6 @@ class Tenant(ApiWrapper):
 
     def policies(self):
         return Policies(self)
-
-
-class Clients(ApiWrapper):
-    def __init__(self, parent):
-        super(Clients, self).__init__(parent.api, 'clients')
-
-    def get_list(self):
-        return self.api.get('/minimal')
-
-    def client(self, uuid):
-        return Client(self, uuid)
-
-    def create_client(self, client_definition):
-        return self.api.post('', json=client_definition)
-
-
-class Client(ApiWrapper):
-    def __init__(self, parent, uuid):
-        assert uuid[:7] == 'client_'
-        super(Client, self).__init__(parent.api, '%s' % uuid)
-
-    def get(self):
-        return self.api.get()
 
 
 class Policies(ApiWrapper):
