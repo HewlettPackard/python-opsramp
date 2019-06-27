@@ -51,3 +51,24 @@ class StaticsTest(unittest.TestCase):
             'smsVoiceNotification': tvalues['sms_voice_notifications']
         }
         assert actual == expected
+
+    def test_mkclient(self):
+        tvalues = {
+            'name': 'unit test client',
+            'address': 'Springfield',
+            'tz': 'America/Los_Angeles',
+            'country': 'United States'
+        }
+        actual = Client.mkclient(
+            name=tvalues['name'],
+            address=tvalues['address'],
+            time_zone=tvalues['tz'],
+            country=tvalues['country'],
+        )
+        expected = {
+            'name': tvalues['name'],
+            'address': tvalues['address'],
+            'timeZone': tvalues['tz'],
+            'country': tvalues['country']
+        }
+        assert actual == expected
