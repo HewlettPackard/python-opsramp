@@ -26,6 +26,7 @@ from opsramp.globalconfig import GlobalConfig
 from opsramp.rba import Rba
 from opsramp.monitoring import Monitoring
 from opsramp.msp import Clients
+from opsramp.devmgmt import Policies
 
 
 def connect(url, key, secret):
@@ -90,37 +91,3 @@ class Tenant(ApiWrapper):
 
     def policies(self):
         return Policies(self)
-
-
-class Policies(ApiWrapper):
-    def __init__(self, parent):
-        super(Policies, self).__init__(parent.api, 'policies/management')
-
-    def get_list(self):
-        return self.api.get()
-
-    def search(self, pattern=''):
-        return self.api.get('/search?name=%s' % pattern)
-
-    def policy(self, uuid):
-        return Policy(self, uuid)
-
-    def create_policy(self, policy_definition):
-        return self.api.post('', json=policy_definition)
-
-    def update_policy(self, policy_definition):
-        return self.api.put('', json=policy_definition)
-
-
-class Policy(ApiWrapper):
-    def __init__(self, parent, uuid):
-        super(Policy, self).__init__(parent.api, '%s' % uuid)
-
-    def get(self):
-        return self.api.get()
-
-    def run(self):
-        return self.api.get('/action/run')
-
-    def delete(self):
-        return self.api.delete()
