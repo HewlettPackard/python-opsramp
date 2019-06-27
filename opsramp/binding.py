@@ -23,10 +23,7 @@ from __future__ import print_function
 
 from opsramp.base import ApiObject, ApiWrapper
 from opsramp.globalconfig import GlobalConfig
-from opsramp.rba import Rba
-from opsramp.monitoring import Monitoring
-from opsramp.msp import Clients
-from opsramp.devmgmt import Policies
+from opsramp.tenant import Tenant
 
 
 def connect(url, key, secret):
@@ -61,33 +58,3 @@ class Opsramp(ApiWrapper):
 
     def tenant(self, name):
         return Tenant(self, name)
-
-
-class Tenant(ApiWrapper):
-    def __init__(self, parent, uuid):
-        super(Tenant, self).__init__(parent.api, 'tenants/%s' % uuid)
-        self.uuid = uuid
-
-    def is_client(self):
-        return self.uuid[:7] == 'client_'
-
-    def rba(self):
-        return Rba(self)
-
-    def monitoring(self):
-        return Monitoring(self)
-
-    def clients(self):
-        assert not self.is_client()
-        return Clients(self)
-
-    def get_alerts(self, searchpattern):
-        return self.api.get('/alerts/search?queryString=%s' % searchpattern)
-
-    def get_agent_script(self):
-        assert self.is_client()
-        hdr = {'Accept': 'application/octet-stream,application/xml'}
-        return self.api.get('agents/deployAgentsScript', headers=hdr)
-
-    def policies(self):
-        return Policies(self)
