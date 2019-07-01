@@ -60,9 +60,6 @@ class Script(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Script, self).__init__(parent.api, 'scripts/%s' % uuid)
 
-    def get(self):
-        return self.api.get()
-
     # Returns a string containing a base64 encoded version of the
     # content of the specified file. It was quite finicky to come
     # up with a method that works on both Python 2 and 3 so please

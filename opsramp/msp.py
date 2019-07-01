@@ -31,6 +31,12 @@ class Clients(ApiWrapper):
     def get_list(self):
         return self.api.get('/minimal')
 
+    def search(self, pattern=''):
+        return self.api.get('/search?%s' % pattern)
+
+    def search_for_prefix(self, prefix):
+        return self.api.get('/search?queryString=name:%s' % prefix)
+
     def client(self, uuid):
         return Client(self, uuid)
 
@@ -42,9 +48,6 @@ class Client(ApiWrapper):
     def __init__(self, parent, uuid):
         assert uuid[:7] == 'client_'
         super(Client, self).__init__(parent.api, '%s' % uuid)
-
-    def get(self):
-        return self.api.get()
 
     @staticmethod
     def mkhours(day_start=datetime.time(9, 0),
@@ -79,3 +82,12 @@ class Client(ApiWrapper):
         # TODO there are lots and lots more optional fields that we
         # will probably need to cater for in the fullness of time.
         return retval
+
+    def activate(self):
+        return self.api.post('/activate')
+
+    def suspend(self):
+        return self.api.post('/suspend')
+
+    def terminate(self):
+        return self.api.post('/terminate')

@@ -47,9 +47,6 @@ class Policy(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Policy, self).__init__(parent.api, '%s' % uuid)
 
-    def get(self):
-        return self.api.get()
-
     def run(self):
         return self.api.get('/action/run')
 

@@ -162,3 +162,6 @@ class ApiWrapper(object):
 
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
+
+    def get(self, suffix='', headers={}):
+        return self.api.get(suffix, headers)

@@ -206,6 +206,16 @@ import opsramp.msp
 
 - class Client() _a single client_
   - get() -> returns the definition of this client as a Python dict. See the OpsRamp API docs for detailed contents.
+  - search(self, pattern='') -> returns a list of client ids matching the specified search pattern, the format of
+  which is described in the OpsRamp documentation.
+  - search\_for\_prefix(self, prefix) -> returns a list of client ids whose names begin with a specific prefix.
+  This is a convenience method which calls "search" internally with an appropriate search pattern.
+  - activate() -> marks the client as "active" in OpsRamp.
+  - suspend() -> marks the client as "suspended" in OpsRamp. _This takes 10+ seconds to run._
+  - terminate() -> terminates the client in OpsRamp. The API docs say that this call deletes the client but in
+  reality that does not appear to happen. Our experience has been that the client will still be listed in future
+  API calls and the OpsRamp UI. It's unclear what if anything this call actually does.
+  _We do not know at this time how to delete a client properly in OpsRamp._
 
 import opsramp.devmgmt
 
