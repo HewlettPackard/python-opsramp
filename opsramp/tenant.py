@@ -26,6 +26,7 @@ import opsramp.rba
 import opsramp.monitoring
 import opsramp.msp
 import opsramp.devmgmt
+import opsramp.integrations
 
 
 class Tenant(ApiWrapper):
@@ -48,6 +49,9 @@ class Tenant(ApiWrapper):
 
     def policies(self):
         return opsramp.devmgmt.Policies(self)
+
+    def integrations(self):
+        return opsramp.integrations.Integrations(self)
 
     def get_alerts(self, searchpattern):
         return self.api.get('/alerts/search?queryString=%s' % searchpattern)

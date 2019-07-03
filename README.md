@@ -157,6 +157,7 @@ import opsramp.tenant
   See the OpsRamp API docs for details on the format of the pattern string.
   - monitoring() -> returns a Monitoring object representing all monitoring information for this Tenant.
   - rba() -> returns an Rba object representing all runbook automation information for this Tenant.
+  - integrations() -> returns an Integrations object representing all integrations on this Tenant.
 
 import opsramp.monitoring
 
@@ -234,6 +235,51 @@ import opsramp.devmgmt
   - get() -> returns the definition of this policy as a Python dict. See the OpsRamp API docs for detailed contents.
   - run() -> sends a request to the OpsRamp server to run this policy now. The actual run is asynchronous.
   - delete() -> deletes this policy
+
+import opsramp.integrations
+
+- class Integrations() _the integrations subtree of one specific Tenant_
+  - types() -> Returns an IntegrationTypes object describing all the *types*
+  of integrations that are available to be installed on this Tenant. Each
+  represents a *category* like CUSTOM, AZURE, rather than specific instances
+  of those.
+  - instances() -> Returns an Instances object representing all the actual
+  instances of integrations that are installed on this Tenant. Each has a
+  type field plus a set of configuration values for this specific instance
+  of the type.
+  - create\_instance(type\_name, definition) -> creates a new instance of an
+  integration type on this Tenant. "definition" is a Python dict specifying
+  details of the integration instance that is to be created.
+  Helper functions for creating these dicts will be added later.
+  - _available() -> A synonym for "types()" that I included because that's
+  the name of the API endpoint in OpsRamp that returns this set of data.
+  It took a while to figure out what the returned data means though,
+  so we went with the more obvious name "types" here instead._
+  - _installed() -> A synonym for "instances()" that I included because that's
+  the name of the API endpoint in OpsRamp that returns this set of data.
+  It took a while to figure out what the returned data means though,
+  so we went with the more obvious name "instances" here instead._
+
+- class Types() _a set of integration types_
+  - search(pattern) -> Search for an integration type with a specific name or
+  other attributes. The syntax is defined in the OpsRamp docs.
+
+- class Instances() _a set of instances of integration types_
+  - search(pattern) -> Search for an integration with a specific name or other
+  attributes. The syntax is defined in the OpsRamp docs.
+  - instance(uuid) -> returns an Instance object representing one specific
+  integration instance.
+
+- class SingleInstance() _a single instance of an integration type_
+  - get() -> returns the definition of this specific integration as a Python
+  dict. See the OpsRamp API docs for detailed contents, which varies depending
+  on the integration type.
+  - enable() -> marks this specific instance as "enabled" in OpsRamp.
+  - disable() -> marks this specific instance as "disabled" in OpsRamp.
+  - notifier(definition) -> configures a notifier on this specific instance.
+  "definition" is a Python dict specifying details of the new configuration.
+  The syntax is defined in the OpsRamp docs. Helper functions for creating
+  these dicts will be added later.
 
 ## The API objects and direct REST calls
 

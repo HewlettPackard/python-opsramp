@@ -48,6 +48,25 @@ def main():
     # Focus on a specific tenant.
     tenant = ormp.tenant(TENANT_ID)
 
+    print('List the integrations on tenant', TENANT_ID)
+    ints = tenant.integrations()
+    group = ints.types()
+    found = group.search()
+    print(found['totalResults'], 'integration types')
+    for i in found['results']:
+        print(i)
+    group = ints.instances()
+    found = group.search()
+    print(found['totalResults'], 'integration instances')
+    # "found" contains a complete description of each integration but let's
+    # pull them individually anyway and assert that this gives same result.
+    for i in found['results']:
+        print('...', i['id'], i['integration']['id'],
+              '"' + i.get('displayName', '<no name>') + '"')
+        ithis = group.instance(i['id'])
+        direct = ithis.get()
+        assert direct == i
+
     # Retrieve the agent installation script for this client. The string
     # that OpsRamp returns will contain keys for the client so just print
     # its length and first line to show that we got something.
