@@ -40,8 +40,12 @@ class Clients(ApiWrapper):
     def client(self, uuid):
         return Client(self, uuid)
 
-    def create_client(self, client_definition):
-        return self.api.post('', json=client_definition)
+    def create_client(self, definition):
+        assert 'name' in definition
+        assert 'address' in definition
+        assert 'timeZone' in definition
+        assert 'country' in definition
+        return self.api.post('', json=definition)
 
 
 class Client(ApiWrapper):
@@ -91,3 +95,6 @@ class Client(ApiWrapper):
 
     def terminate(self):
         return self.api.post('/terminate')
+
+    def update(self, definition):
+        return self.api.post(json=definition)

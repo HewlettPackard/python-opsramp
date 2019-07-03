@@ -217,6 +217,8 @@ import opsramp.msp
   reality that does not appear to happen. Our experience has been that the client will still be listed in future
   API calls and the OpsRamp UI. It's unclear what if anything this call actually does.
   _We do not know at this time how to delete a client properly in OpsRamp._
+  - update(definition) -> "definition" is a Python dict specifying the changes to be made to this client.
+  The contents are described in the OpsRamp docs and helper functions for creating these dicts will be added later.
 
 import opsramp.devmgmt
 
