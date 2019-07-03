@@ -20,7 +20,8 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+import os
+from opsramp.base import ApiWrapper, Helpers
 
 '''
 POST install/{intgld} e.g. CUSTOM
@@ -54,6 +55,77 @@ class Integrations(ApiWrapper):
     def create_instance(self, type_name, definition):
         resp = self.api.post('install', type_name, json=definition)
         return resp
+
+    # Helper functions to create the complex structures that OpsRamp
+    # uses to define new integration instances. There are lots of
+    # optional fields and potential gotchas here and we guard against
+    # *some* of them.
+    @staticmethod
+    def mkBase(display_name,
+               logo_fname=None):
+        retval = {
+            'displayName': display_name,
+        }
+        if logo_fname:
+            payload = Helpers.b64encode_payload(logo_fname)
+            retval['logo'] = {
+                'name': os.path.basename(logo_fname),
+                'file': payload
+            }
+        return retval
+
+    @staticmethod
+    def mkEmailAlert(display_name,
+                     logo_fname=None):
+        retval = Integrations.mkBase(display_name, logo_fname)
+        return retval
+
+    @staticmethod
+    def mkCustom(display_name,
+                 logo_fname=None,
+                 parent_uuid=None):
+        retval = Integrations.mkBase(display_name, logo_fname)
+        if parent_uuid:
+            retval['parentIntg'] = {
+                'id': parent_uuid
+            }
+        return retval
+
+    @staticmethod
+    def mkAzureARM(display_name,
+                   arm_subscription_id,
+                   arm_tenant_id,
+                   arm_client_id,
+                   arm_secret_key):
+        retval = {
+            'displayName': display_name,
+            'credential': {
+                'credentialType': 'AZURE',
+                'AzureType': 'ARM',
+                'SubscriptionId': arm_subscription_id,
+                'TenantId': arm_tenant_id,
+                'ClientID': arm_client_id,
+                'SecretKey': arm_secret_key
+            }
+        }
+        return retval
+
+    @staticmethod
+    def mkAzureASM(display_name,
+                   arm_subscription_id,
+                   arm_mgmt_cert,
+                   arm_keystore_pass):
+        retval = {
+            'displayName': display_name,
+            'credential': {
+                'credentialType': 'AZURE',
+                'AzureType': 'ASM',
+                'SubscriptionId': arm_subscription_id,
+                'ManagementCertificate': arm_mgmt_cert,
+                'KeystorePassword': arm_keystore_pass
+            }
+        }
+        return retval
 
     def available(self):
         # Compatibility function because this is the name that the
@@ -103,3 +175,6 @@ class SingleInstance(ApiWrapper):
 
     def notifier(self, definition):
         return self.api.post('/notifier', json=definition)
+
+    def update(self, definition):
+        return self.api.post(json=definition)
