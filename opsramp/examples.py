@@ -55,6 +55,16 @@ def main():
     print(found['totalResults'], 'integration types')
     for i in found['results']:
         print(i)
+
+    print('Define a new custom integration on', TENANT_ID)
+    newcint = ints.mkCustom(
+        display_name='Example API integration'
+    )
+    print(newcint)
+    # uncomment these lines to actually create the integration.
+    # resp = ints.create_instance('CUSTOM', newcint)
+    # print(resp)
+
     group = ints.instances()
     found = group.search()
     print(found['totalResults'], 'integration instances')

@@ -53,7 +53,7 @@ class Integrations(ApiWrapper):
         return Instances(self)
 
     def create_instance(self, type_name, definition):
-        resp = self.api.post('install', type_name, json=definition)
+        resp = self.api.post('install/%s' % type_name, json=definition)
         return resp
 
     # Helper functions to create the complex structures that OpsRamp
