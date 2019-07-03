@@ -252,7 +252,22 @@ import opsramp.integrations
   - create\_instance(type\_name, definition) -> creates a new instance of an
   integration type on this Tenant. "definition" is a Python dict specifying
   details of the integration instance that is to be created.
-  Helper functions for creating these dicts will be added later.
+  - @staticmethod mkEmailAlert(display\_name, logo\_fname=None) ->
+  helper function that returns a Python dict suitable for creating or updating
+  an integration instance of type EMAILALERT.
+  - @staticmethod mkCustom(display\_name, logo\_fname=None, parent\_uuid=None) ->
+  helper function that returns a Python dict suitable for creating or updating
+  an integration instance of type CUSTOM.
+  - @staticmethod mkAzureARM(display\_name, arm\_subscription\_id,
+  arm\_tenant\_id, arm\_client\_id, arm\_secret\_key) ->
+  helper function that returns a Python dict suitable for creating or updating
+  an integration instance of type AZUREARM. Note that ARM and ASM integrations
+  are different and each has its own helper function.
+  - @staticmethod mkAzureASM(display\_name, arm\_subscription\_id,
+  arm\_mgmt\_cert, arm\_keystore\_pass) ->
+  helper function that returns a Python dict suitable for creating or updating
+  an integration instance of type AZUREASM. Note that ARM and ASM integrations
+  are different and each has its own helper function.
   - _available() -> A synonym for "types()" that I included because that's
   the name of the API endpoint in OpsRamp that returns this set of data.
   It took a while to figure out what the returned data means though,
@@ -282,6 +297,9 @@ import opsramp.integrations
   "definition" is a Python dict specifying details of the new configuration.
   The syntax is defined in the OpsRamp docs. Helper functions for creating
   these dicts will be added later.
+  - update(definition) -> "definition" is a Python dict specifying the changes
+  to be made to this instance. The contents are described in the OpsRamp docs
+  and helper functions to construct them exist in the Integrations class.
 
 ## The API objects and direct REST calls
 
