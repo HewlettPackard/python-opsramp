@@ -18,6 +18,7 @@ from __future__ import print_function
 import unittest
 import base64
 
+from opsramp.base import Helpers
 from opsramp.rba import Script
 
 
@@ -26,7 +27,7 @@ class StaticsTest(unittest.TestCase):
         testfile = 'README.md'
         with open(testfile, 'rb') as f:
             expected = f.read()
-        actual64 = Script.encode_payload(testfile)
+        actual64 = Helpers.b64encode_payload(testfile)
         actual = base64.b64decode(actual64)
         assert actual == expected
 

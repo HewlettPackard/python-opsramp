@@ -21,7 +21,20 @@
 # limitations under the License.
 
 from __future__ import print_function
+import base64
 import requests
+
+
+class Helpers(object):
+    # Returns a string containing a base64 encoded version of the
+    # content of the specified file. It was quite finicky to come
+    # up with a method that works on both Python 2 and 3 so please
+    # don't modify this, or test carefully if you do.
+    @staticmethod
+    def b64encode_payload(fname):
+        with open(fname, 'rb') as f:
+            content = base64.b64encode(f.read())
+        return content.decode()
 
 
 class PathTracker(object):
