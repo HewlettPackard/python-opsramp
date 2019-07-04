@@ -229,14 +229,14 @@ import opsramp.devmgmt
   - create\_policy(definition) -> creates a new policy in this Tenant. "definition" is a Python dict
   specifying details of the policy to be created. The contents are described in the OpsRamp docs and helper
   functions for creating these dicts will be added in the Policy class in a later commit.
-  - update\_policy(definition) -> updates an existing policy in this Tenant. "definition" is a Python dict
-  specifying details of the changes to the policy. The contents are described in the OpsRamp docs and helper
-  functions for creating these dicts will be added in a later commit.
 
 - class Policy() _a single policy_
   - get() -> returns the definition of this policy as a Python dict. See the OpsRamp API docs for detailed contents.
   - run() -> sends a request to the OpsRamp server to run this policy now. The actual run is asynchronous.
   - delete() -> deletes this policy
+  - update(definition) -> updates an existing policy. "definition" is a Python
+  dict specifying details of the changes. The contents are described in the
+  OpsRamp docs and helper functions for creating these dicts will be added later.
 
 import opsramp.integrations
 

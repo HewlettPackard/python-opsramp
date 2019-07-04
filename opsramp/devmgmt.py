@@ -33,14 +33,11 @@ class Policies(ApiWrapper):
     def search(self, pattern=''):
         return self.api.get('/search?name=%s' % pattern)
 
+    def create_policy(self, definition):
+        return self.api.post('', json=definition)
+
     def policy(self, uuid):
         return Policy(self, uuid)
-
-    def create_policy(self, policy_definition):
-        return self.api.post('', json=policy_definition)
-
-    def update_policy(self, policy_definition):
-        return self.api.put('', json=policy_definition)
 
 
 class Policy(ApiWrapper):
@@ -52,3 +49,6 @@ class Policy(ApiWrapper):
 
     def delete(self):
         return self.api.delete()
+
+    def update(self, definition):
+        return self.api.put('', json=definition)

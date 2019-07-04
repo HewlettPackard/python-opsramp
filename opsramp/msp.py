@@ -37,15 +37,15 @@ class Clients(ApiWrapper):
     def search_for_prefix(self, prefix):
         return self.api.get('/search?queryString=name:%s' % prefix)
 
-    def client(self, uuid):
-        return Client(self, uuid)
-
     def create_client(self, definition):
         assert 'name' in definition
         assert 'address' in definition
         assert 'timeZone' in definition
         assert 'country' in definition
         return self.api.post('', json=definition)
+
+    def client(self, uuid):
+        return Client(self, uuid)
 
 
 class Client(ApiWrapper):

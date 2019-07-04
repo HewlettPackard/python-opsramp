@@ -28,9 +28,6 @@ class Rba(ApiWrapper):
     def __init__(self, parent):
         super(Rba, self).__init__(parent.api, 'rba')
 
-    def category(self, uuid):
-        return Category(self, uuid)
-
     def get_categories(self):
         return self.api.get('/categories')
 
@@ -40,19 +37,22 @@ class Rba(ApiWrapper):
             jjj['parent'] = parent_uuid
         return self.api.post('/categories', json=jjj)
 
+    def category(self, uuid):
+        return Category(self, uuid)
+
 
 class Category(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Category, self).__init__(parent.api, 'categories/%s' % uuid)
-
-    def script(self, uuid):
-        return Script(self, uuid)
 
     def get_scripts(self):
         return self.api.get('/scripts')
 
     def create_script(self, script_definition):
         return self.api.post('/scripts', json=script_definition)
+
+    def script(self, uuid):
+        return Script(self, uuid)
 
 
 class Script(ApiWrapper):
