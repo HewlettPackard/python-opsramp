@@ -86,11 +86,19 @@ class Integrations(ApiWrapper):
     @staticmethod
     def mkCustom(display_name,
                  logo_fname=None,
-                 parent_uuid=None):
+                 parent_uuid=None,
+                 inbound_auth_type=None):
         retval = Integrations.mkBase(display_name, logo_fname)
         if parent_uuid:
             retval['parentIntg'] = {
                 'id': parent_uuid
+            }
+        if inbound_auth_type:
+            assert inbound_auth_type in ('OAUTH2', 'BASIC')
+            retval['inboundConfig'] = {
+                'authentication': {
+                    'authType': inbound_auth_type
+                }
             }
         return retval
 

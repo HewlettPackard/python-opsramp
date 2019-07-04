@@ -57,18 +57,18 @@ def main():
         print(i)
 
     print('Define a new custom integration on', TENANT_ID)
-    newtype = 'WEBHOOK'
+    newtype = 'OAUTH2'
     newcint = ints.mkCustom(
-        display_name='Example %s integration' % newtype
+        display_name='Example %s integration' % newtype,
+        inbound_auth_type=newtype
     )
     print(newcint)
     # uncomment these lines to actually create the integration.
     # resp = ints.create_instance('CUSTOM', newcint)
-    # print(resp)
-    # uncomment this to set its authentication method
-    # int_id = resp['id']
-    # int_obj = ints.instance(int_id)
-    # resp = int_obj.set_auth_type(newtype)
+    # if 'inboundConfig' in resp:
+    #     for creds in resp['inboundConfig']['authentication']['apiKeyPairs']:
+    #         for i in creds.keys():
+    #             creds[i] = 'REDACTED'
     # print(resp)
 
     group = ints.instances()
