@@ -57,12 +57,18 @@ def main():
         print(i)
 
     print('Define a new custom integration on', TENANT_ID)
+    newtype = 'WEBHOOK'
     newcint = ints.mkCustom(
-        display_name='Example API integration'
+        display_name='Example %s integration' % newtype
     )
     print(newcint)
     # uncomment these lines to actually create the integration.
     # resp = ints.create_instance('CUSTOM', newcint)
+    # print(resp)
+    # uncomment this to set its authentication method
+    # int_id = resp['id']
+    # int_obj = ints.instance(int_id)
+    # resp = int_obj.set_auth_type(newtype)
     # print(resp)
 
     group = ints.instances()
@@ -73,7 +79,7 @@ def main():
     for i in found['results']:
         print('...', i['id'], i['integration']['id'],
               '"' + i.get('displayName', '<no name>') + '"')
-        ithis = group.instance(i['id'])
+        ithis = ints.instance(i['id'])
         direct = ithis.get()
         assert direct == i
 
