@@ -27,6 +27,17 @@ import opsramp.msp
 CATEGORY_NAME = 'Testing 123'
 
 
+def sanitize_response(resp):
+    config = resp.get('inboundConfig', {})
+    auth = config.get('authentication', {})
+    if 'token' in auth:
+        auth['token'] = 'REDACTED'
+    for creds in auth.get('apiKeyPairs', {}):
+        for i in creds.keys():
+            creds[i] = 'REDACTED'
+    return resp
+
+
 def main():
     OPSRAMP_URL = os.environ.get('OPSRAMP_URL')
     TENANT_ID = os.environ.get('OPSRAMP_TENANT_ID')
@@ -56,20 +67,17 @@ def main():
     for i in found['results']:
         print(i)
 
-    print('Define a new custom integration on', TENANT_ID)
-    newtype = 'OAUTH2'
-    newcint = ints.mkCustom(
-        display_name='Example %s integration' % newtype,
-        inbound_auth_type=newtype
-    )
-    print(newcint)
-    # uncomment these lines to actually create the integration.
-    # resp = ints.create_instance('CUSTOM', newcint)
-    # if 'inboundConfig' in resp:
-    #     for creds in resp['inboundConfig']['authentication']['apiKeyPairs']:
-    #         for i in creds.keys():
-    #             creds[i] = 'REDACTED'
-    # print(resp)
+    print('Define new custom integrations on', TENANT_ID)
+    for atype in ('OAUTH2', 'BASIC'):
+        newcint = ints.mkCustom(
+            display_name='Example %s integration' % atype,
+            inbound_auth_type=atype
+        )
+        print(newcint)
+        # uncomment the following lines to actually create the integration.
+        # resp = ints.create_instance('CUSTOM', newcint)
+        # sanitize_response(resp)
+        # print(resp)
 
     group = ints.instances()
     found = group.search()

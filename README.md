@@ -257,7 +257,7 @@ import opsramp.integrations
   - @staticmethod mkEmailAlert(display\_name, logo\_fname=None) ->
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type EMAILALERT.
-  - @staticmethod mkCustom(display\_name, logo\_fname=None, parent\_uuid=None) ->
+  - @staticmethod mkCustom(display\_name, logo\_fname=None, parent\_uuid=None, inbound\_auth\_type=None) ->
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type CUSTOM.
   - @staticmethod mkAzureARM(display\_name, arm\_subscription\_id,
@@ -303,7 +303,7 @@ import opsramp.integrations
   - set\_auth\_type(self, auth\_type) -> sets the authentication type for this
   integration to one of "OAUTH2", "WEBHOOK", "BASIC" and returns a dict that
   contains the keys etc that are needed to connect to this integration using
-  that auth method. Note that OUTH2 secret values are redacted by default in
+  that auth method. Note that OAUTH2 secret values are redacted by default in
   the API response.
 
 ## The API objects and direct REST calls
