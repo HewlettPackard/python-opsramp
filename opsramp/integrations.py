@@ -66,6 +66,7 @@ class Integrations(ApiWrapper):
     @staticmethod
     def mkBase(display_name,
                logo_fname=None):
+        assert display_name
         retval = {
             'displayName': display_name,
         }
@@ -80,6 +81,7 @@ class Integrations(ApiWrapper):
     @staticmethod
     def mkEmailAlert(display_name,
                      logo_fname=None):
+        assert display_name
         retval = Integrations.mkBase(display_name, logo_fname)
         return retval
 
@@ -88,6 +90,7 @@ class Integrations(ApiWrapper):
                  logo_fname=None,
                  parent_uuid=None,
                  inbound_auth_type=None):
+        assert display_name
         retval = Integrations.mkBase(display_name, logo_fname)
         if parent_uuid:
             retval['parentIntg'] = {
@@ -108,6 +111,7 @@ class Integrations(ApiWrapper):
                    arm_tenant_id,
                    arm_client_id,
                    arm_secret_key):
+        assert display_name
         retval = {
             'displayName': display_name,
             'credential': {
@@ -126,6 +130,7 @@ class Integrations(ApiWrapper):
                    arm_subscription_id,
                    arm_mgmt_cert,
                    arm_keystore_pass):
+        assert display_name
         retval = {
             'displayName': display_name,
             'credential': {

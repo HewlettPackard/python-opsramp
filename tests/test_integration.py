@@ -23,10 +23,10 @@ from opsramp.integrations import Integrations
 
 class StaticsTest(unittest.TestCase):
     def base_display_name(self, fn):
+        with self.assertRaises(AssertionError):
+            fn(display_name=None)
         testname = 'Unit test 1'
-        actual = fn(
-            display_name=testname
-        )
+        actual = fn(display_name=testname)
         expected = {
             'displayName': testname
         }
@@ -35,6 +35,11 @@ class StaticsTest(unittest.TestCase):
     def base_logo(self, fn):
         testname = 'Unit test 2'
         testfile = 'README.md'
+        with self.assertRaises(IOError):
+            fn(
+                display_name=testname,
+                logo_fname=testfile + '.that.doesnt.exist'
+            )
         actual = fn(
             display_name=testname,
             logo_fname=testfile
@@ -65,16 +70,27 @@ class StaticsTest(unittest.TestCase):
     def test_custom(self):
         self.base_display_name(Integrations.mkCustom)
         self.base_logo(Integrations.mkCustom)
+        with self.assertRaises(AssertionError):
+            Integrations.mkCustom(
+                display_name='bad auth type',
+                inbound_auth_type='BAD UNIT TEST VALUE'
+            )
+        # Now a variant that should work.
         testname = 'Custom integration unit test'
         fakeuuid = 'deadbeef'
+        auth_type = 'OAUTH2'
         actual = Integrations.mkCustom(
             display_name=testname,
-            parent_uuid=fakeuuid
+            parent_uuid=fakeuuid,
+            inbound_auth_type=auth_type
         )
         expected = {
             'displayName': testname,
             'parentIntg': {
                 'id': fakeuuid
+            },
+            'inboundConfig': {
+                'authentication': {'authType': auth_type}
             }
         }
         assert actual == expected
