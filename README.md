@@ -252,6 +252,8 @@ import opsramp.integrations
   - create\_instance(type\_name, definition) -> creates a new instance of an
   integration type on this Tenant. "definition" is a Python dict specifying
   details of the integration instance that is to be created.
+  - instance(uuid) -> returns a SingleInstance object representing one specific
+  installed integration instance.
   - @staticmethod mkEmailAlert(display\_name, logo\_fname=None) ->
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type EMAILALERT.
@@ -284,8 +286,6 @@ import opsramp.integrations
 - class Instances() _a set of instances of integration types_
   - search(pattern) -> Search for an integration with a specific name or other
   attributes. The syntax is defined in the OpsRamp docs.
-  - instance(uuid) -> returns an Instance object representing one specific
-  integration instance.
 
 - class SingleInstance() _a single instance of an integration type_
   - get() -> returns the definition of this specific integration as a Python
@@ -300,6 +300,11 @@ import opsramp.integrations
   - update(definition) -> "definition" is a Python dict specifying the changes
   to be made to this instance. The contents are described in the OpsRamp docs
   and helper functions to construct them exist in the Integrations class.
+  - set\_auth\_type(self, auth\_type) -> sets the authentication type for this
+  integration to one of "OAUTH2", "WEBHOOK", "BASIC" and returns a dict that
+  contains the keys etc that are needed to connect to this integration using
+  that auth method. Note that OUTH2 secret values are redacted by default in
+  the API response.
 
 ## The API objects and direct REST calls
 

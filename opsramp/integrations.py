@@ -56,6 +56,9 @@ class Integrations(ApiWrapper):
         resp = self.api.post('install/%s' % type_name, json=definition)
         return resp
 
+    def instance(self, uuid):
+        return SingleInstance(self, uuid)
+
     # Helper functions to create the complex structures that OpsRamp
     # uses to define new integration instances. There are lots of
     # optional fields and potential gotchas here and we guard against
@@ -153,9 +156,6 @@ class Instances(ApiWrapper):
     def __init__(self, parent):
         super(Instances, self).__init__(parent.api, 'installed')
 
-    def instance(self, uuid):
-        return SingleInstance(self, uuid)
-
     def search(self, pattern=''):
         suffix = '/search'
         if pattern:
@@ -165,7 +165,9 @@ class Instances(ApiWrapper):
 
 class SingleInstance(ApiWrapper):
     def __init__(self, parent, uuid):
-        super(SingleInstance, self).__init__(parent.api, uuid)
+        api = parent.api.clone()
+        api.chroot('/installed')
+        super(SingleInstance, self).__init__(api, uuid)
 
     def enable(self):
         return self.api.post('/enable')
@@ -178,3 +180,10 @@ class SingleInstance(ApiWrapper):
 
     def update(self, definition):
         return self.api.post(json=definition)
+
+    def set_auth_type(self, auth_type):
+        assert auth_type in ('OAUTH2', 'WEBHOOK', 'BASIC')
+        settings = {
+            'authType': auth_type
+        }
+        return self.api.post('inbound/authentication', json=settings)
