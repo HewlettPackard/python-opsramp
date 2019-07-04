@@ -157,6 +157,9 @@ import opsramp.tenant
   See the OpsRamp API docs for details on the format of the pattern string.
   - monitoring() -> returns a Monitoring object representing all monitoring information for this Tenant.
   - rba() -> returns an Rba object representing all runbook automation information for this Tenant.
+  - clients() ->  returns a Clients object representing all OpsRamp clients on this Tenant. _Note that
+  this is only valid for MSP-level tenants because an OpsRamp client cannot contain other clients._
+  - policies() -> returns a Policies object representing the device management policies on this Tenant.
   - integrations() -> returns an Integrations object representing all integrations on this Tenant.
 
 import opsramp.monitoring
@@ -172,16 +175,16 @@ import opsramp.rba
 
 - class Rba() _the runbook automation subtree of one specific Tenant_
   - get\_categories() -> Return a list of all the script categories in this subtree.
-  - category(uuid) -> returns a Category object representing one specific script category on this Tenant.
   - create\_category(name, optional parent\_uuid) -> creates a new script category on this Tenant and
   returns its uuid. Optionally takes the uuid of a pre-existing category under which to nest the new one.
+  - category(uuid) -> returns a Category object representing one specific script category on this Tenant.
 
 - class Category() _the subtree for one RBA category_
   - get\_scripts() -> returns a list of the scripts in this category.
-  - script(uuid) -> returns a Script object representing the API subtree for one specific script.
   - create\_script(definition) -> creates a new script in this category. "definition" is a Python dict
   specifying details of the script to be created. Helper functions for creating these dicts are provided
   in the Script class and documented there.
+  - script(uuid) -> returns a Script object representing the API subtree for one specific script.
 
 - class Script() _a single RBA script_
   - get() -> returns the definition of this script as a Python dict. See the OpsRamp API docs for detailed contents.
@@ -193,17 +196,16 @@ import opsramp.rba
 
 import opsramp.msp
 
-- class Clients() _the subtree containing all clients_
-  This call is only supported on Tenants that are at MSP or Partner level or higher because a Client
-  cannot contain other clients.
+- class Clients() _the subtree containing all clients of this MSP-level tenant_
+  An OpsRamp client cannot contain other clients so this is class is only useful with MSP-level tenants.
   - get\_list() -> returns a list of dicts, each one containing minimal details for one client. It's worth
-  noting that the main ID field in the summary objects that get returned is called *uniqueId* and this is the
+  noting that the main ID field in the objects that get returned is called *uniqueId* and this is the
   value you need to use everywhere in this binding that a client ID is required.
-  - client(uuid) -> returns a Client object representing the API subtree for one specific client. The uuid
-  is one of the uniqueId values that would be returned by `get_list()`
   - create\_client(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
   specifying details of the client to be created. The contents are described in the OpsRamp docs and helper
   functions for creating these dicts will be added in a later commit.
+  - client(uuid) -> returns a Client object representing the API subtree for one specific client. The uuid
+  is one of the uniqueId values that would be returned by `get_list()`
 
 - class Client() _a single client_
   - get() -> returns the definition of this client as a Python dict. See the OpsRamp API docs for detailed contents.
@@ -225,10 +227,10 @@ import opsramp.devmgmt
 - class Policies() _the policies subtree of one specific Tenant_
   - get\_list() -> returns a list of dicts, each containing a single policy definition.
   - search(pattern) -> Search for a policy with a specific name. The syntax is defined in the OpsRamp docs.
-  - policy(uuid) -> returns a Policy object representing the API subtree for one specific policy.
   - create\_policy(definition) -> creates a new policy in this Tenant. "definition" is a Python dict
   specifying details of the policy to be created. The contents are described in the OpsRamp docs and helper
   functions for creating these dicts will be added in the Policy class in a later commit.
+  - policy(uuid) -> returns a Policy object representing the API subtree for one specific policy.
 
 - class Policy() _a single policy_
   - get() -> returns the definition of this policy as a Python dict. See the OpsRamp API docs for detailed contents.
