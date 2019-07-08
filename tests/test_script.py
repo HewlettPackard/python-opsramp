@@ -19,7 +19,7 @@ import unittest
 import base64
 
 from opsramp.base import Helpers
-from opsramp.rba import Scripts
+from opsramp.rba import Category
 
 
 class StaticsTest(unittest.TestCase):
@@ -36,7 +36,7 @@ class StaticsTest(unittest.TestCase):
             'name': 'whatever.sh',
             'content': 'random stuff'
         }
-        actual = Scripts.mkattachment(
+        actual = Category.mkattachment(
             name=tvalues['name'],
             payload=tvalues['content']
         )
@@ -52,7 +52,7 @@ class StaticsTest(unittest.TestCase):
             'description': 'Where am I today?',
             'type': 'STRING'
         }
-        actual = Scripts.mkparameter(
+        actual = Category.mkparameter(
             name=tvalues['name'],
             description=tvalues['description'],
             datatype=tvalues['type']
@@ -67,7 +67,7 @@ class StaticsTest(unittest.TestCase):
         assert actual == expected
 
     def test_mkscript(self):
-        p1 = Scripts.mkparameter(
+        p1 = Category.mkparameter(
             name='venue',
             description='Where am I today?',
             datatype='STRING'
@@ -80,7 +80,7 @@ class StaticsTest(unittest.TestCase):
             'payload': 'echo "hello $1"',
             'parameters': [p1]
         }
-        actual = Scripts.mkscript(
+        actual = Category.mkscript(
             name=tvalues['name'],
             description=tvalues['description'],
             platforms=tvalues['platforms'],

@@ -61,7 +61,7 @@ def main():
 
     print('List the integrations on tenant', TENANT_ID)
     integs = tenant.integrations()
-    group = integs.types()
+    group = integs.itypes()
     found = group.search()
     print(found['totalResults'], 'integration types')
     for i in found['results']:
