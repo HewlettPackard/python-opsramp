@@ -53,9 +53,6 @@ class Tenant(ApiWrapper):
     def integrations(self):
         return opsramp.integrations.Integrations(self)
 
-    def get_alerts(self, searchpattern):
-        return self.api.get('/alerts/search?queryString=%s' % searchpattern)
-
     def get_agent_script(self):
         assert self.is_client()
         hdr = {'Accept': 'application/octet-stream,application/xml'}

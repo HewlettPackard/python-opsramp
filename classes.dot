@@ -17,27 +17,19 @@
 # limitations under the License.
 #
 digraph {
-  opsramp -> { globalconfig tenant }
+  opsramp -> { tenant globalconfig }
   opsramp [label="opsramp(url,key,secret)"]
-  tenant -> { rba monitoring clients policies integrations }
+  tenant -> { integrations rba monitoring policies clients }
   tenant [label="tenant(tid)"]
   rba -> categories
   categories -> category
-  category [label="category(cid)"]
-  category -> scripts
-  scripts -> script
-  script [label="script(sid)"]
   monitoring -> templates
-  templates -> template
-  template [label="template(tid)"]
-  clients -> client
-  client [label="client(cid)"]
-  policies -> policy
-  policy [label="policy(pid)"]
-  integrations -> { types instances }
-  instances -> instance
-  instance [label="instance(iid)"]
-  { rank=same rba monitoring clients policies integrations }
-  { rank=same categories templates instances }
-  { rank=same category template client policy instance }
+  integrations -> { itypes instances }
+  { rank=same categories templates clients policies itypes instances }
+  category [label="category(cid)" style="filled" fillcolor="turquoise"]
+  instances [style="filled" fillcolor="turquoise"]
+  categories [style="filled" fillcolor="turquoise"]
+  templates [style="filled" fillcolor="turquoise"]
+  policies [style="filled" fillcolor="turquoise"]
+  clients [style="filled" fillcolor="turquoise"]
 }

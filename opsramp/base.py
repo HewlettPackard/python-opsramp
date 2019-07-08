@@ -72,6 +72,7 @@ class PathTracker(object):
         return self.prefix
 
     def fullpath(self, suffix=''):
+        suffix = str(suffix)
         if len(suffix) > 0 and suffix[0] == '/':
             retval = suffix
         else:

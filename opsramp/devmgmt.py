@@ -27,28 +27,17 @@ class Policies(ApiWrapper):
     def __init__(self, parent):
         super(Policies, self).__init__(parent.api, 'policies/management')
 
-    def get_list(self):
-        return self.api.get()
-
     def search(self, pattern=''):
         return self.api.get('/search?name=%s' % pattern)
 
-    def create_policy(self, definition):
+    def create(self, definition):
         return self.api.post('', json=definition)
 
-    def policy(self, uuid):
-        return Policy(self, uuid)
+    def update(self, uuid, definition):
+        return self.api.put('%s' % uuid, json=definition)
 
+    def run(self, uuid):
+        return self.api.get('%s/action/run' % uuid)
 
-class Policy(ApiWrapper):
-    def __init__(self, parent, uuid):
-        super(Policy, self).__init__(parent.api, '%s' % uuid)
-
-    def run(self):
-        return self.api.get('/action/run')
-
-    def delete(self):
-        return self.api.delete()
-
-    def update(self, definition):
-        return self.api.put('', json=definition)
+    def delete(self, uuid):
+        return self.api.delete('%s' % uuid)

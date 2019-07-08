@@ -18,10 +18,10 @@ from __future__ import print_function
 import base64
 import unittest
 
-from opsramp.integrations import Integrations
+from opsramp.integrations import Instances
 
 
-class StaticsTest(unittest.TestCase):
+class InstancesTest(unittest.TestCase):
     def base_display_name(self, fn):
         with self.assertRaises(AssertionError):
             fn(display_name=None)
@@ -60,18 +60,18 @@ class StaticsTest(unittest.TestCase):
         assert actual == expected
 
     def test_base(self):
-        self.base_display_name(Integrations.mkBase)
-        self.base_logo(Integrations.mkBase)
+        self.base_display_name(Instances.mkBase)
+        self.base_logo(Instances.mkBase)
 
     def test_emailalert(self):
-        self.base_display_name(Integrations.mkEmailAlert)
-        self.base_logo(Integrations.mkEmailAlert)
+        self.base_display_name(Instances.mkEmailAlert)
+        self.base_logo(Instances.mkEmailAlert)
 
     def test_custom(self):
-        self.base_display_name(Integrations.mkCustom)
-        self.base_logo(Integrations.mkCustom)
+        self.base_display_name(Instances.mkCustom)
+        self.base_logo(Instances.mkCustom)
         with self.assertRaises(AssertionError):
-            Integrations.mkCustom(
+            Instances.mkCustom(
                 display_name='bad auth type',
                 inbound_auth_type='BAD UNIT TEST VALUE'
             )
@@ -79,7 +79,7 @@ class StaticsTest(unittest.TestCase):
         testname = 'Custom integration unit test'
         fakeuuid = 'deadbeef'
         auth_type = 'OAUTH2'
-        actual = Integrations.mkCustom(
+        actual = Instances.mkCustom(
             display_name=testname,
             parent_uuid=fakeuuid,
             inbound_auth_type=auth_type
@@ -101,7 +101,7 @@ class StaticsTest(unittest.TestCase):
         tenant_id = 'Some random Azure tenant'
         client_id = 'Azure client shtuff'
         secret_key = 'Open Sesame I Say!'
-        actual = Integrations.mkAzureARM(
+        actual = Instances.mkAzureARM(
             display_name=testname,
             arm_subscription_id=subscription_id,
             arm_tenant_id=tenant_id,
@@ -126,7 +126,7 @@ class StaticsTest(unittest.TestCase):
         subscription_id = 'ABCDEFGHIJKLMNOP'
         mgmt_cert = 'Azure management cert'
         keystore_pass = 'Abrakedabra'
-        actual = Integrations.mkAzureASM(
+        actual = Instances.mkAzureASM(
             display_name=testname,
             arm_subscription_id=subscription_id,
             arm_mgmt_cert=mgmt_cert,

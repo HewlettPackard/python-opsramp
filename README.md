@@ -106,14 +106,12 @@ import opsramp.tenant
   - get\_alert\_script() -> Returns a string containing the appropriate Python script to run on a Linux node
   to install the OpsRamp agent there and connect it to this Tenant. This text contains the tenant's access keys
   so think twice before printing it to the screen or logs.
-  - get\_alerts(pattern) -> Returns a list of alert instances on this Tenant that match the specified pattern.
-  See the OpsRamp API docs for details on the format of the pattern string.
-  - monitoring() -> returns a Monitoring object representing all monitoring information for this Tenant.
+  - integrations() -> returns an Integrations object representing all integrations on this Tenant.
   - rba() -> returns an Rba object representing all runbook automation information for this Tenant.
+  - monitoring() -> returns a Monitoring object representing all monitoring information for this Tenant.
+  - policies() -> returns a Policies object representing the device management policies on this Tenant.
   - clients() ->  returns a Clients object representing all OpsRamp clients on this Tenant. _Note that
   this is only valid for MSP-level tenants because an OpsRamp client cannot contain other clients._
-  - policies() -> returns a Policies object representing the device management policies on this Tenant.
-  - integrations() -> returns an Integrations object representing all integrations on this Tenant.
 
 import opsramp.monitoring
 
@@ -127,20 +125,23 @@ import opsramp.monitoring
 import opsramp.rba
 
 - class Rba() _the runbook automation subtree of one specific Tenant_
-  - get\_categories() -> Return a list of all the script categories in this subtree.
-  - create\_category(name, optional parent\_uuid) -> creates a new script category on this Tenant and
+  - categories() -> the subtree containing the RBA categories of this Tenant
+
+- class Categories() _the subtree for the RBA categories of one specific Tenant_
+  - get() -> Return a list of all the script categories in this Tenant RBA subtree.
+  - get(uuid) -> returns the definition of one specific category as a Python dict.
+  See the OpsRamp API docs for detailed contents of these dicts.
+  - create(name, optional parent\_uuid) -> creates a new script category on this Tenant and
   returns its uuid. Optionally takes the uuid of a pre-existing category under which to nest the new one.
-  - category(uuid) -> returns a Category object representing one specific script category on this Tenant.
+  - category(uuid) -> returns a Category object representing the API subtree for one specific category.
 
 - class Category() _the subtree for one RBA category_
-  - get\_scripts() -> returns a list of the scripts in this category.
-  - create\_script(definition) -> creates a new script in this category. "definition" is a Python dict
-  specifying details of the script to be created. Helper functions for creating these dicts are provided
-  in the Script class and documented there.
-  - script(uuid) -> returns a Script object representing the API subtree for one specific script.
-
-- class Script() _a single RBA script_
-  - get() -> returns the definition of this script as a Python dict. See the OpsRamp API docs for detailed contents.
+  - get() -> returns a list of the scripts in this category.
+  - get(uuid) -> returns the definition of one specific script as a Python dict.
+  See the OpsRamp API docs for detailed contents of these dicts.
+  - create(definition) -> creates a new script in this category. "definition" is a Python dict
+  specifying details of the script to be created. The content of these structs is complex so helper
+  functions for creating them are provided below.
   - @staticmethod mkparameter(name, description, datatype, optional, default) -> helper function that returns a
   Python dict describing one parameter of a proposed new script.
   - @staticmethod mkscript(name, description, platforms, execution\_type, payload, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
@@ -151,64 +152,99 @@ import opsramp.msp
 
 - class Clients() _the subtree containing all clients of this MSP-level tenant_
   An OpsRamp client cannot contain other clients so this is class is only useful with MSP-level tenants.
-  - get\_list() -> returns a list of dicts, each one containing minimal details for one client. It's worth
+  - get() -> returns a list of dicts, each one containing minimal details for one client. It's worth
   noting that the main ID field in the objects that get returned is called *uniqueId* and this is the
   value you need to use everywhere in this binding that a client ID is required.
-  - create\_client(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
-  specifying details of the client to be created. The contents are described in the OpsRamp docs and helper
-  functions for creating these dicts will be added in a later commit.
-  - client(uuid) -> returns a Client object representing the API subtree for one specific client. The uuid
-  is one of the uniqueId values that would be returned by `get_list()`
-
-- class Client() _a single client_
-  - get() -> returns the definition of this client as a Python dict. See the OpsRamp API docs for detailed contents.
+  - get(uuid) -> returns the definition of one specific client as a Python dict.
+  See the OpsRamp API docs for detailed contents of these dicts.
   - search(self, pattern='') -> returns a list of client ids matching the specified search pattern, the format of
   which is described in the OpsRamp documentation.
   - search\_for\_prefix(self, prefix) -> returns a list of client ids whose names begin with a specific prefix.
   This is a convenience method which calls "search" internally with an appropriate search pattern.
-  - activate() -> marks the client as "active" in OpsRamp.
-  - suspend() -> marks the client as "suspended" in OpsRamp. _This takes 10+ seconds to run._
-  - terminate() -> terminates the client in OpsRamp. The API docs say that this call deletes the client but in
+  - create(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
+  specifying details of the client to be created.
+  The content of these structs is complex so helper functions for creating them are provided below.
+  - update(uuid, definition) -> "definition" is a Python dict specifying the changes to be made to this client.
+  The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
+  - activate(uuid) -> marks the client as "active" in OpsRamp.
+  - suspend(uuid) -> marks the client as "suspended" in OpsRamp. _This takes 10+ seconds to run._
+  - terminate(uuid) -> terminates the client in OpsRamp. The API docs say that this call deletes the client but in
   reality that does not appear to happen. Our experience has been that the client will still be listed in future
-  API calls and the OpsRamp UI. It's unclear what if anything this call actually does.
+  API calls and the OpsRamp UI. It's unclear what if anything this call actually does...
   _We do not know at this time how to delete a client properly in OpsRamp._
-  - update(definition) -> "definition" is a Python dict specifying the changes to be made to this client.
-  The contents are described in the OpsRamp docs and helper functions for creating these dicts will be added later.
+  - @staticmethod mkhours(day\_start=datetime.time(9, 0),
+                day\_end=datetime.time(17, 0),
+                week\_start=2, week\_end=6,
+                sms\_voice\_notification=False) -> returns a dict that can be used to define
+  customer working and opening hours in OpsRamp.
+  - @staticmethod mkclient(name, address, time\_zone, country, hours=None) -> returns a dict that can be
+  used to create a new client.
 
 import opsramp.devmgmt
 
 - class Policies() _the policies subtree of one specific Tenant_
-  - get\_list() -> returns a list of dicts, each containing a single policy definition.
+  - get() -> returns a list of dicts, each containing a single policy definition.
+  - get(uuid) -> returns the definition of one specific policy as a Python dict.
+  See the OpsRamp API docs for detailed contents of these dicts.
   - search(pattern) -> Search for a policy with a specific name. The syntax is defined in the OpsRamp docs.
-  - create\_policy(definition) -> creates a new policy in this Tenant. "definition" is a Python dict
-  specifying details of the policy to be created. The contents are described in the OpsRamp docs and helper
-  functions for creating these dicts will be added in the Policy class in a later commit.
-  - policy(uuid) -> returns a Policy object representing the API subtree for one specific policy.
-
-- class Policy() _a single policy_
-  - get() -> returns the definition of this policy as a Python dict. See the OpsRamp API docs for detailed contents.
-  - run() -> sends a request to the OpsRamp server to run this policy now. The actual run is asynchronous.
-  - delete() -> deletes this policy
-  - update(definition) -> updates an existing policy. "definition" is a Python
-  dict specifying details of the changes. The contents are described in the
-  OpsRamp docs and helper functions for creating these dicts will be added later.
+  - create(definition) -> creates a new policy in this Tenant. "definition" is a Python dict
+  specifying details of the policy to be created.
+  The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
+  - update(uuid, definition) -> Updates an existing policy.
+  "definition" is a Python dict specifying the changes to be made.
+  The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
+  - run(uuid) -> sends a request to the OpsRamp server to run this policy now. _The actual run is asynchronous._
+  - delete(uuid) -> deletes this policy from the OpsRamp server.
 
 import opsramp.integrations
 
 - class Integrations() _the integrations subtree of one specific Tenant_
-  - types() -> Returns an IntegrationTypes object describing all the *types*
+  - itypes() -> Returns a Types object describing all the *types*
   of integrations that are available to be installed on this Tenant. Each
   represents a *category* like CUSTOM, AZURE, rather than specific instances
   of those.
   - instances() -> Returns an Instances object representing all the actual
-  instances of integrations that are installed on this Tenant. Each has a
-  type field plus a set of configuration values for this specific instance
-  of the type.
-  - create\_instance(type\_name, definition) -> creates a new instance of an
+  instances of integrations that are installed on this Tenant.
+  - _available() -> A synonym for "types()" that I included because that's
+  the name of the API endpoint in OpsRamp that returns this set of data.
+  It took a while to figure out what the returned data means though,
+  so we went with the more obvious name "types" here instead._
+  - _installed() -> A synonym for "instances()" that I included because that's
+  the name of the API endpoint in OpsRamp that returns this set of data.
+  It took a while to figure out what the returned data means though,
+  so we went with the more obvious name "instances" here instead._
+
+- class Types() _a set of integration types_
+  - get() -> returns a list of dicts, each containing a single integration type.
+  - get(uuid) -> returns the definition of one specific type as a Python dict.
+  - search(pattern) -> Search for an integration type with a specific name or
+  other attributes. The syntax of the pattern is defined in the OpsRamp docs.
+  Returns a list of type definition dicts.
+
+- class Instances() _the actual integration instances on one specific Tenant_
+  - get() -> returns a list of dicts, each containing a single integration instance.
+  - get(uuid) -> returns the definition of one specific integration instance as a Python dict.
+  - search(pattern) -> Search for existing integration instances with specific name or
+  other attributes. The syntax of the pattern is defined in the OpsRamp docs.
+  Returns a list of instance definition dicts.
+  - create(type\_name, definition) -> creates a new instance of a specific
   integration type on this Tenant. "definition" is a Python dict specifying
   details of the integration instance that is to be created.
-  - instance(uuid) -> returns a SingleInstance object representing one specific
-  installed integration instance.
+  The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
+  - update(definition) -> "definition" is a Python dict specifying the changes
+  to be made to this instance. The contents are described in the OpsRamp docs
+  and helper functions to construct them exist in the Integrations class.
+  - set\_auth\_type(self, auth\_type) -> sets the authentication type for this
+  integration to one of "OAUTH2", "WEBHOOK", "BASIC" and returns a dict that
+  contains the keys etc that are needed to connect to this integration using
+  that auth method. Note that OAUTH2 secret values are redacted by default in
+  the API response.
+  - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
+  - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp.
+  - notifier(uuid, definition) -> configures a notifier on one specific instance.
+  "definition" is a Python dict specifying details of the new configuration.
+  The syntax is defined in the OpsRamp docs. Helper functions for creating
+  these dicts will be added later.
   - @staticmethod mkEmailAlert(display\_name, logo\_fname=None) ->
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type EMAILALERT.
@@ -225,41 +261,6 @@ import opsramp.integrations
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type AZUREASM. Note that ARM and ASM integrations
   are different and each has its own helper function.
-  - _available() -> A synonym for "types()" that I included because that's
-  the name of the API endpoint in OpsRamp that returns this set of data.
-  It took a while to figure out what the returned data means though,
-  so we went with the more obvious name "types" here instead._
-  - _installed() -> A synonym for "instances()" that I included because that's
-  the name of the API endpoint in OpsRamp that returns this set of data.
-  It took a while to figure out what the returned data means though,
-  so we went with the more obvious name "instances" here instead._
-
-- class Types() _a set of integration types_
-  - search(pattern) -> Search for an integration type with a specific name or
-  other attributes. The syntax is defined in the OpsRamp docs.
-
-- class Instances() _a set of instances of integration types_
-  - search(pattern) -> Search for an integration with a specific name or other
-  attributes. The syntax is defined in the OpsRamp docs.
-
-- class SingleInstance() _a single instance of an integration type_
-  - get() -> returns the definition of this specific integration as a Python
-  dict. See the OpsRamp API docs for detailed contents, which varies depending
-  on the integration type.
-  - enable() -> marks this specific instance as "enabled" in OpsRamp.
-  - disable() -> marks this specific instance as "disabled" in OpsRamp.
-  - notifier(definition) -> configures a notifier on this specific instance.
-  "definition" is a Python dict specifying details of the new configuration.
-  The syntax is defined in the OpsRamp docs. Helper functions for creating
-  these dicts will be added later.
-  - update(definition) -> "definition" is a Python dict specifying the changes
-  to be made to this instance. The contents are described in the OpsRamp docs
-  and helper functions to construct them exist in the Integrations class.
-  - set\_auth\_type(self, auth\_type) -> sets the authentication type for this
-  integration to one of "OAUTH2", "WEBHOOK", "BASIC" and returns a dict that
-  contains the keys etc that are needed to connect to this integration using
-  that auth method. Note that OAUTH2 secret values are redacted by default in
-  the API response.
 
 ## Examples
 The file `examples.py` gives a series of examples of how to use this binding and

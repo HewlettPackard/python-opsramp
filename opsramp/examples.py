@@ -39,10 +39,10 @@ def sanitize_response(resp):
 
 
 def main():
-    OPSRAMP_URL = os.environ.get('OPSRAMP_URL')
-    TENANT_ID = os.environ.get('OPSRAMP_TENANT_ID')
-    KEY = os.environ.get('OPSRAMP_KEY')
-    SECRET = os.environ.get('OPSRAMP_SECRET')
+    OPSRAMP_URL = os.environ['OPSRAMP_URL']
+    TENANT_ID = os.environ['OPSRAMP_TENANT_ID']
+    KEY = os.environ['OPSRAMP_KEY']
+    SECRET = os.environ['OPSRAMP_SECRET']
 
     ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
 
@@ -60,26 +60,27 @@ def main():
     tenant = ormp.tenant(TENANT_ID)
 
     print('List the integrations on tenant', TENANT_ID)
-    ints = tenant.integrations()
-    group = ints.types()
+    integs = tenant.integrations()
+    group = integs.itypes()
     found = group.search()
     print(found['totalResults'], 'integration types')
     for i in found['results']:
         print(i)
 
     print('Define new custom integrations on', TENANT_ID)
+    group = integs.instances()
     for atype in ('OAUTH2', 'BASIC'):
-        newcint = ints.mkCustom(
+        newcint = opsramp.integrations.Instances.mkCustom(
             display_name='Example %s integration' % atype,
             inbound_auth_type=atype
         )
         print(newcint)
         # uncomment the following lines to actually create the integration.
-        # resp = ints.create_instance('CUSTOM', newcint)
-        # sanitize_response(resp)
-        # print(resp)
+        # if tenant.is_client():
+        #     resp = group.create('CUSTOM', newcint)
+        #     sanitize_response(resp)
+        #     print(resp)
 
-    group = ints.instances()
     found = group.search()
     print(found['totalResults'], 'integration instances')
     # "found" contains a complete description of each integration but let's
@@ -87,8 +88,7 @@ def main():
     for i in found['results']:
         print('...', i['id'], i['integration']['id'],
               '"' + i.get('displayName', '<no name>') + '"')
-        ithis = ints.instance(i['id'])
-        direct = ithis.get()
+        direct = group.get(i['id'])
         assert direct == i
 
     # Retrieve the agent installation script for this client. The string
@@ -101,21 +101,20 @@ def main():
         print(agent_script.split('\n')[0])
     else:
         print('List the clients of tenant', TENANT_ID)
-        cs = tenant.clients()
-        for c in cs.get_list():
+        group = tenant.clients()
+        for c in group.get():
             print(c)
-            cobj = cs.client(c['uniqueId'])
-            resp = cobj.get()
+            resp = group.get(c['uniqueId'])
             print('createdBy', resp['createdBy'])
         print('Exercise the create-client code')
-        cdef = opsramp.msp.Client.mkclient(
-            name='test client 93',
+        cdef = opsramp.msp.Clients.mkclient(
+            name='test client 99',
             address='Death Valley',
             time_zone='America/Los_Angeles',
             country='United States')
         print(cdef)
         # uncomment these lines to actually create the client.
-        # resp = cs.create_client(cdef)
+        # resp = group.create(cdef)
         # print(resp)
 
     print('List the monitoring templates on tenant', TENANT_ID)
@@ -126,18 +125,11 @@ def main():
     for t in resp['results']:
         print('...', t['name'])
 
-    print('Search for open alerts on tenant', TENANT_ID)
-    open_alerts = tenant.get_alerts('actions:OPEN')
-    # there might be thousands so only print the first one.
-    print(open_alerts['totalResults'], 'open alerts')
-    al0 = open_alerts['results'][0]
-    for key, value in al0.items():
-        print('>', key, value)
-
     # list the RBA script categories and find or create the one we want.
     print('List the RBA categories on tenant', TENANT_ID)
     rba = tenant.rba()
-    clist = rba.get_categories()
+    group = rba.categories()
+    clist = group.get()
     print(len(clist), 'categories')
     for c in clist:
         print(c)
@@ -145,31 +137,28 @@ def main():
             cid = c['id']
             break
     else:
-        resp = rba.create_category(CATEGORY_NAME)
+        resp = group.create(CATEGORY_NAME)
         cid = resp['id']
 
     print('Scripts in category', cid)
-    cobj = rba.category(cid)
-    slist = cobj.get_scripts()
+    cobj = group.category(cid)
+    slist = cobj.get()
     print(len(slist), 'scripts')
-    # slist contains a complete description of each script but let's pull
-    # them individually anyway and assert that this gives the same result.
     for s in slist:
         print('...', s['id'], s['name'])
-        sobj = cobj.script(s['id'])
-        direct = sobj.get()
+        direct = cobj.get(s['id'])
         assert s == direct
 
     # Create a new RBA script in this category, with one parameter. You can
     # see from the "payload" that this gets passed to the script as $1
-    p1 = opsramp.rba.Script.mkparameter(
+    p1 = opsramp.rba.Category.mkparameter(
         name='venue',
         description='Where am I today?',
         datatype='STRING'
     )
     print('Parameter definition struct')
     print(p1)
-    s1 = opsramp.rba.Script.mkscript(
+    s1 = opsramp.rba.Category.mkscript(
         name='Hello <venue>',
         description='Stereotypical rock star intro',
         platforms=['LINUX'],
@@ -180,12 +169,12 @@ def main():
     print('Script definition struct')
     print(s1)
     # uncomment these lines to actually create the script.
-    # resp = cobj.create_script(s1)
+    # resp = cobj.create(s1)
     # print(resp)
 
     print('Management policies on tenant', TENANT_ID)
-    policies = tenant.policies()
-    plist = policies.get_list()
+    group = tenant.policies()
+    plist = group.get()
     print(len(plist), 'policies')
     for p in plist:
         rules = p['rules']
@@ -200,8 +189,8 @@ def main():
         # plist contains a complete description of each policy
         # but let's pull them individually anyway and assert that
         # this gives the same result.
-        pobj = policies.policy(p['id'])
-        direct = pobj.get()
+        direct = group.get(p['id'])
+        print(direct)
         assert p == direct
 
 
