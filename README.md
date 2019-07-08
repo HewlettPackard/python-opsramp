@@ -112,8 +112,9 @@ $
 ## Public Object Tree
 
 Following is a summary of the object tree currently available in this OpsRamp language binding. See `examples.py`
-for an illustration of how to use them. You start by creating a single OpsRamp object to represent the entire REST API
-instance that you want to access, and make a series of calls that return progressively lower level objects to access
+for an illustration of how to use them. You start by calling `opsramp.binding.connect()`
+which returns a single "OpsRamp" object to represent the entire REST API instance
+that you want to access, and make a series of calls that return progressively lower level objects to access
 lower level information from OpsRamp. For clarity in these end-user instructions I have omitted several Python
 classes that are internal implementation detail in the module and not intended for direct use by external callers.
 
@@ -125,6 +126,17 @@ ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
 cfg = ormp.config()
 print('alert types', cfg.get_alert_types())
 ```
+
+### Class diagram
+
+This diagram is an overview of the public classes and their relationship to each other.
+The individual classes are described in detail in the following section. This diagram
+was produced using https://www.graphviz.org/ and to edit it you need to modify the
+source file ``classes.dot`` and regenerate the PNG from that.
+
+![OpsRamp classes](classes.png)
+
+### Class definitions
 
 import opsramp.binding
 
