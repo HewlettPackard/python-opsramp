@@ -24,8 +24,10 @@ I have also added "assert" statements in various places to guard against pitfall
 that I ran into that are not obvious from the API docs.
 
 ### Scope
-At this time (June 2019) the basic framework of this library is in place and the
-scope will increase incrementally over time.
+The basic framework of this library is in place and the
+scope will increase incrementally over time. The file `examples.py`
+exercises most of the main API sections and is descibed in the Examples
+section later in this document.
 
 Note however that all of our wrapper objects provide an `api` property that
 returns an object that can be used to access REST URLs further down the API tree
@@ -47,67 +49,6 @@ This module is primarily designed for use on Python 3.
 We also run the unit tests against Python 2.7 and it *should* work correctly there
 too. Note however that Python 2 is going end-of-life in late 2019 and we reserve
 the right to drop support for it in a future version of this module.
-
-## Examples
-The file examples.py gives a series of examples of how to use this binding and
-illustrates most of the major areas of the API that we cover.
-
-`python3 -m opsramp.examples`
-
-It depends on the existence of some environment variables to tell it which OpsRamp
-endpoint to use and the relevant creds. You can see those at the top of examples.py
-and you must set them appropriately in your environment before running it.
-
-```
-export OPSRAMP_URL='https://my-org.api.try.opsramp.com'
-export OPSRAMP_TENANT_ID='client_1234'
-export OPSRAMP_KEY='whatever'
-export OPSRAMP_SECRET='whatever'
-```
-
-The client id, key and secret are obtained from an "integration" in the OpsRamp UI.
-You need to go to "setup", "integrations" and look for (or create) a row containing
-a custom integration that uses OAUTH2. It doesn't matter what it's called, you just
-need its id and creds to call the REST API.
-
-On the list of integrations, click on the integration name in the appropriate row
-and a screen appears with the "Tenant Id", "Key" and "Secret" fields that you need.
-The UI even gives sample curl commands at the bottom and you can cut the URL value
-out of those if it's not obvious. It's just the bit as far as opsramp.com like the
-example above.
-
-It's not obvious, but the creds you're getting here are for the entire *Tenant*
-(aka client) and will be the same for all integrations on that Tenant. Be careful
-with them, don't put them in logs or post them online by accident.
-
-If there isn't a suitable integration already (or you want your own) then create a new
-one by selecting the "other" tab in the Available Integrations section at the bottom
-of the page and then "custom". Give it a name and leave the image file field blank.
-The name will appear in access logs but otherwise has no real meaning. Select OAUTH2
-as the authentication type and hit Save. This will bring you to the screen with keys
-and curl commands etc as described above.
-
-### Simple CLI prototype
-I wrote a simple Python program that uses this binding to perform some simple
-read-only operations on OpsRamp. Uses the same environment variables as above.
-```
-$ python3 -m opsramp.cli tenant rba categories | jq -S .
-[
-  {
-    "id": 346,
-    "name": "Day to day actions"
-  },
-  {
-    "id": 698,
-    "name": "DR procedures"
-  }
-]
-$ python3 -m opsramp.cli tenant monitoring templates
-538 monitoring templates found
-$ python3 -m opsramp.cli tenant agent script | wc -l
-763
-$
-```
 
 ## Public Object Tree
 
@@ -319,6 +260,67 @@ import opsramp.integrations
   contains the keys etc that are needed to connect to this integration using
   that auth method. Note that OAUTH2 secret values are redacted by default in
   the API response.
+
+## Examples
+The file `examples.py` gives a series of examples of how to use this binding and
+illustrates most of the major areas of the API that we cover.
+
+`python3 -m opsramp.examples`
+
+It depends on the existence of some environment variables to tell it which OpsRamp
+endpoint to use and the relevant creds. You can see those at the top of examples.py
+and you must set them appropriately in your environment before running it.
+
+```
+export OPSRAMP_URL='https://my-org.api.try.opsramp.com'
+export OPSRAMP_TENANT_ID='client_1234'
+export OPSRAMP_KEY='whatever'
+export OPSRAMP_SECRET='whatever'
+```
+
+The client id, key and secret are obtained from an "integration" in the OpsRamp UI.
+You need to go to "setup", "integrations" and look for (or create) a row containing
+a custom integration that uses OAUTH2. It doesn't matter what it's called, you just
+need its id and creds to call the REST API.
+
+On the list of integrations, click on the integration name in the appropriate row
+and a screen appears with the "Tenant Id", "Key" and "Secret" fields that you need.
+The UI even gives sample curl commands at the bottom and you can cut the URL value
+out of those if it's not obvious. It's just the bit as far as opsramp.com like the
+example above.
+
+It's not obvious, but the creds you're getting here are for the entire *Tenant*
+(aka client) and will be the same for all integrations on that Tenant. Be careful
+with them, don't put them in logs or post them online by accident.
+
+If there isn't a suitable integration already (or you want your own) then create a new
+one by selecting the "other" tab in the Available Integrations section at the bottom
+of the page and then "custom". Give it a name and leave the image file field blank.
+The name will appear in access logs but otherwise has no real meaning. Select OAUTH2
+as the authentication type and hit Save. This will bring you to the screen with keys
+and curl commands etc as described above.
+
+### Simple CLI prototype
+I wrote a simple Python program that uses this binding to perform some simple
+read-only operations on OpsRamp. Uses the same environment variables as above.
+```
+$ python3 -m opsramp.cli tenant rba categories | jq -S .
+[
+  {
+    "id": 346,
+    "name": "Day to day actions"
+  },
+  {
+    "id": 698,
+    "name": "DR procedures"
+  }
+]
+$ python3 -m opsramp.cli tenant monitoring templates
+538 monitoring templates found
+$ python3 -m opsramp.cli tenant agent script | wc -l
+763
+$
+```
 
 ## The API objects and direct REST calls
 
