@@ -18,10 +18,10 @@ from __future__ import print_function
 import unittest
 import datetime
 
-from opsramp.msp import Client
+from opsramp.msp import Clients
 
 
-class StaticsTest(unittest.TestCase):
+class ClientsTest(unittest.TestCase):
     def test_mkhours(self):
         tvalues = {
             'start_hour': 10,
@@ -32,7 +32,7 @@ class StaticsTest(unittest.TestCase):
             'week_end': 4,
             'sms_voice_notifications': True
         }
-        actual = Client.mkhours(
+        actual = Clients.mkhours(
             day_start=datetime.time(
                 tvalues['start_hour'], tvalues['start_min']),
             day_end=datetime.time(
@@ -59,7 +59,7 @@ class StaticsTest(unittest.TestCase):
             'tz': 'America/Los_Angeles',
             'country': 'United States'
         }
-        actual = Client.mkclient(
+        actual = Clients.mkclient(
             name=tvalues['name'],
             address=tvalues['address'],
             time_zone=tvalues['tz'],

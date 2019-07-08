@@ -46,18 +46,70 @@ class Integrations(ApiWrapper):
     def __init__(self, parent):
         super(Integrations, self).__init__(parent.api, 'integrations')
 
-    def types(self):
+    def itypes(self):
         return Types(self)
 
     def instances(self):
         return Instances(self)
 
-    def create_instance(self, type_name, definition):
-        resp = self.api.post('install/%s' % type_name, json=definition)
+    def available(self):
+        # Compatibility function because this is the name that the
+        # OpsRamp API docs use for this data set.
+        return self.itypes()
+
+    def installed(self):
+        # Compatibility function because this is the name that the
+        # OpsRamp API docs use for this data set.
+        return self.instances()
+
+
+class Types(ApiWrapper):
+    def __init__(self, parent):
+        super(Types, self).__init__(parent.api, 'available')
+
+    def search(self, pattern=''):
+        suffix = '/search'
+        if pattern:
+            suffix += '?' + pattern
+        return self.api.get(suffix)
+
+
+class Instances(ApiWrapper):
+    def __init__(self, parent):
+        super(Instances, self).__init__(parent.api, 'installed')
+        # The OpsRamp "create instance" API endpoint is in an
+        # atypical place in the tree so need to compute it.
+        self.creator_api = parent.api.clone()
+        self.creator_api.chroot('install')
+
+    def search(self, pattern=''):
+        suffix = '/search'
+        if pattern:
+            suffix += '?' + pattern
+        return self.api.get(suffix)
+
+    def create(self, type_name, definition):
+        resp = self.creator_api.post(type_name, json=definition)
         return resp
 
-    def instance(self, uuid):
-        return SingleInstance(self, uuid)
+    def update(self, uuid, definition):
+        return self.api.post('%s' % uuid, json=definition)
+
+    def set_auth_type(self, uuid, auth_type):
+        assert auth_type in ('OAUTH2', 'WEBHOOK', 'BASIC')
+        settings = {
+            'authType': auth_type
+        }
+        return self.api.post('%s/inbound/authentication' % uuid, json=settings)
+
+    def enable(self, uuid):
+        return self.api.post('%s/enable' % uuid)
+
+    def disable(self, uuid):
+        return self.api.post('%s/disable' % uuid)
+
+    def notifier(self, uuid, definition):
+        return self.api.post('%s/notifier' % uuid, json=definition)
 
     # Helper functions to create the complex structures that OpsRamp
     # uses to define new integration instances. There are lots of
@@ -82,7 +134,7 @@ class Integrations(ApiWrapper):
     def mkEmailAlert(display_name,
                      logo_fname=None):
         assert display_name
-        retval = Integrations.mkBase(display_name, logo_fname)
+        retval = Instances.mkBase(display_name, logo_fname)
         return retval
 
     @staticmethod
@@ -91,7 +143,7 @@ class Integrations(ApiWrapper):
                  parent_uuid=None,
                  inbound_auth_type=None):
         assert display_name
-        retval = Integrations.mkBase(display_name, logo_fname)
+        retval = Instances.mkBase(display_name, logo_fname)
         if parent_uuid:
             retval['parentIntg'] = {
                 'id': parent_uuid
@@ -142,61 +194,3 @@ class Integrations(ApiWrapper):
             }
         }
         return retval
-
-    def available(self):
-        # Compatibility function because this is the name that the
-        # OpsRamp API docs use for this data set.
-        return self.types()
-
-    def installed(self):
-        # Compatibility function because this is the name that the
-        # OpsRamp API docs use for this data set.
-        return self.instances()
-
-
-class Types(ApiWrapper):
-    def __init__(self, parent):
-        super(Types, self).__init__(parent.api, 'available')
-
-    def search(self, pattern=''):
-        suffix = '/search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
-
-class Instances(ApiWrapper):
-    def __init__(self, parent):
-        super(Instances, self).__init__(parent.api, 'installed')
-
-    def search(self, pattern=''):
-        suffix = '/search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
-
-class SingleInstance(ApiWrapper):
-    def __init__(self, parent, uuid):
-        api = parent.api.clone()
-        api.chroot('/installed')
-        super(SingleInstance, self).__init__(api, uuid)
-
-    def enable(self):
-        return self.api.post('/enable')
-
-    def disable(self):
-        return self.api.post('/disable')
-
-    def notifier(self, definition):
-        return self.api.post('/notifier', json=definition)
-
-    def update(self, definition):
-        return self.api.post(json=definition)
-
-    def set_auth_type(self, auth_type):
-        assert auth_type in ('OAUTH2', 'WEBHOOK', 'BASIC')
-        settings = {
-            'authType': auth_type
-        }
-        return self.api.post('inbound/authentication', json=settings)

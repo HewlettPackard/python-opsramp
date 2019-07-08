@@ -28,14 +28,19 @@ class Rba(ApiWrapper):
     def __init__(self, parent):
         super(Rba, self).__init__(parent.api, 'rba')
 
-    def get_categories(self):
-        return self.api.get('/categories')
+    def categories(self):
+        return Categories(self)
 
-    def create_category(self, name, parent_uuid=None):
+
+class Categories(ApiWrapper):
+    def __init__(self, parent):
+        super(Categories, self).__init__(parent.api, 'categories')
+
+    def create(self, name, parent_uuid=None):
         jjj = {'name': name}
         if parent_uuid:
             jjj['parent'] = parent_uuid
-        return self.api.post('/categories', json=jjj)
+        return self.api.post(json=jjj)
 
     def category(self, uuid):
         return Category(self, uuid)
@@ -43,21 +48,10 @@ class Rba(ApiWrapper):
 
 class Category(ApiWrapper):
     def __init__(self, parent, uuid):
-        super(Category, self).__init__(parent.api, 'categories/%s' % uuid)
+        super(Category, self).__init__(parent.api, '%s/scripts' % uuid)
 
-    def get_scripts(self):
-        return self.api.get('/scripts')
-
-    def create_script(self, script_definition):
-        return self.api.post('/scripts', json=script_definition)
-
-    def script(self, uuid):
-        return Script(self, uuid)
-
-
-class Script(ApiWrapper):
-    def __init__(self, parent, uuid):
-        super(Script, self).__init__(parent.api, 'scripts/%s' % uuid)
+    def create(self, definition):
+        return self.api.post(json=definition)
 
     # A helper function for use with mkparameter & mkscript.
     @staticmethod
@@ -107,7 +101,7 @@ class Script(ApiWrapper):
             payload_value = payload
         else:
             payload_key = 'attachment'
-            payload_value = Script.mkattachment(script_name, payload)
+            payload_value = Category.mkattachment(script_name, payload)
 
         # fields that are always present.
         retval = {

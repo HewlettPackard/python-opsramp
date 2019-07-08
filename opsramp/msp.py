@@ -28,8 +28,8 @@ class Clients(ApiWrapper):
     def __init__(self, parent):
         super(Clients, self).__init__(parent.api, 'clients')
 
-    def get_list(self):
-        return self.api.get('/minimal')
+    def get(self, suffix='/minimal'):
+        return self.api.get(suffix)
 
     def search(self, pattern=''):
         return self.api.get('/search?%s' % pattern)
@@ -37,22 +37,27 @@ class Clients(ApiWrapper):
     def search_for_prefix(self, prefix):
         return self.api.get('/search?queryString=name:%s' % prefix)
 
-    def create_client(self, definition):
+    def create(self, definition):
         assert 'name' in definition
         assert 'address' in definition
         assert 'timeZone' in definition
         assert 'country' in definition
         return self.api.post('', json=definition)
 
-    def client(self, uuid):
-        return Client(self, uuid)
+    def update(self, uuid, definition):
+        return self.api.post('%s' % uuid, json=definition)
 
+    def activate(self, uuid):
+        return self.api.post('%s/activate' % uuid)
 
-class Client(ApiWrapper):
-    def __init__(self, parent, uuid):
-        assert uuid[:7] == 'client_'
-        super(Client, self).__init__(parent.api, '%s' % uuid)
+    def suspend(self, uuid):
+        return self.api.post('%s/suspend' % uuid)
 
+    def terminate(self, uuid):
+        return self.api.post('%s/terminate' % uuid)
+
+    # Helper functions to create the complex structures that OpsRamp
+    # uses to manipulate client definitions.
     @staticmethod
     def mkhours(day_start=datetime.time(9, 0),
                 day_end=datetime.time(17, 0),
@@ -86,15 +91,3 @@ class Client(ApiWrapper):
         # TODO there are lots and lots more optional fields that we
         # will probably need to cater for in the fullness of time.
         return retval
-
-    def activate(self):
-        return self.api.post('/activate')
-
-    def suspend(self):
-        return self.api.post('/suspend')
-
-    def terminate(self):
-        return self.api.post('/terminate')
-
-    def update(self, definition):
-        return self.api.post(json=definition)
