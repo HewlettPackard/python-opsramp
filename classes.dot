@@ -37,6 +37,7 @@ digraph {
   integrations -> { types instances }
   instances -> instance
   instance [label="instance(iid)"]
-  { rank=same categories templates clients policies integrations }
+  { rank=same rba monitoring clients policies integrations }
+  { rank=same categories templates instances }
   { rank=same category template client policy instance }
 }
