@@ -36,6 +36,7 @@ class Categories(ApiWrapper):
     def __init__(self, parent):
         super(Categories, self).__init__(parent.api, 'categories')
 
+    # Creates a new category with optional parent.
     def create(self, name, parent_uuid=None):
         jjj = {'name': name}
         if parent_uuid:
@@ -50,6 +51,7 @@ class Category(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Category, self).__init__(parent.api, '%s/scripts' % uuid)
 
+    # Creates a script in this category
     def create(self, definition):
         return self.api.post(json=definition)
 
