@@ -94,6 +94,9 @@ class InstancesTest(unittest.TestCase):
             }
         }
         assert actual == expected
+        # exercise the auth_type helper while we have a suitable struct.
+        atypes = Instances.auth_type(actual)
+        assert atypes == (auth_type, None)
 
     def test_ARM(self):
         testname = 'Azure ARM integration unit test'

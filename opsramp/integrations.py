@@ -111,6 +111,34 @@ class Instances(ApiWrapper):
     def notifier(self, uuid, definition):
         return self.api.post('%s/notifier' % uuid, json=definition)
 
+    # A helper function that extracts the authentication types from typical
+    # integration instance response structs.
+    @staticmethod
+    def auth_type(resp):
+        in_auth = resp.get(
+            'inboundConfig', {}).get(
+                'authentication', {}).get(
+                    'authType', None)
+        out_auth = resp.get(
+            'outboundConfig', {}).get(
+                'authentication', {}).get(
+                    'authType', None)
+        return (in_auth, out_auth)
+
+    # A helper function that looks for login credentials in typical
+    # integration instance response structs and redacts them.
+    @staticmethod
+    def redact_response(resp):
+        for key in ('inboundConfig', 'outboundConfig'):
+            config = resp.get(key, {})
+            auth = config.get('authentication', {})
+            if 'token' in auth:
+                auth['token'] = 'REDACTED'
+            for creds in auth.get('apiKeyPairs', {}):
+                for i in creds.keys():
+                    creds[i] = 'REDACTED'
+        return resp
+
     # Helper functions to create the complex structures that OpsRamp
     # uses to define new integration instances. There are lots of
     # optional fields and potential gotchas here and we guard against

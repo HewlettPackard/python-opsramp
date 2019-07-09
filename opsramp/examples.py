@@ -27,17 +27,6 @@ import opsramp.msp
 CATEGORY_NAME = 'Testing 123'
 
 
-def sanitize_response(resp):
-    config = resp.get('inboundConfig', {})
-    auth = config.get('authentication', {})
-    if 'token' in auth:
-        auth['token'] = 'REDACTED'
-    for creds in auth.get('apiKeyPairs', {}):
-        for i in creds.keys():
-            creds[i] = 'REDACTED'
-    return resp
-
-
 def main():
     OPSRAMP_URL = os.environ['OPSRAMP_URL']
     TENANT_ID = os.environ['OPSRAMP_TENANT_ID']
@@ -70,7 +59,7 @@ def main():
     print('Define new custom integrations on', TENANT_ID)
     group = integs.instances()
     for atype in ('OAUTH2', 'BASIC'):
-        newcint = opsramp.integrations.Instances.mkCustom(
+        newcint = group.mkCustom(
             display_name='Example %s integration' % atype,
             inbound_auth_type=atype
         )
@@ -78,7 +67,7 @@ def main():
         # uncomment the following lines to actually create the integration.
         # if tenant.is_client():
         #     resp = group.create('CUSTOM', newcint)
-        #     sanitize_response(resp)
+        #     group.redact_response(resp)
         #     print(resp)
 
     found = group.search()
