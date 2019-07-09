@@ -21,7 +21,7 @@
 
 from __future__ import print_function
 
-from opsramp.base import ApiWrapper
+from opsramp.base import ApiWrapper, Helpers
 
 
 class Rba(ApiWrapper):
@@ -36,6 +36,7 @@ class Categories(ApiWrapper):
     def __init__(self, parent):
         super(Categories, self).__init__(parent.api, 'categories')
 
+    # Creates a new category with optional parent.
     def create(self, name, parent_uuid=None):
         jjj = {'name': name}
         if parent_uuid:
@@ -50,6 +51,7 @@ class Category(ApiWrapper):
     def __init__(self, parent, uuid):
         super(Category, self).__init__(parent.api, '%s/scripts' % uuid)
 
+    # Creates a script in this category
     def create(self, definition):
         return self.api.post(json=definition)
 
@@ -57,6 +59,7 @@ class Category(ApiWrapper):
     @staticmethod
     def mkattachment(name, payload):
         assert name
+        assert payload
         return {
             'name': name,
             'file': payload
@@ -83,7 +86,9 @@ class Category(ApiWrapper):
     # for use with Category.create_script() it also asserts that
     # certain rules are being complied with in the script definition.
     @staticmethod
-    def mkscript(name, description, platforms, execution_type, payload,
+    def mkscript(name, description, platforms, execution_type,
+                 payload=None,
+                 payload_file=None,
                  parameters=[],
                  script_name=None,
                  install_timeout=0,
@@ -93,6 +98,14 @@ class Category(ApiWrapper):
                  service_name=None,
                  output_directory=None,
                  output_file=None):
+        assert name
+        assert description
+        assert platforms
+        assert execution_type
+        if payload_file:
+            assert not payload
+            payload = Helpers.b64encode_payload(payload_file)
+        assert payload
         if execution_type not in ('DOWNLOAD', 'EXE', 'MSI'):
             assert not output_directory
             assert not output_file
@@ -100,6 +113,7 @@ class Category(ApiWrapper):
             payload_key = 'command'
             payload_value = payload
         else:
+            assert script_name
             payload_key = 'attachment'
             payload_value = Category.mkattachment(script_name, payload)
 
