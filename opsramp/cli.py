@@ -26,10 +26,10 @@ import opsramp.binding
 
 
 # TODO make these optional command line parameters
-OPSRAMP_URL = os.environ.get('OPSRAMP_URL')
-OPSRAMP_KEY = os.environ.get('OPSRAMP_KEY')
-OPSRAMP_SECRET = os.environ.get('OPSRAMP_SECRET')
-OPSRAMP_TENANT_ID = os.environ.get('OPSRAMP_TENANT_ID')
+OPSRAMP_URL = os.environ['OPSRAMP_URL']
+OPSRAMP_KEY = os.environ['OPSRAMP_KEY']
+OPSRAMP_SECRET = os.environ['OPSRAMP_SECRET']
+OPSRAMP_TENANT_ID = os.environ['OPSRAMP_TENANT_ID']
 
 
 def do_auth():
@@ -59,7 +59,7 @@ def parse_args():
 
 def do_tenant_rba_action(rba, action):
     if action == 'categories':
-        clist = rba.get_categories()
+        clist = rba.categories().get()
         print(json.dumps(clist))
     else:
         raise ValueError(rba, action)
