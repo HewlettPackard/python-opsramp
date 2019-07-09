@@ -144,14 +144,14 @@ import opsramp.rba
   - create(definition) -> creates a new *script* in this category. "definition" is a Python dict
   specifying details of the script to be created. The content of these structs is complex so helper
   functions for creating them are provided below.
-  - @staticmethod mkparameter(name, description, datatype, optional=False, default=None) -> helper function that returns a
+  - @staticmethod mkParameter(name, description, datatype, optional=False, default=None) -> helper function that returns a
   Python dict describing one parameter of a proposed new script.
-  - @staticmethod mkscript(name, description, platforms, execution\_type, payload=None, payload_file=None, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
+  - @staticmethod mkScript(name, description, platforms, execution\_type, payload=None, payload_file=None, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
   a Python dict describing a proposed new script. There are lots of optional arguments because these structs
   have variable content depending on the type of script and also some are only applicable on Linux, some only on Windows.
   The function contains `assert` statements to flag violations of (some of) those rules.
   I may add another layer of helpers later that are more specificially targetted (like "mkPythonLinuxScript" for example)
-  and implement those by calling mkscript() internally with appropriate arguments.
+  and implement those by calling mkScript() internally with appropriate arguments.
 
 import opsramp.msp
 
@@ -177,12 +177,12 @@ import opsramp.msp
   reality that does not appear to happen. Our experience has been that the client will still be listed in future
   API calls and the OpsRamp UI. It's unclear what if anything this call actually does...
   _We do not know at this time how to delete a client properly in OpsRamp._
-  - @staticmethod mkhours(day\_start=datetime.time(9, 0),
+  - @staticmethod mkHours(day\_start=datetime.time(9, 0),
                 day\_end=datetime.time(17, 0),
                 week\_start=2, week\_end=6,
                 sms\_voice\_notification=False) -> returns a dict that can be used to define
   customer working and opening hours in OpsRamp.
-  - @staticmethod mkclient(name, address, time\_zone, country, hours=None) -> returns a dict that can be
+  - @staticmethod mkClient(name, address, time\_zone, country, hours=None) -> returns a dict that can be
   used to create a new client.
 
 import opsramp.devmgmt

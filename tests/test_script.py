@@ -31,12 +31,12 @@ class StaticsTest(unittest.TestCase):
         actual = base64.b64decode(actual64)
         assert actual == expected
 
-    def test_mkattachment(self):
+    def test_mkAttachment(self):
         tvalues = {
             'name': 'whatever.sh',
             'content': 'random stuff'
         }
-        actual = Category.mkattachment(
+        actual = Category.mkAttachment(
             name=tvalues['name'],
             payload=tvalues['content']
         )
@@ -46,13 +46,13 @@ class StaticsTest(unittest.TestCase):
         }
         assert actual == expected
 
-    def test_mkparameter(self):
+    def test_mkParameter(self):
         tvalues = {
             'name': 'venue',
             'description': 'Where am I today?',
             'type': 'STRING'
         }
-        actual = Category.mkparameter(
+        actual = Category.mkParameter(
             name=tvalues['name'],
             description=tvalues['description'],
             datatype=tvalues['type']
@@ -66,8 +66,8 @@ class StaticsTest(unittest.TestCase):
         }
         assert actual == expected
 
-    def test_mkscript(self):
-        p1 = Category.mkparameter(
+    def test_mkScript(self):
+        p1 = Category.mkParameter(
             name='venue',
             description='Where am I today?',
             datatype='STRING'
@@ -80,7 +80,7 @@ class StaticsTest(unittest.TestCase):
             'payload': 'echo "hello $1"',
             'parameters': [p1]
         }
-        actual = Category.mkscript(
+        actual = Category.mkScript(
             name=tvalues['name'],
             description=tvalues['description'],
             platforms=tvalues['platforms'],

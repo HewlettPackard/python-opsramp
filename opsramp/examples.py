@@ -96,7 +96,7 @@ def main():
             resp = group.get(c['uniqueId'])
             print('createdBy', resp['createdBy'])
         print('Exercise the create-client code')
-        cdef = opsramp.msp.Clients.mkclient(
+        cdef = group.mkClient(
             name='test client 99',
             address='Death Valley',
             time_zone='America/Los_Angeles',
@@ -140,14 +140,14 @@ def main():
 
     # Create a new RBA script in this category, with one parameter. You can
     # see from the "payload" that this gets passed to the script as $1
-    p1 = opsramp.rba.Category.mkparameter(
+    p1 = cobj.mkParameter(
         name='venue',
         description='Where am I today?',
         datatype='STRING'
     )
     print('Parameter definition struct')
     print(p1)
-    s1 = opsramp.rba.Category.mkscript(
+    s1 = cobj.mkScript(
         name='Hello <venue>',
         description='Stereotypical rock star intro',
         platforms=['LINUX'],

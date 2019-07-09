@@ -55,9 +55,9 @@ class Category(ApiWrapper):
     def create(self, definition):
         return self.api.post(json=definition)
 
-    # A helper function for use with mkparameter & mkscript.
+    # A helper function for use with mkParameter & mkScript.
     @staticmethod
-    def mkattachment(name, payload):
+    def mkAttachment(name, payload):
         assert name
         assert payload
         return {
@@ -67,7 +67,7 @@ class Category(ApiWrapper):
 
     # Returns a Python dict that defines one parameter of a script.
     @staticmethod
-    def mkparameter(name, description, datatype,
+    def mkParameter(name, description, datatype,
                     optional=False, default=None):
         assert name
         assert description
@@ -86,7 +86,7 @@ class Category(ApiWrapper):
     # for use with Category.create_script() it also asserts that
     # certain rules are being complied with in the script definition.
     @staticmethod
-    def mkscript(name, description, platforms, execution_type,
+    def mkScript(name, description, platforms, execution_type,
                  payload=None,
                  payload_file=None,
                  parameters=[],
@@ -115,7 +115,7 @@ class Category(ApiWrapper):
         else:
             assert script_name
             payload_key = 'attachment'
-            payload_value = Category.mkattachment(script_name, payload)
+            payload_value = Category.mkAttachment(script_name, payload)
 
         # fields that are always present.
         retval = {

@@ -22,7 +22,7 @@ from opsramp.msp import Clients
 
 
 class ClientsTest(unittest.TestCase):
-    def test_mkhours(self):
+    def test_mkHours(self):
         tvalues = {
             'start_hour': 10,
             'start_min': 40,
@@ -32,7 +32,7 @@ class ClientsTest(unittest.TestCase):
             'week_end': 4,
             'sms_voice_notifications': True
         }
-        actual = Clients.mkhours(
+        actual = Clients.mkHours(
             day_start=datetime.time(
                 tvalues['start_hour'], tvalues['start_min']),
             day_end=datetime.time(
@@ -52,14 +52,14 @@ class ClientsTest(unittest.TestCase):
         }
         assert actual == expected
 
-    def test_mkclient(self):
+    def test_mkClient(self):
         tvalues = {
             'name': 'unit test client',
             'address': 'Springfield',
             'tz': 'America/Los_Angeles',
             'country': 'United States'
         }
-        actual = Clients.mkclient(
+        actual = Clients.mkClient(
             name=tvalues['name'],
             address=tvalues['address'],
             time_zone=tvalues['tz'],

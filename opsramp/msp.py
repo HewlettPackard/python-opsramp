@@ -59,7 +59,7 @@ class Clients(ApiWrapper):
     # Helper functions to create the complex structures that OpsRamp
     # uses to manipulate client definitions.
     @staticmethod
-    def mkhours(day_start=datetime.time(9, 0),
+    def mkHours(day_start=datetime.time(9, 0),
                 day_end=datetime.time(17, 0),
                 week_start=2, week_end=6,
                 sms_voice_notification=False):
@@ -78,7 +78,7 @@ class Clients(ApiWrapper):
     # uses to define a new client. There are lots of optional fields and
     # potential gotchas here and we guard against *some* of them.
     @staticmethod
-    def mkclient(name, address, time_zone, country,
+    def mkClient(name, address, time_zone, country,
                  hours=None):
         retval = {
             'name': name,

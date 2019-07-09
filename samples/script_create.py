@@ -21,7 +21,6 @@ import os
 import sys
 
 import opsramp.binding
-from opsramp.rba import Category
 
 
 def connect():
@@ -36,12 +35,12 @@ def create_command_script(targetcat):
     # OpsRamp will prompt for a value for this parameter each time
     # you run this script in the UI and will pass the value in as $1
     # which you can see being used in the "payload" below.
-    p1 = Category.mkparameter(
+    p1 = targetcat.mkParameter(
         name='venue',
         description='Where am I today?',
         datatype='STRING'
     )
-    s1 = Category.mkscript(
+    s1 = targetcat.mkScript(
         name='Hello <venue>',
         description='Stereotypical rock star intro',
         platforms=['LINUX'],
@@ -62,7 +61,7 @@ def create_python_script(targetcat):
 from __future__ import print_function
 print('hello world')
 ''')
-    s1 = Category.mkscript(
+    s1 = targetcat.mkScript(
         name='Python hello',
         description='Hello from Python land',
         platforms=['LINUX'],
