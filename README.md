@@ -25,13 +25,13 @@ that I ran into that are not obvious from the API docs.
 
 ### Scope
 The basic framework of this library is in place and the
-scope will increase incrementally over time. The file `examples.py`
-exercises most of the main API sections and is descibed in the Examples
-section later in this document.
+scope will increase incrementally over time. The supplied samples
+exercise most of the main API sections and are described
+later in this document.
 
-Note however that all of our wrapper objects provide an `api` property that
-returns an object that can be used to access REST URLs further down the API tree
-where we have not written a specific wrapper class here yet.
+Note however that all of our wrapper objects also provide an `api` property that
+can be used to access REST URLs further down the API tree
+where we have not written a specific wrapper class yet.
 
 While you can use these api objects to work directly with OpsRamp at a REST level,
 please consider taking the small amount of time needed to add a proper wrapper class
@@ -51,29 +51,32 @@ too. Note however that Python 2 is going end-of-life in late 2019 and we reserve
 the right to drop support for it in a future version of this module.
 
 ## Public Object Tree
+Following is a summary of the object tree currently available in this OpsRamp language binding. See
+the "Samples" section later in this document for an illustration of how to use them.
 
-Following is a summary of the object tree currently available in this OpsRamp language binding. See `examples.py`
-for an illustration of how to use them. You start by calling `opsramp.binding.connect()`
+You start by calling `opsramp.binding.connect()`
 which returns a single "OpsRamp" object to represent the entire REST API instance
 that you want to access, and make a series of calls that return progressively lower level objects to access
 lower level information from OpsRamp. For clarity in these end-user instructions I have omitted several Python
 classes that are internal implementation detail in the module and not intended for direct use by external callers.
 
-Here's an illustration of a simple use of the binding. See examples.py for a much more comprehensive one.
+Here's an illustration of a simple use of the binding. See the Samples section for more detailed ones.
 ```
 import opsramp.binding
 
 ormp = opsramp.binding.connect(OPSRAMP_URL, KEY, SECRET)
 cfg = ormp.config()
 print('alert types', cfg.get_alert_types())
+print('timezones', cfg.get_timezones())
 ```
 
 ### Class diagram
-
 This diagram is an overview of the public classes and their relationship to each other.
 The individual classes are described in detail in the following section. This diagram
 was produced using https://www.graphviz.org/ and to edit it you need to modify the
-source file ``classes.dot`` and regenerate the PNG from that.
+source file classes.dot and regenerate the PNG from that.
+
+`dot -Tpng < classes.dot > classes.png`
 
 ![OpsRamp classes](classes.png)
 
@@ -84,7 +87,6 @@ import opsramp.binding
 - def connect(url, key, secret) _returns an instance of the class Opsramp that is connected to the specified API endpoint_
   This function posts a login request to the specified endpoint URL using the key and secret given. This post
   returns an access token, which the function uses to construct an Opsramp object and returns that.
-
 - class Opsramp(url, token) _an object representing the complete API tree of one OpsRamp instance_
   - config() -> returns a GlobalConfig object that can be used to access global settings for this OpsRamp instance.
   - tenant(uuid) -> returns a Tenant object representing the API subtree for one specific tenant.
@@ -262,24 +264,33 @@ import opsramp.integrations
   an integration instance of type AZUREASM. Note that ARM and ASM integrations
   are different and each has its own helper function.
 
-## Examples
-The file `examples.py` gives a series of examples of how to use this binding and
-illustrates most of the major areas of the API that we cover.
+## Samples and examples
+The `samples` subdirectory contains a series of short Python scripts illustrating
+the use of most of the major API sections that we cover. These are supposed to be
+self-explanatory so I will not document them in detail here. If any of the samples
+are not obvious then please submit a PR that adds comments to the appropriate
+source file explaining how it works, as an aid to other users.
 
-`python3 -m opsramp.examples`
+All of the samples expect to be run as modules, like this:
+```
+ls -l samples/*.py
+python3 -m samples.timezones
+python3 -m samples.integrations
+python3 -m samples.category_list
+... etc ...
+```
 
-It depends on the existence of some environment variables to tell it which OpsRamp
-endpoint to use and the relevant creds. You can see those at the top of examples.py
-and you must set them appropriately in your environment before running it.
-
+### OpsRamp credentials
+Each of the samples depends on the existence of some environment variables to tell it which OpsRamp
+endpoint to use and the relevant creds. You can see those at the top of timezones.py
+for example, and you must set them appropriately in your environment before running it.
 ```
 export OPSRAMP_URL='https://my-org.api.try.opsramp.com'
 export OPSRAMP_TENANT_ID='client_1234'
 export OPSRAMP_KEY='whatever'
 export OPSRAMP_SECRET='whatever'
 ```
-
-The client id, key and secret are obtained from an "integration" in the OpsRamp UI.
+The tenant id, key and secret are obtained from an "integration" in the OpsRamp UI.
 You need to go to "setup", "integrations" and look for (or create) a row containing
 a custom integration that uses OAUTH2. It doesn't matter what it's called, you just
 need its id and creds to call the REST API.
@@ -290,7 +301,7 @@ The UI even gives sample curl commands at the bottom and you can cut the URL val
 out of those if it's not obvious. It's just the bit as far as opsramp.com like the
 example above.
 
-It's not obvious, but the creds you're getting here are for the entire *Tenant*
+It's not obvious, but the creds you're getting here are for *the entire Tenant*
 (aka client) and will be the same for all integrations on that Tenant. Be careful
 with them, don't put them in logs or post them online by accident.
 
@@ -300,6 +311,13 @@ of the page and then "custom". Give it a name and leave the image file field bla
 The name will appear in access logs but otherwise has no real meaning. Select OAUTH2
 as the authentication type and hit Save. This will bring you to the screen with keys
 and curl commands etc as described above.
+
+### examples.py
+The file `examples.py` collects together a series of examples and illustrates most of
+the major areas of the API that we cover. It uses the same environment variables as
+the samples to tell it which OpsRamp tenant to examine.
+
+`python3 -m opsramp.examples`
 
 ### Simple CLI prototype
 I wrote a simple Python program that uses this binding to perform some simple
@@ -324,13 +342,15 @@ $
 ```
 
 ## The API objects and direct REST calls
-
 If we don't have a class that exposes the piece of the API that you want to use, then you can use the `ApiObject` base
 class to make REST calls to that part directly while still using the correct wrapper classes for everything else.
-The general idea would be to navigate to the nearest object for which we do have a wrapper and use its `api` property
-to get an instance of the `ApiObject` class that you can then use to make direct REST calls to the tree below that point.
 
-For example:
+The general approach would be to navigate to the nearest object for which we do have a wrapper and use its `api` property
+to get an instance of the `ApiObject` class that you can then use to make direct REST calls to the tree below that point.
+This still has an advantage over raw curl or "requests" calls because the enclosing object class will have set up the
+URLs and access tokens for you.
+
+### API object example
 ```
 monitoring_api = ormp.tenant('client_9234').monitoring().api
 result = monitoring_api.get('/templates')
