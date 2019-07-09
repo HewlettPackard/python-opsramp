@@ -73,12 +73,15 @@ print('timezones', cfg.get_timezones())
 ### Class diagram
 This diagram is an overview of the public classes and their relationship to each other.
 The individual classes are described in detail in the following section. This diagram
-was produced using https://www.graphviz.org/ and to edit it you need to modify the
+was produced using [Graphviz](https://www.graphviz.org/) `apt-get install graphviz`
+and to edit it you need to modify the
 source file classes.dot and regenerate the PNG from that.
 
 `dot -Tpng < classes.dot > classes.png`
 
 ![OpsRamp classes](classes.png)
+
+I have used color to highlight the subset of classes that implement a "create" method.
 
 ### Class definitions
 
