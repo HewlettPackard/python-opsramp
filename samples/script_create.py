@@ -31,18 +31,7 @@ def connect():
     return opsramp.binding.connect(url, key, secret)
 
 
-def main():
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
-
-    if len(sys.argv) != 2:
-        print('usage: %s <category id>' % sys.argv[0])
-        exit(2)
-    category_id = int(sys.argv[1])
-
-    ormp = connect()
-    tenant = ormp.tenant(tenant_id)
-    targetcat = tenant.rba().categories().category(category_id)
-
+def create_command_script(targetcat):
     # Create a new RBA script in this category, with one parameter.
     # OpsRamp will prompt for a value for this parameter each time
     # you run this script in the UI and will pass the value in as $1
@@ -60,8 +49,51 @@ def main():
         payload='echo "hello $1"',
         parameters=[p1]
     )
-    print('creating new COMMAND script in category', category_id, '...')
+    print('creating new COMMAND script...')
+    print(s1)
     resp = targetcat.create(s1)
+    return resp
+
+
+def create_python_script(targetcat):
+    scriptfile = '/tmp/whatever-%s.py' % os.getpid()
+    with open(scriptfile, 'w') as f:
+        f.write('''#! /usr/bin/env python
+from __future__ import print_function
+print('hello world')
+''')
+    s1 = Category.mkscript(
+        name='Python hello',
+        description='Hello from Python land',
+        platforms=['LINUX'],
+        execution_type='PYTHON',
+        script_name=os.path.basename(scriptfile),
+        payload_file=scriptfile
+    )
+    print('creating new PYTHON script...')
+    print(s1)
+    resp = targetcat.create(s1)
+    os.remove(scriptfile)
+    return resp
+
+
+def main():
+    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+
+    if len(sys.argv) != 2:
+        print('usage: %s <category id>' % sys.argv[0])
+        exit(2)
+    category_id = int(sys.argv[1])
+
+    ormp = connect()
+    tenant = ormp.tenant(tenant_id)
+    targetcat = tenant.rba().categories().category(category_id)
+
+    # A "COMMAND" script is a basic oneliner that doesn't require a shell.
+    resp = create_command_script(targetcat)
+    print(resp)
+
+    resp = create_python_script(targetcat)
     print(resp)
 
 
