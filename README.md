@@ -133,7 +133,7 @@ import opsramp.rba
   - get() -> Return a list of all the script categories in this Tenant RBA subtree.
   - get(uuid) -> returns the definition of one specific category as a Python dict.
   See the OpsRamp API docs for detailed contents of these dicts.
-  - create(name, optional parent\_uuid) -> creates a new script category on this Tenant and
+  - create(name, optional parent\_uuid) -> creates a new *category* on this Tenant and
   returns its uuid. Optionally takes the uuid of a pre-existing category under which to nest the new one.
   - category(uuid) -> returns a Category object representing the API subtree for one specific category.
 
@@ -141,14 +141,17 @@ import opsramp.rba
   - get() -> returns a list of the scripts in this category.
   - get(uuid) -> returns the definition of one specific script as a Python dict.
   See the OpsRamp API docs for detailed contents of these dicts.
-  - create(definition) -> creates a new script in this category. "definition" is a Python dict
+  - create(definition) -> creates a new *script* in this category. "definition" is a Python dict
   specifying details of the script to be created. The content of these structs is complex so helper
   functions for creating them are provided below.
-  - @staticmethod mkparameter(name, description, datatype, optional, default) -> helper function that returns a
+  - @staticmethod mkparameter(name, description, datatype, optional=False, default=None) -> helper function that returns a
   Python dict describing one parameter of a proposed new script.
-  - @staticmethod mkscript(name, description, platforms, execution\_type, payload, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
-  a Python dict describing a proposed new script. Some of the parameters are only applicable on Linux,
-  some only on Windows, and the function contains `assert` statements to flag violations of those rules.
+  - @staticmethod mkscript(name, description, platforms, execution\_type, payload=None, payload_file=None, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
+  a Python dict describing a proposed new script. There are lots of optional arguments because these structs
+  have variable content depending on the type of script and also some are only applicable on Linux, some only on Windows.
+  The function contains `assert` statements to flag violations of (some of) those rules.
+  I may add another layer of helpers later that are more specificially targetted (like "mkPythonLinuxScript" for example)
+  and implement those by calling mkscript() internally with appropriate arguments.
 
 import opsramp.msp
 
