@@ -182,6 +182,13 @@ def main():
         print(direct)
         assert p == direct
 
+    print('Credential sets on tenant', TENANT_ID)
+    cs = tenant.credential_sets()
+    resp = cs.get()
+    print(resp['totalResults'], 'credential sets')
+    for i in resp['results']:
+        print(i)
+
     print('Discovery Profiles on tenant', TENANT_ID)
     if tenant.is_client():
         discovery = tenant.discovery()
