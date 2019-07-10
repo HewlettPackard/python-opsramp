@@ -50,6 +50,9 @@ class Tenant(ApiWrapper):
     def policies(self):
         return opsramp.devmgmt.Policies(self)
 
+    def discovery(self):
+        return opsramp.devmgmt.Discovery(self)
+
     def integrations(self):
         return opsramp.integrations.Integrations(self)
 
@@ -57,3 +60,6 @@ class Tenant(ApiWrapper):
         assert self.is_client()
         hdr = {'Accept': 'application/octet-stream,application/xml'}
         return self.api.get('agents/deployAgentsScript', headers=hdr)
+
+    def credential_sets(self):
+        return opsramp.devmgmt.CredentialSets(self)
