@@ -117,6 +117,8 @@ import opsramp.tenant
   - policies() -> returns a Policies object representing the device management policies on this Tenant.
   - clients() ->  returns a Clients object representing all OpsRamp clients on this Tenant. _Note that
   this is only valid for MSP-level tenants because an OpsRamp client cannot contain other clients._
+  - discovery() -> returns a Discovery object representing all OpsRamp Discovery profiles for this Tenant.
+  - credential_sets() -> returns a Credential set object representing all OpsRamp Discovery profiles for this Tenant.
 
 import opsramp.monitoring
 
@@ -203,6 +205,19 @@ import opsramp.devmgmt
   The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
   - run(uuid) -> sends a request to the OpsRamp server to run this policy now. _The actual run is asynchronous._
   - delete(uuid) -> deletes this policy from the OpsRamp server.
+
+- class Discovery() _the discovery profile subtree of one specific Tenant_
+  - search(pattern) -> returns a list of dicts, each containing a single discovery profile.
+  - create(definition) -> Creates a new discovery profile in this Tenant. "definition" is a Python dict.
+  - update(definition) -> Updates an existing discovery profile.
+  - rescan(discoveryProfileId) -> Causes a discovery profile to run.
+  - delete(discoveryProfileId) -> Deletes this discovery profile.
+
+- class CredentialSets() _the Credential set subtree of one specific Tenant_
+  - get(credentialSetId, minimal) -> Returns a Credential set definition.
+  - create(definition) -> Creates a new Credential set in this Tenant.
+  - update(credentialSetId, definition) -> Update an existing Credential set.
+  - delete(credentialSetId) -> Delete a Credential set.
 
 import opsramp.integrations
 

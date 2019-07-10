@@ -41,3 +41,44 @@ class Policies(ApiWrapper):
 
     def delete(self, uuid):
         return self.api.delete('%s' % uuid)
+
+
+class Discovery(ApiWrapper):
+    def __init__(self, parent):
+        assert parent.is_client()
+        super(Discovery, self).__init__(parent.api, 'policies/discovery')
+
+    def search(self, pattern=''):
+        return self.api.get('/search?name=%s' % pattern)
+
+    def create(self, definition):
+        return self.api.post('', json=definition)
+
+    def update(self, definition):
+        return self.api.post('', json=definition)
+
+    def rescan(self, discoveryProfileId):
+        return self.api.get('/action/scan/%s' % discoveryProfileId)
+
+    def delete(self, discoveryProfileId):
+        return self.api.delete('/%s' % discoveryProfileId)
+
+
+class CredentialSets(ApiWrapper):
+    def __init__(self, parent):
+        super(CredentialSets, self).__init__(parent.api, 'credentialSets')
+
+    def get(self, credentialSetId='', minimal=False):
+        if minimal:
+            return self.api.get('/%s/minimal' % credentialSetId)
+        else:
+            return self.api.get('/%s' % credentialSetId)
+
+    def create(self, definition):
+        return self.api.post('', json=definition)
+
+    def update(self, credentialSetId, definition):
+        return self.api.post('/%s' % credentialSetId, json=definition)
+
+    def delete(self, credentialSetId):
+        return self.api.delete('/%s' % credentialSetId)

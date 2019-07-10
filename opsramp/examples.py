@@ -182,6 +182,21 @@ def main():
         print(direct)
         assert p == direct
 
+    print('Discovery Profiles on tenant', TENANT_ID)
+    if tenant.is_client():
+        discovery = tenant.discovery()
+        profiles = discovery.get()
+        print(len(profiles), 'profiles')
+        for profile in profiles:
+            id = profile['id']
+            name = profile['name']
+            print("Profile ID: %s name %s\n" % (id, name))
+            # Get profile by ID
+            this_profile = discovery.get(id)
+            print("Profile %s: %s\n" % (id, str(this_profile)))
+            this_profile = discovery.search(name)
+            print("Profile %s: %s\n" % (name, str(this_profile)))
+
 
 if __name__ == "__main__":
     main()
