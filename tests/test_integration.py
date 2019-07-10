@@ -16,6 +16,7 @@
 
 from __future__ import print_function
 import base64
+import copy
 import unittest
 
 from opsramp.integrations import Instances
@@ -146,3 +147,36 @@ class InstancesTest(unittest.TestCase):
             }
         }
         assert actual == expected
+
+    def test_redaction(self):
+        original = {
+            'inboundConfig': {
+                'authentication': {
+                    'token': 'shakespeare'
+                }
+            },
+            'outboundConfig': {
+                'authentication': {
+                    'apiKeyPairs': [{
+                        'char1': 'juliet',
+                        'char2': 'goneril'
+                    }]
+                }
+            }
+        }
+        # make a copy and check that it really is a copy.
+        tvalues = copy.deepcopy(original)
+        assert tvalues is not original
+        assert tvalues == original
+        # the redact function should modify the dict in place, not copy it.
+        result = Instances.redact_response(tvalues)
+        assert result is tvalues
+        # check the redaction did what we expected.
+        original['inboundConfig']['authentication'][
+            'token'] = 'REDACTED'
+        original['outboundConfig']['authentication'][
+            'apiKeyPairs'][0]['char1'] = 'REDACTED'
+        original['outboundConfig']['authentication'][
+            'apiKeyPairs'][0]['char2'] = 'REDACTED'
+        assert result is not original
+        assert result == original

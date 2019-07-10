@@ -40,6 +40,7 @@ def main():
     found = group.search()
     for idata in found['results']:
         in_auth, out_auth = group.auth_type(idata)
+        print(idata)
         print(
             idata['id'],
             in_auth, out_auth,
