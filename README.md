@@ -295,9 +295,10 @@ source file explaining how it works, as an aid to other users.
 All of the samples expect to be run as modules, like this:
 ```
 ls -l samples/*.py
-python3 -m samples.timezones
-python3 -m samples.integrations
+python3 -m samples.timezone_list
+python3 -m samples.integration_list
 python3 -m samples.category_list
+python3 -m samples.client_list
 ... etc ...
 ```
 
