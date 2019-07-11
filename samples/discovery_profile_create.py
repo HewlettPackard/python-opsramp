@@ -39,6 +39,7 @@ def main():
 
     ormp = connect()
     tnt = ormp.tenant(tenant_id)
+    discovery = tnt.discovery()
 
     # Create new discovery profile...
     jdata = [{
@@ -72,7 +73,7 @@ def main():
         }
     }]
 
-    resp = tnt.discovery().create(jdata)
+    resp = discovery.create(jdata)
     print(resp)
 
 
