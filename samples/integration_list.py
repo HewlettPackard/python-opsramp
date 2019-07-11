@@ -40,12 +40,11 @@ def main():
     found = group.search()
     for idata in found['results']:
         in_auth, out_auth = group.auth_type(idata)
-        print(idata)
         print(
             idata['id'],
-            in_auth, out_auth,
-            idata['integration']['id'],
-            '\"%s\"' % idata.get('displayName', '<unnamed>')
+            'type', idata['integration']['id'],
+            'in_auth', in_auth, 'out_auth', out_auth,
+            'name \"%s\"' % idata.get('displayName', '<unnamed>')
         )
 
 
