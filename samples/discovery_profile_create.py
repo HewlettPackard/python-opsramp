@@ -38,11 +38,10 @@ def main():
     tenant_id = os.environ['OPSRAMP_TENANT_ID']
 
     ormp = connect()
-    tenant = ormp.tenant(tenant_id)
-    discovery = tenant.discovery()
+    tnt = ormp.tenant(tenant_id)
 
-    # Create new discovery profile..
-    json = [{
+    # Create new discovery profile...
+    jdata = [{
         'name': 'whatever',
         'credential': {
             'credentialType': 'Azure',
@@ -73,8 +72,8 @@ def main():
         }
     }]
 
-    res = discovery.create(json)
-    print('res: %s\n' % str(res))
+    resp = tnt.discovery().create(jdata)
+    print(resp)
 
 
 if __name__ == "__main__":

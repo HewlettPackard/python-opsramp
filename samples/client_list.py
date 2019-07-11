@@ -39,8 +39,8 @@ def main():
         print(partner_id, 'is not a partner-level tenant')
         exit(2)
 
-    clients = partner.clients()
-    clist = clients.get()
+    collection = partner.clients()
+    clist = collection.get()
     print('[')
     for cdata in clist:
         print('  ', json.dumps(cdata))
