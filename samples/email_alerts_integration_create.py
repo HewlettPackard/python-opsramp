@@ -18,7 +18,6 @@
 
 from __future__ import print_function
 import os
-import sys
 
 import opsramp.binding
 
@@ -41,11 +40,11 @@ def main():
     jdata = {
         'displayName': 'Test Email Alerts integration',
         'emailProps': [{
-	    'name': 'logz.io email alert',
+            'name': 'logz.io email alert',
             'identifier': '^\\[Alert\\]',
             'identifierSource': 'EMAIL_SUBJECT',
             'properties': [{
-		'name': 'Alert State',
+                'name': 'Alert State',
                 'defaultValue': 'OK',
                 'condition': {
                     'contentSource': 'EMAIL_SUBJECT',
@@ -58,32 +57,32 @@ def main():
                         'attrValue': 'Critical',
                         'thirdPartyAttrValue': 'Severe'
                     },
-                    {
+                        {
                         'attrValue': 'Warning',
                         'thirdPartyAttrValue': 'High'
                     },
-                    {
+                        {
                         'attrValue': 'Observed',
                         'thirdPartyAttrValue': 'Medium'
                     },
-                    {
+                        {
                         'attrValue': 'Info',
                         'thirdPartyAttrValue': 'Low'
                     },
-                    {
+                        {
                         'attrValue': 'Ok',
                         'thirdPartyAttrValue': 'Info'
                     }]
                 }
             },
-            {
+                {
                 'name': 'Service Name',
                 'defaultValue': 'whatever',
                 'condition': {
                     'contentSource': 'DEFAULT_VALUE'
                 }
             },
-            {
+                {
                 'name': 'Device Host Name',
                 'defaultValue': 'whatever',
                 'condition': {
