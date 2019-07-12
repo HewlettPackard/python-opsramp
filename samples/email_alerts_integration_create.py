@@ -41,7 +41,7 @@ def main():
     jdata = {
         'displayName': 'Test Email Alerts integration',
         'emailProps': [{
-	    'name': 'logz.io eamil alert',
+	    'name': 'logz.io email alert',
             'identifier': '^\\[Alert\\]',
             'identifierSource': 'EMAIL_SUBJECT',
             'properties': [{
