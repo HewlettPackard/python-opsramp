@@ -20,6 +20,8 @@ from __future__ import print_function
 import os
 
 import opsramp.binding
+import opsramp.integrations
+
 
 subscription = os.environ['AZURE_SUBSCRIPTION']
 azure_tenant = os.environ['AZURE_TENANT_ID']
@@ -42,16 +44,15 @@ def main():
     discovery = tnt.discovery()
 
     # Create new discovery profile...
+    creds = opsramp.Integrations.mkAzureARM(
+        arm_subscription_id=subscription,
+        arm_tenant_id=azure_tenant,
+        arm_client_id=azure_client,
+        arm_secret_key=azure_secret
+    )
     jdata = [{
-        'name': 'whatever',
-        'credential': {
-            'credentialType': 'Azure',
-            'AzureType': 'ARM',
-            'SubscriptionId': subscription,
-            'TenantId': azure_tenant,
-            'ClientID': azure_client,
-            'SecretKey': azure_secret
-        },
+        'name': 'Azure ' + subscription,
+        'credential': creds,
         'policy': {
             'name': 'whatever',
             'resourceType': 'ALL',
