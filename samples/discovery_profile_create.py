@@ -58,7 +58,7 @@ def main():
             'resourceType': 'ALL',
             'entityType': 'ALL',
             'rules': [{
-                'filterType': 'ANY_DEVICE'
+                'filterType': 'ANY_CLOUD_RESOURCE'
             }],
             'actions': [{
                 'action': 'MANAGE DEVICE',
