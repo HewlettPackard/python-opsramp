@@ -18,6 +18,7 @@ from __future__ import print_function
 import unittest
 import json
 from requests import codes as http_status
+import requests_mock
 
 import opsramp.binding
 
@@ -48,6 +49,35 @@ class ApiOjectTest(unittest.TestCase):
             self.fake_auth.copy()
         )
         assert 'ApiObject' in str(self.ao)
+        self.awrapper = opsramp.binding.ApiWrapper(self.ao, 'whatevs')
+        assert 'ApiWrapper' in str(self.awrapper)
+
+    def test_compute_url(self):
+        suffix = 'unit/test/value'
+        expected = self.ao.compute_url() + '/' + suffix
+        assert self.ao.compute_url(suffix) == expected
+
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the PathTracker unit tests.
+    def test_cd(self):
+        suffix = 'unit/test/cd'
+        expected = self.ao.compute_url() + '/' + suffix
+        actual = self.ao.cd(suffix)
+        assert actual == expected
+        assert self.ao.compute_url() == expected
+
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the PathTracker unit tests.
+    def test_pushpopd(self):
+        suffix = 'unit/test/pushd'
+        base = self.ao.compute_url()
+        expected = base + '/' + suffix
+        actual = self.ao.pushd(suffix)
+        assert actual == expected
+        assert self.ao.compute_url() == expected
+        actual = self.ao.popd()
+        assert actual == base
+        assert self.ao.compute_url() == base
 
     def test_headers(self):
         expected = self.fake_auth.copy()
@@ -91,3 +121,45 @@ class ApiOjectTest(unittest.TestCase):
         fake_resp.status_code = http_status.BAD_REQUEST
         with self.assertRaises(RuntimeError):
             self.ao.process_result(self.fake_url, fake_resp)
+
+    def test_get(self):
+        with requests_mock.Mocker() as m:
+            url = self.ao.compute_url()
+            expected = 'unit test get result'
+            m.get(url, text=expected)
+            actual = self.ao.get()
+            assert actual == expected
+
+    def test_put(self):
+        with requests_mock.Mocker() as m:
+            url = self.ao.compute_url()
+            expected = 'unit test put result'
+            m.put(url, text=expected)
+            actual = self.ao.put()
+            assert actual == expected
+
+    def test_post(self):
+        with requests_mock.Mocker() as m:
+            url = self.ao.compute_url()
+            expected = 'unit test post result'
+            m.post(url, text=expected)
+            actual = self.ao.post()
+            assert actual == expected
+
+    def test_delete(self):
+        with requests_mock.Mocker() as m:
+            url = self.ao.compute_url()
+            expected = 'unit test delete result'
+            m.delete(url, text=expected)
+            actual = self.ao.delete()
+            assert actual == expected
+
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the ApiObject unit tests.
+    def test_wrapped_get(self):
+        with requests_mock.Mocker() as m:
+            url = self.awrapper.api.compute_url()
+            expected = 'unit test wrapped get result'
+            m.get(url, text=expected)
+            actual = self.awrapper.get()
+            assert actual == expected

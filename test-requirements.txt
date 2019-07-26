@@ -16,3 +16,4 @@ flake8
 coverage
 pytest
 mock
+requests_mock
