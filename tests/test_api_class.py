@@ -57,9 +57,8 @@ class ApiOjectTest(unittest.TestCase):
         expected = self.ao.compute_url() + '/' + suffix
         assert self.ao.compute_url(suffix) == expected
 
-    # This does not need to test lots of use cases because "ao"
-    # is an instance of the ApiObject class which has its own
-    # unit tests that exercise all the variants it supports.
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the PathTracker unit tests.
     def test_cd(self):
         suffix = 'unit/test/cd'
         expected = self.ao.compute_url() + '/' + suffix
@@ -67,9 +66,8 @@ class ApiOjectTest(unittest.TestCase):
         assert actual == expected
         assert self.ao.compute_url() == expected
 
-    # This does not need to test lots of use cases because "ao"
-    # is an instance of the ApiObject class which has its own
-    # unit tests that exercise all the variants it supports.
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the PathTracker unit tests.
     def test_pushpopd(self):
         suffix = 'unit/test/pushd'
         base = self.ao.compute_url()
@@ -156,6 +154,8 @@ class ApiOjectTest(unittest.TestCase):
             actual = self.ao.delete()
             assert actual == expected
 
+    # We're not testing an exhaustive set of suffix patterns here because
+    # that is already being done by the ApiObject unit tests.
     def test_wrapped_get(self):
         with requests_mock.Mocker() as m:
             url = self.awrapper.api.compute_url()
