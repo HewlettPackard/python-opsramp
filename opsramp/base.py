@@ -103,20 +103,23 @@ class ApiObject(object):
         return new1
 
     def cd(self, path):
-        return self.tracker.cd(path)
+        self.tracker.cd(path)
+        return self.compute_url()
 
     def pushd(self, path):
-        return self.tracker.pushd(path)
+        self.tracker.pushd(path)
+        return self.compute_url()
 
     def popd(self):
-        return self.tracker.popd()
+        self.tracker.popd()
+        return self.compute_url()
 
     def chroot(self, suffix=''):
         suffix = self.tracker.fullpath(suffix)
         if suffix:
             self.baseurl += suffix
             self.tracker.reset()
-        return ''
+        return self.compute_url()
 
     def compute_url(self, suffix=''):
         retval = self.baseurl
