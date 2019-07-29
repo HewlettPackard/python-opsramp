@@ -222,3 +222,32 @@ class Instances(ApiWrapper):
             }
         }
         return retval
+
+    @staticmethod
+    def mkBaseNotifier(api_type, base_uri,
+                       auth_type='OAUTH2',
+                       grant_type=None,
+                       access_token_uri=None,
+                       api_key=None,
+                       api_secret=None,
+                       user_name=None,
+                       password=None):
+        assert api_type in ('REST API', 'SOAP API')
+        assert base_uri
+        assert auth_type in ('NONE', 'BASIC', 'OAUTH2')
+        retval = {
+            'type': api_type,
+            'baseURI': base_uri,
+            'authType': auth_type
+        }
+        if auth_type != 'NONE':
+            retval['grantType'] = grant_type
+            if auth_type == 'OAUTH2':
+                assert grant_type in ('CLIENT_CREDENTIALS', 'PASSWORD')
+                retval['accessTokenURL'] = access_token_uri
+                retval['apiKey'] = api_key
+                retval['apiSecret'] = api_secret
+            if grant_type == 'PASSWORD':
+                retval['userName'] = user_name
+                retval['password'] = password
+        return retval
