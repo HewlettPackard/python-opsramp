@@ -258,3 +258,12 @@ class Instances(ApiWrapper):
                 retval['userName'] = user_name
                 retval['password'] = password
         return retval
+
+    # mkValueMap(('attrValue', 'tenantAttrValue'),
+    #            (('client_113', '22cdbc5bb401d737b088c9'),
+    #             ('client_843', '66cdbc5bb401d737b088c9'))
+    @staticmethod
+    def mkValueMap(labels, value_pairs):
+        ormpname, othername = labels
+        retval = [{ormpname: x[0], othername: x[1]} for x in value_pairs]
+        return retval
