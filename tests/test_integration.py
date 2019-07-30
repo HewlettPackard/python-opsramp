@@ -148,6 +148,87 @@ class InstancesTest(unittest.TestCase):
         }
         assert actual == expected
 
+    def test_valuemap(self):
+        expected = [
+            {
+                'attrValue': 'client_113',
+                'tenantAttrValue': '22cdbc5bb401d737b088c9'
+            },
+            {
+                'attrValue': 'client_843',
+                'tenantAttrValue': '66cdbc5bb401d737b088c9'
+            }
+        ]
+        actual = Instances.mkValueMap(
+            ('attrValue', 'tenantAttrValue'),
+            (('client_113', '22cdbc5bb401d737b088c9'),
+             ('client_843', '66cdbc5bb401d737b088c9'))
+        )
+        assert actual == expected
+
+        expected = [
+            {
+                'attrValue': 'Fido',
+                'thirdPartyAttrValue': 'His Royal Fidoness'
+            },
+            {
+                'attrValue': 'brown',
+                'thirdPartyAttrValue': 'Autumn Sunset'
+            }
+        ]
+        actual = Instances.mkValueMap(
+            ('attrValue', 'thirdPartyAttrValue'),
+            (('Fido', 'His Royal Fidoness'),
+             ('brown', 'Autumn Sunset'))
+        )
+        assert actual == expected
+
+    def test_basenotifier(self):
+        expected = {
+            'type': 'REST_API',
+            'baseURI': 'www.example.com',
+            'authType': 'OAUTH2',
+            'grantType': 'CLIENT_CREDENTIALS',
+            'accessTokenURI': 'www.example.com/creds',
+            'apiKey': '6h67PAAFscVPMwhQZFcshpcqN5b6pyU9',
+            'apiSecret': 'totalandcompletenonsense'
+        }
+        actual = Instances.mkBaseNotifier(
+            expected['type'], expected['baseURI'],
+            access_token_uri=expected['accessTokenURI'],
+            api_key=expected['apiKey'],
+            api_secret=expected['apiSecret']
+        )
+        assert actual == expected
+
+        expected = {
+            'type': 'SOAP_API',
+            'baseURI': 'www.example.com',
+            'authType': 'NONE'
+        }
+        actual = Instances.mkBaseNotifier(
+            expected['type'], expected['baseURI'],
+            auth_type=expected['authType']
+        )
+        assert actual == expected
+
+        expected = {
+            'type': 'REST_API',
+            'baseURI': 'www.example.com/whatevs',
+            'authType': 'BASIC',
+            'grantType': 'PASSWORD',
+            'userName': 'elvis',
+            'password': 'graceland'
+        }
+        actual = Instances.mkBaseNotifier(
+            expected['type'], expected['baseURI'],
+            auth_type=expected['authType'],
+            grant_type=expected['grantType'],
+            user_name=expected['userName'],
+            password=expected['password']
+        )
+        assert actual == expected
+
     def test_redaction(self):
         original = {
             'inboundConfig': {
