@@ -226,13 +226,13 @@ class Instances(ApiWrapper):
     @staticmethod
     def mkBaseNotifier(api_type, base_uri,
                        auth_type='OAUTH2',
-                       grant_type=None,
+                       grant_type='CLIENT_CREDENTIALS',
                        access_token_uri=None,
                        api_key=None,
                        api_secret=None,
                        user_name=None,
                        password=None):
-        assert api_type in ('REST API', 'SOAP API')
+        assert api_type in ('REST_API', 'SOAP_API')
         assert base_uri
         assert auth_type in ('NONE', 'BASIC', 'OAUTH2')
         retval = {
@@ -244,10 +244,17 @@ class Instances(ApiWrapper):
             retval['grantType'] = grant_type
             if auth_type == 'OAUTH2':
                 assert grant_type in ('CLIENT_CREDENTIALS', 'PASSWORD')
-                retval['accessTokenURL'] = access_token_uri
+                # empty string is ok but omitting these isn't.
+                assert access_token_uri is not None
+                assert api_key is not None
+                assert api_secret is not None
+                retval['accessTokenURI'] = access_token_uri
                 retval['apiKey'] = api_key
                 retval['apiSecret'] = api_secret
             if grant_type == 'PASSWORD':
+                # empty string is ok but omitting these isn't.
+                assert user_name is not None
+                assert password is not None
                 retval['userName'] = user_name
                 retval['password'] = password
         return retval
