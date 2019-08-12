@@ -1,3 +1,11 @@
+#!/bin/bash
+#
+# runtests.sh
+# This script runs the actual test commands and assumes that the required
+# packages are already installed. Installation of the packages is done
+# outside of this script using pip install -r test-requirements.txt and
+# that command is already folded into our tox.ini
+#
 # (c) Copyright 2019 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +20,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[tox]
-envlist = py27,py3
-
-[testenv]
-deps = -rrequirements.txt
-       -rtest-requirements.txt
-
-commands =
-    ./runtests.sh
+flake8 --ignore=none
+coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
+coverage html
+coverage xml -o ./cover/coverage.xml
+coverage report

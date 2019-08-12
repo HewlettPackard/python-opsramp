@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[tox]
-envlist = py27,py3
-
-[testenv]
-deps = -rrequirements.txt
-       -rtest-requirements.txt
-
-commands =
-    ./runtests.sh
+language: python
+install:
+  - pip install -r requirements.txt -r test-requirements.txt
+python:
+  - "2.7"
+  - "3.6"
+script: ./runtests.sh
