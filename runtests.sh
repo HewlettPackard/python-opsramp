@@ -26,5 +26,5 @@ coverage html
 coverage xml -o ./cover/coverage.xml
 coverage report
 if [ -n "${TRAVIS_JOB_ID:-}" ]; then
-  coveralls
+  coveralls || :
 fi
