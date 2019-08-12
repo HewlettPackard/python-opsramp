@@ -25,6 +25,8 @@ coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
 coverage html
 coverage xml -o ./cover/coverage.xml
 coverage report
-if [ -n "${COVERALLS_REPO_TOKEN:-}" ]; then
-  coveralls
-fi
+env | sort
+coveralls
+#if [ -n "${COVERALLS_REPO_TOKEN:-}" ]; then
+#  coveralls
+#fi
