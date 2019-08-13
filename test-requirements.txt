@@ -17,4 +17,3 @@ coverage
 pytest
 mock
 requests_mock
-coveralls

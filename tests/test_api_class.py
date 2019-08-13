@@ -36,7 +36,7 @@ class FakeResp(object):
         return json.loads(self.content)
 
 
-class ApiOjectTest(unittest.TestCase):
+class ApiObjectTest(unittest.TestCase):
     def setUp(self):
         self.fake_url = 'http://api.example.com'
         self.fake_token = 'ffffffffffffffff'
@@ -155,11 +155,17 @@ class ApiOjectTest(unittest.TestCase):
             assert actual == expected
 
     # We're not testing an exhaustive set of suffix patterns here because
-    # that is already being done by the ApiObject unit tests.
+    # that is already being done by the ApiObject unit tests. Just
+    # get() and get(something) is enough.
     def test_wrapped_get(self):
         with requests_mock.Mocker() as m:
             url = self.awrapper.api.compute_url()
             expected = 'unit test wrapped get result'
             m.get(url, text=expected)
             actual = self.awrapper.get()
+            assert actual == expected
+            suffix = 'some/where/random'
+            url = self.awrapper.api.compute_url(suffix)
+            m.get(url, text=expected)
+            actual = self.awrapper.get(suffix)
             assert actual == expected
