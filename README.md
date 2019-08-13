@@ -16,6 +16,8 @@ limitations under the License.
 # python-opsramp
 A Python language binding for the OpsRamp API
 
+CI status: [![CircleCI](https://circleci.com/gh/HewlettPackard/python-opsramp.svg?style=svg)](https://circleci.com/gh/HewlettPackard/python-opsramp)
+
 ## About
 This directory tree contains a Python module that provides a convenient way to
 access the OpsRamp REST API programmatically. The OpsRamp API documentation is
