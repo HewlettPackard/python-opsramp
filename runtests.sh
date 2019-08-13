@@ -20,7 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-flake8 --ignore=none
+flake8 --ignore=none --exclude=venv,.git,__pycache__,.tox,.eggs,*.egg
 coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
 coverage html
 coverage xml -o ./cover/coverage.xml
