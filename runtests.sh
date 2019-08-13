@@ -25,6 +25,3 @@ coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
 coverage html
 coverage xml -o ./cover/coverage.xml
 coverage report
-if [ -n "${TRAVIS_JOB_ID:-}" ]; then
-  coveralls || :
-fi
