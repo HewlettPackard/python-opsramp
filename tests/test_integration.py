@@ -39,13 +39,13 @@ class InstancesTest(unittest.TestCase):
 
     def test_itypes(self):
         group = self.integs.itypes()
-        assert group
+        pattern = 'whatever'
+        url = group.api.compute_url('search?%s' % pattern)
         expected = ['unit', 'test', 'list']
-        assert expected
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?whatever')
+            assert expected
             m.get(url, json=expected)
-            actual = group.search('whatever')
+            actual = group.search(pattern)
         assert actual == expected
         # check the compatibility function would return the
         # same type of object, so there's no need to repeat
@@ -54,18 +54,86 @@ class InstancesTest(unittest.TestCase):
 
     def test_instances(self):
         group = self.integs.instances()
-        assert group
+        pattern = 'whatever'
+        url = group.api.compute_url('search?%s' % pattern)
         expected = ['unit', 'test', 'list']
-        assert expected
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?whatever')
+            assert expected
             m.get(url, json=expected)
-            actual = group.search('whatever')
+            actual = group.search(pattern)
         assert actual == expected
         # check the compatibility function would return the
         # same type of object, so there's no need to repeat
         # all of the tests for it.
         assert isinstance(self.integs.installed(), type(group))
+
+    def test_instance_create(self):
+        group = self.integs.instances()
+        name = 'unit-test-integration'
+        url = group.creator_api.compute_url(name)
+        expected = {'unit': 'test'}
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.post(url, json=expected)
+            actual = group.create(type_name=name, definition=expected)
+        assert actual == expected
+
+    def test_instance_update(self):
+        group = self.integs.instances()
+        newid = 123456
+        url = group.api.compute_url(newid)
+        expected = {'unit': 'test'}
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.post(url, json=expected)
+            actual = group.update(uuid=newid, definition=expected)
+        assert actual == expected
+
+    def test_instance_enable(self):
+        group = self.integs.instances()
+        thisid = 789012
+        url = group.api.compute_url('%s/enable' % thisid)
+        expected = {'id': thisid}
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.post(url, json=expected)
+            actual = group.enable(uuid=thisid)
+        assert actual == expected
+
+    def test_instance_disable(self):
+        group = self.integs.instances()
+        thisid = 345678
+        url = group.api.compute_url('%s/disable' % thisid)
+        expected = {'id': thisid}
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.post(url, json=expected)
+            actual = group.disable(uuid=thisid)
+        assert actual == expected
+
+    def test_instance_notifier(self):
+        group = self.integs.instances()
+        thisid = 901234
+        url = group.api.compute_url('%s/notifier' % thisid)
+        expected = {'id': thisid}
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.post(url, json=expected)
+            actual = group.notifier(uuid=thisid, definition=expected)
+        assert actual == expected
+
+    def test_instance_auth_type(self):
+        group = self.integs.instances()
+        thisid = 567890
+        url = group.api.compute_url('%s/inbound/authentication' % thisid)
+        with requests_mock.Mocker() as m:
+            for key in 'OAUTH2', 'WEBHOOK', 'BASIC':
+                expected = {'type': key}
+                m.post(url, json=expected)
+                actual = group.set_auth_type(uuid=thisid, auth_type=key)
+                assert actual == expected
+            with self.assertRaises(AssertionError):
+                group.set_auth_type(uuid=thisid, auth_type='unit test value')
 
     def base_display_name(self, fn):
         with self.assertRaises(AssertionError):
