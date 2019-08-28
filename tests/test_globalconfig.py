@@ -16,7 +16,6 @@
 
 from __future__ import print_function
 import unittest
-import json
 import requests_mock
 
 import opsramp.binding
@@ -30,20 +29,43 @@ class GlobalConfigTest(unittest.TestCase):
         self.gconfig = self.ormp.config()
         assert 'GlobalConfig' in str(self.gconfig)
 
-    def test_urls(self):
-        for fn, suffix in (
-            (self.gconfig.get_alert_types, '/alertTypes'),
-            (self.gconfig.get_countries, '/cfg/countries'),
-            (self.gconfig.get_timezones, '/cfg/timezones'),
-            (self.gconfig.get_alert_technologies, '/cfg/alertTechnologies'),
-            (self.gconfig.get_channels, '/cfg/tenants/channels'),
-            (self.gconfig.get_nocs, '/cfg/tenants/nocs'),
-            (self.gconfig.get_device_types, '/cfg/devices/types')
-        ):
+    def test_simple_urls(self):
+        fnmap = {
+            '/alertTypes': self.gconfig.get_alert_types,
+            '/cfg/countries': self.gconfig.get_countries,
+            '/cfg/timezones': self.gconfig.get_timezones,
+            '/cfg/alertTechnologies': self.gconfig.get_alert_technologies,
+            '/cfg/tenants/channels': self.gconfig.get_channels,
+            '/cfg/devices/types': self.gconfig.get_device_types
+        }
+        for suffix, fn in fnmap.items():
             with requests_mock.Mocker() as m:
                 url = self.ormp.api.compute_url(suffix)
                 # all these methods return lists so create a nonsense one.
-                expected = ['unit', 'test'].extend(suffix.split('/'))
-                m.get(url, text=json.dumps(expected))
+                expected = ['unit', 'test']
+                expected.extend(suffix.split('/'))
+                assert expected
+                m.get(url, json=expected)
+                actual = fn()
+                assert actual == expected
+
+    # Test the bizarre special cases around NOT FOUND that are
+    # documented in the definitiom of get_nocs.
+    def test_irregular_urls(self):
+        fnmap = {
+            '/cfg/tenants/nocs': self.gconfig.get_nocs
+        }
+        for suffix, fn in fnmap.items():
+            with requests_mock.Mocker() as m:
+                # rig the mock to raise an exception on "get"
+                url = self.ormp.api.compute_url(suffix)
+                expected = 'nonsense unit test value'
+                for eclass in (RuntimeError, AssertionError, Exception):
+                    m.get(url, exc=eclass('omg the sky is falling'))
+                    with self.assertRaises(eclass):
+                        actual = fn()
+                # now try the special case exception that fn() *should* handle.
+                expected = []
+                m.get(url, exc=RuntimeError('"code":"0005" rien de rien'))
                 actual = fn()
                 assert actual == expected
