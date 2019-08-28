@@ -18,11 +18,55 @@ from __future__ import print_function
 import base64
 import copy
 import unittest
+import requests_mock
 
+import opsramp.binding
 from opsramp.integrations import Instances
 
 
 class InstancesTest(unittest.TestCase):
+    def setUp(self):
+        fake_url = 'http://api.example.com'
+        fake_token = 'unit-test-fake-token'
+        self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
+
+        self.fake_client_id = 'client_for_unit_test'
+        self.client = self.ormp.tenant(self.fake_client_id)
+        assert self.client.is_client()
+
+        self.integs = self.client.integrations()
+        assert 'Integrations' in str(self.integs)
+
+    def test_itypes(self):
+        group = self.integs.itypes()
+        assert group
+        expected = ['unit', 'test', 'list']
+        assert expected
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('search?whatever')
+            m.get(url, json=expected)
+            actual = group.search('whatever')
+        assert actual == expected
+        # check the compatibility function would return the
+        # same type of object, so there's no need to repeat
+        # all of the tests for it.
+        assert isinstance(self.integs.available(), type(group))
+
+    def test_instances(self):
+        group = self.integs.instances()
+        assert group
+        expected = ['unit', 'test', 'list']
+        assert expected
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('search?whatever')
+            m.get(url, json=expected)
+            actual = group.search('whatever')
+        assert actual == expected
+        # check the compatibility function would return the
+        # same type of object, so there's no need to repeat
+        # all of the tests for it.
+        assert isinstance(self.integs.installed(), type(group))
+
     def base_display_name(self, fn):
         with self.assertRaises(AssertionError):
             fn(display_name=None)
