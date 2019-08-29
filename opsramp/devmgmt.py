@@ -57,28 +57,28 @@ class Discovery(ApiWrapper):
     def update(self, definition):
         return self.api.post('', json=definition)
 
-    def rescan(self, discoveryProfileId):
-        return self.api.get('/action/scan/%s' % discoveryProfileId)
+    def rescan(self, uuid):
+        return self.api.get('/action/scan/%s' % uuid)
 
-    def delete(self, discoveryProfileId):
-        return self.api.delete('/%s' % discoveryProfileId)
+    def delete(self, uuid):
+        return self.api.delete('/%s' % uuid)
 
 
 class CredentialSets(ApiWrapper):
     def __init__(self, parent):
         super(CredentialSets, self).__init__(parent.api, 'credentialSets')
 
-    def get(self, credentialSetId='', minimal=False):
+    def get(self, uuid='', minimal=False):
         if minimal:
-            return self.api.get('/%s/minimal' % credentialSetId)
+            return self.api.get('/%s/minimal' % uuid)
         else:
-            return self.api.get('/%s' % credentialSetId)
+            return self.api.get('/%s' % uuid)
 
     def create(self, definition):
         return self.api.post('', json=definition)
 
-    def update(self, credentialSetId, definition):
-        return self.api.post('/%s' % credentialSetId, json=definition)
+    def update(self, uuid, definition):
+        return self.api.post('/%s' % uuid, json=definition)
 
-    def delete(self, credentialSetId):
-        return self.api.delete('/%s' % credentialSetId)
+    def delete(self, uuid):
+        return self.api.delete('/%s' % uuid)
