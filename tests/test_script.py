@@ -17,9 +17,11 @@
 from __future__ import print_function
 import unittest
 import base64
+import requests_mock
 
 from opsramp.base import Helpers
 from opsramp.rba import Category
+import opsramp.binding
 
 
 class StaticsTest(unittest.TestCase):
@@ -97,3 +99,48 @@ class StaticsTest(unittest.TestCase):
             'parameters': tvalues['parameters']
         }
         assert actual == expected
+
+
+class ApiTest(unittest.TestCase):
+    def setUp(self):
+        fake_url = 'https://api.example.com'
+        fake_token = 'unit-test-fake-token'
+        self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
+
+        self.fake_client_id = 'client_for_unit_test'
+        self.client = self.ormp.tenant(self.fake_client_id)
+        assert self.client.is_client()
+
+        self.rba = self.client.rba()
+        assert 'Rba' in str(self.rba)
+
+    def test_categories(self):
+        group = self.rba.categories()
+        assert group
+        expected = ['unit', 'test', 'list']
+        assert expected
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url()
+            m.post(url, json=expected)
+            actual = group.create(
+                name='unit-test-category-A'
+            )
+            assert actual == expected
+            actual = group.create(
+                name='unit-test-category-B',
+                parent_uuid=123456
+            )
+            assert actual == expected
+
+    def test_one_category(self):
+        this1 = self.rba.categories().category('unit-test-1')
+        assert this1
+        expected = {'unit': 'test'}
+        assert expected
+        with requests_mock.Mocker() as m:
+            url = this1.api.compute_url()
+            m.post(url, json=expected)
+            actual = this1.create(
+                definition=expected
+            )
+            assert actual == expected
