@@ -48,12 +48,25 @@ class StaticsTest(unittest.TestCase):
         }
         assert actual == expected
 
-    def test_mkParameter(self):
+    def test_mkBadParameter(self):
+        with self.assertRaises(AssertionError):
+            Category.mkParameter(
+                name='pname', description='pdesc', datatype='STRING',
+                optional=True
+                # deliberately missing default value
+            )
+
+    def test_mkGoodParameter(self):
         tvalues = {
             'name': 'venue',
             'description': 'Where am I today?',
             'type': 'STRING'
         }
+        actual = Category.mkParameter(
+            name=tvalues['name'],
+            description=tvalues['description'],
+            datatype=tvalues['type']
+        )
         actual = Category.mkParameter(
             name=tvalues['name'],
             description=tvalues['description'],
@@ -68,7 +81,22 @@ class StaticsTest(unittest.TestCase):
         }
         assert actual == expected
 
-    def test_mkScript(self):
+    def test_mkBadScript(self):
+        with self.assertRaises(AssertionError):
+            Category.mkScript(
+                name='sname', description='pdesc', platforms=['LINUX'],
+                execution_type='Firing squad is not valid',
+                payload_file='README.md'
+            )
+        with self.assertRaises(AssertionError):
+            Category.mkScript(
+                name='sname', description='pdesc', platforms=['LINUX'],
+                execution_type='COMMAND',
+                payload='if there is a payload',
+                payload_file='cannot have payload_file as well'
+            )
+
+    def test_mkGoodScript(self):
         p1 = Category.mkParameter(
             name='venue',
             description='Where am I today?',
