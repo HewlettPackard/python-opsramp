@@ -27,6 +27,7 @@ import opsramp.monitoring
 import opsramp.msp
 import opsramp.devmgmt
 import opsramp.integrations
+import opsramp.roles
 
 
 class Tenant(ApiWrapper):
@@ -63,3 +64,6 @@ class Tenant(ApiWrapper):
 
     def credential_sets(self):
         return opsramp.devmgmt.CredentialSets(self)
+
+    def roles(self):
+        return opsramp.roles.Roles(self)

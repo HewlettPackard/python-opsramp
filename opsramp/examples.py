@@ -48,6 +48,13 @@ def main():
     # Focus on a specific tenant.
     tenant = ormp.tenant(TENANT_ID)
 
+    print('List the RBAC roles on tenant', TENANT_ID)
+    group = tenant.roles()
+    found = group.search()
+    print(found['totalResults'], 'RBAC roles')
+    for i in found['results']:
+        print(i)
+
     print('List the integrations on tenant', TENANT_ID)
     integs = tenant.integrations()
     group = integs.itypes()
