@@ -44,9 +44,14 @@ class TenantTest(unittest.TestCase):
             assert actual == expected
 
     def test_clients(self):
+        # A partner object can have clients contained within it.
+        assert not self.msp.is_client()
+        assert self.msp.clients()
+        # A client object cannot have other clients nested inside it
+        # so it should raise an assertion if we try to access them.
+        assert self.client.is_client()
         with self.assertRaises(AssertionError):
             assert self.client.clients()
-        assert self.msp.clients()
 
     def test_methods_exist(self):
         assert self.client.rba()
@@ -55,3 +60,4 @@ class TenantTest(unittest.TestCase):
         assert self.client.discovery()
         assert self.client.integrations()
         assert self.client.credential_sets()
+        assert self.client.roles()
