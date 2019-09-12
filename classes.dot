@@ -18,12 +18,12 @@
 #
 digraph {
   opsramp -> { tenant globalconfig }
-  tenant -> { integrations rba monitoring policies discovery credential_sets clients }
+  tenant -> { integrations rba monitoring policies discovery credential_sets clients roles }
   rba -> categories
   categories -> category
   monitoring -> templates
   integrations -> { itypes instances }
-  { rank=same categories templates clients policies itypes instances discovery credential_sets }
+  { rank=same categories templates clients policies itypes instances discovery credential_sets roles }
 
   opsramp [label="opsramp(url,key,secret)"]
   tenant [label="tenant(tid)"]
@@ -34,4 +34,5 @@ digraph {
   clients [style="filled" fillcolor="turquoise"]
   discovery [style="filled" fillcolor="turquoise"]
   credential_sets [style="filled" fillcolor="turquoise"]
+  roles [style="filled" fillcolor="turquoise"]
 }
