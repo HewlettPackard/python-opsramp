@@ -18,6 +18,7 @@
 
 from __future__ import print_function
 import os
+import yaml
 
 import opsramp.binding
 import opsramp.rba
@@ -51,17 +52,15 @@ def main():
     print('List the RBAC roles on tenant', TENANT_ID)
     group = tenant.roles()
     found = group.search()
-    print(found['totalResults'], 'RBAC roles')
-    for i in found['results']:
-        print(i)
+    print(found['totalResults'], 'roles')
+    print(yaml.dump(found['results'], default_flow_style=False))
 
     print('List the integrations on tenant', TENANT_ID)
     integs = tenant.integrations()
     group = integs.itypes()
     found = group.search()
     print(found['totalResults'], 'integration types')
-    for i in found['results']:
-        print(i)
+    print(yaml.dump(found['results']))
 
     print('Define new custom integrations on', TENANT_ID)
     group = integs.instances()
@@ -70,7 +69,7 @@ def main():
             display_name='Example %s integration' % atype,
             inbound_auth_type=atype
         )
-        print(newcint)
+        print(yaml.dump(newcint))
         # uncomment the following lines to actually create the integration.
         # if tenant.is_client():
         #     resp = group.create('CUSTOM', newcint)
@@ -81,6 +80,7 @@ def main():
     print(found['totalResults'], 'integration instances')
     # "found" contains a complete description of each integration but let's
     # pull them individually anyway and assert that this gives same result.
+    print('GET the integrations individually and compare')
     for i in found['results']:
         print('...', i['id'], i['integration']['id'],
               '"' + i.get('displayName', '<no name>') + '"')
@@ -98,17 +98,20 @@ def main():
     else:
         print('List the clients of tenant', TENANT_ID)
         group = tenant.clients()
+        clist = group.get()
+        print(len(clist), 'clients')
+        print(yaml.dump(clist, width=150))
         for c in group.get():
-            print(c)
+            print('client', yaml.dump(c, width=150).strip())
             resp = group.get(c['uniqueId'])
-            print('createdBy', resp['createdBy'])
+            print('createdBy', yaml.dump(resp['createdBy'], width=150))
         print('Exercise the create-client code')
         cdef = group.mkClient(
             name='test client 99',
             address='Death Valley',
             time_zone='America/Los_Angeles',
             country='United States')
-        print(cdef)
+        print(yaml.dump(cdef))
         # uncomment these lines to actually create the client.
         # resp = group.create(cdef)
         # print(resp)
@@ -118,6 +121,7 @@ def main():
     templates = monitoring.templates()
     resp = templates.search()
     print(resp['totalResults'], 'templates')
+    # There are typically hundreds of templates so don't YAML dump them.
     for t in resp['results']:
         print('...', t['name'])
 
@@ -127,8 +131,8 @@ def main():
     group = rba.categories()
     clist = group.get()
     print(len(clist), 'categories')
+    print(yaml.dump(clist))
     for c in clist:
-        print(c)
         if c['name'] == CATEGORY_NAME:
             cid = c['id']
             break
@@ -153,7 +157,7 @@ def main():
         datatype='STRING'
     )
     print('Parameter definition struct')
-    print(p1)
+    print(yaml.dump(p1))
     s1 = cobj.mkScript(
         name='Hello <venue>',
         description='Stereotypical rock star intro',
@@ -163,7 +167,7 @@ def main():
         parameters=[p1]
     )
     print('Script definition struct')
-    print(s1)
+    print(yaml.dump(s1))
     # uncomment these lines to actually create the script.
     # resp = cobj.create(s1)
     # print(resp)
@@ -175,7 +179,7 @@ def main():
     for p in plist:
         rules = p['rules']
         actions = p['actions']
-        print('...', p['id'], p['uid'], p['name'],
+        print('...', p['id'], p['uid'], 'name', p['name'],
               'rules', len(rules),
               'actions', len(actions))
         for r in rules:
@@ -186,15 +190,16 @@ def main():
         # but let's pull them individually anyway and assert that
         # this gives the same result.
         direct = group.get(p['id'])
-        print(direct)
         assert p == direct
 
     print('Credential sets on tenant', TENANT_ID)
-    cs = tenant.credential_sets()
-    resp = cs.get()
-    print(resp['totalResults'], 'credential sets')
-    for i in resp['results']:
-        print(i)
+    if tenant.is_client():
+        cs = tenant.credential_sets()
+        resp = cs.get()
+        print(resp['totalResults'], 'credential sets')
+        print(yaml.dump(resp['results'], default_flow_style=False))
+    else:
+        print('<clients only>')
 
     print('Discovery Profiles on tenant', TENANT_ID)
     if tenant.is_client():
@@ -205,9 +210,11 @@ def main():
             uuid = profile['id']
             name = profile['name']
             print('...', uuid, '"%s"' % name)
-            print(profile)
+            print(yaml.dump(profile))
             direct = group.get(uuid)
             assert direct == profile
+    else:
+        print('<clients only>')
 
 
 if __name__ == "__main__":

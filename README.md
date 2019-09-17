@@ -121,6 +121,7 @@ import opsramp.tenant
   this is only valid for MSP-level tenants because an OpsRamp client cannot contain other clients._
   - discovery() -> returns a Discovery object representing all OpsRamp Discovery profiles for this Tenant.
   - credential\_sets() -> returns a Credential set object representing all OpsRamp Discovery profiles for this Tenant.
+  - roles() -> returns a Roles object representing all OpsRamp RBAC roles for this Tenant.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
