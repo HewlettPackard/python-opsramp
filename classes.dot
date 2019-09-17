@@ -17,15 +17,19 @@
 # limitations under the License.
 #
 digraph {
-  opsramp -> { tenant globalconfig }
-  tenant -> { integrations rba monitoring policies discovery credential_sets clients roles }
+  rankdir="LR";
+  binding -> { globalconfig tenant }
+  tenant -> { clients integrations rba monitoring roles discovery policies credential_sets }
   rba -> categories
   categories -> category
   monitoring -> templates
-  integrations -> { itypes instances }
-  { rank=same categories templates clients policies itypes instances discovery credential_sets roles }
+  integrations -> { instances itypes }
 
-  opsramp [label="opsramp(url,key,secret)"]
+  { rank=same binding globalconfig }
+  { rank=same tenant clients }
+  { rank=same categories templates policies itypes instances discovery credential_sets roles }
+
+  binding [label="opsramp\nbinding"]
   tenant [label="tenant(tid)"]
   category [label="category(cid)" style="filled" fillcolor="turquoise"]
   instances [style="filled" fillcolor="turquoise"]
