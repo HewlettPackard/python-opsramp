@@ -160,7 +160,7 @@ class ApiTest(unittest.TestCase):
             )
             assert actual == expected
 
-    def test_one_category(self):
+    def test_create_script(self):
         this1 = self.rba.categories().category('unit-test-1')
         assert this1
         expected = {'unit': 'test'}
@@ -170,5 +170,19 @@ class ApiTest(unittest.TestCase):
             m.post(url, json=expected)
             actual = this1.create(
                 definition=expected
+            )
+            assert actual == expected
+
+    def test_update_script(self):
+        this1 = self.rba.categories().category('unit-test-1')
+        assert this1
+        scriptId = 12345
+        expected = {'unit': 'test'}
+        assert expected
+        with requests_mock.Mocker() as m:
+            url = this1.api.compute_url(scriptId)
+            m.post(url, json=expected)
+            actual = this1.update(
+                uuid=scriptId, definition=expected
             )
             assert actual == expected

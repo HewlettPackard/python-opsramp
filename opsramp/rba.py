@@ -55,6 +55,10 @@ class Category(ApiWrapper):
     def create(self, definition):
         return self.api.post(json=definition)
 
+    # Updates a script given the id
+    def update(self, uuid, definition):
+        return self.api.post('%s' % uuid, json=definition)
+
     # A helper function for use with mkParameter & mkScript.
     @staticmethod
     def mkAttachment(name, payload):
