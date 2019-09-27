@@ -166,6 +166,7 @@ import opsramp.rba
   The function contains `assert` statements to flag violations of (some of) those rules.
   I may add another layer of helpers later that are more specificially targetted (like "mkPythonLinuxScript" for example)
   and implement those by calling mkScript() internally with appropriate arguments.
+  - update(uuid, definition) -> Updates an existing *script* in this category given the uuid of the script.The Python dict, "definition" is similar to the one used for create call and the helper functions used for create can be used for update too.
 
 import opsramp.msp
 
