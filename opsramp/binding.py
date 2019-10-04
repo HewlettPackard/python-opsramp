@@ -24,6 +24,8 @@ from __future__ import print_function
 from opsramp.base import ApiObject, ApiWrapper
 from opsramp.globalconfig import GlobalConfig
 from opsramp.tenant import Tenant
+from opsramp.metric import Metric
+from opsramp.resources import Resources
 
 
 def connect(url, key, secret):
@@ -58,3 +60,9 @@ class Opsramp(ApiWrapper):
 
     def tenant(self, name):
         return Tenant(self, name)
+
+    def metric(self, name):
+        return Metric(self, name)
+
+    def resources(self, name):
+        return Resources(self, name)
