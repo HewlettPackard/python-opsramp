@@ -77,20 +77,37 @@ def main():
     metrics = ormp.metric(tenant_id)
     res = metrics.get(rtype, device_id)
     pretty_res = json.dumps(res, sort_keys=True, indent=4, separators=('.', ': '))
-    print("Metrics: %s\n" % pretty_res)
+    print("Realtime Metrics: %s\n" % pretty_res)
 
-    # An example of getting time-based Opsramp metrics for
+    # An example of getting realtime time-based Opsramp metrics for
     # a particular resource within a particular tenant.
     rtype = 'DEVICE'
     metrics = ormp.metric(tenant_id)
     metric_name = "azure.cpu"
+    # 24 hours ago
     starttime = int((time.time() - (60*60*24)))
+    # now
     endtime = int(time.time())
     ts_type = "RealTime"
 
     res = metrics.search(rtype, device_id, metric_name, starttime, endtime, ts_type)
     pretty_res = json.dumps(res, sort_keys=True, indent=4, separators=('.', ': '))
-    print("Time Series Metrics: %s\n" % pretty_res)
+    print("Realtime CPU Metrics: %s\n" % pretty_res)
+
+    # Another example of getting realtime time-based Opsramp metrics for
+    # a particular resource within a particular tenant.
+    rtype = 'DEVICE'
+    metrics = ormp.metric(tenant_id)
+    metric_name = "cloud.instance.state"
+    # 24 hours ago
+    starttime = int((time.time() - (60*60*24)))
+    # now
+    endtime = int(time.time())
+    ts_type = "RealTime"
+
+    res = metrics.search(rtype, device_id, metric_name, starttime, endtime, ts_type)
+    pretty_res = json.dumps(res, sort_keys=True, indent=4, separators=('.', ': '))
+    print("Realtime instance state Metrics: %s\n" % pretty_res)
 
 if __name__ == "__main__":
     main()
