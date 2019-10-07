@@ -33,3 +33,10 @@ class Metric(ApiWrapper):
         suffix = '/tenants/%s/rtypes/%s/resources/%s/metrics' % \
                  (self.uuid, rtype, resource)
         return self.api.get(suffix)
+
+    def search(self, rtype, resource, metric, starttime, endtime, ts_type):
+        suffix='/search?tenant=%s&rtype=%s&' \
+               'resource=%s&metric=%s&startTime=%s&endTime=%s' \
+               '&timeseries_type=%s' % \
+               (self.uuid, rtype, resource, metric, starttime, endtime, ts_type)
+        return self.api.get(suffix)
