@@ -139,7 +139,12 @@ class ApiObject(object):
     @staticmethod
     def process_result(url, resp):
         if resp.status_code != requests.codes.OK:
-            msg = '%s %s %s' % (resp, url, resp.content)
+            msg = '%s %s %s %s' % (
+                resp,
+                resp.request.method,
+                url,
+                resp.content
+            )
             raise RuntimeError(msg)
         try:
             return resp.json()

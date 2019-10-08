@@ -19,6 +19,7 @@ import unittest
 import json
 from requests import codes as http_status
 import requests_mock
+from mock import MagicMock
 
 import opsramp.binding
 
@@ -29,6 +30,8 @@ class FakeResp(object):
         self.content = content
         self.text = str(self.content)
         self.json_fail = False
+        self.request = MagicMock()
+        self.request.method = 'FAKE'
 
     def json(self):
         if self.json_fail:
@@ -119,8 +122,14 @@ class ApiObjectTest(unittest.TestCase):
         assert json.loads(actual) == expected
 
         fake_resp.status_code = http_status.BAD_REQUEST
-        with self.assertRaises(RuntimeError):
+        fake_resp.request.method = 'UNIT-TEST-VALUE'
+        failed = False
+        try:
             self.ao.process_result(self.fake_url, fake_resp)
+        except RuntimeError as e:
+            assert fake_resp.request.method in str(e)
+            failed = True
+        assert failed
 
     def test_get(self):
         with requests_mock.Mocker() as m:
