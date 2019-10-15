@@ -20,8 +20,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -eux -o pipefail
 flake8 --ignore=none --exclude=.git,__pycache__,.tox,.eggs,*.egg,venv,venv2,venv3
 coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
+coverage report
 coverage html
 coverage xml -o ./cover/coverage.xml
-coverage report
