@@ -39,9 +39,6 @@ class Policies(ApiWrapper):
     def run(self, uuid):
         return self.api.get('%s/action/run' % uuid)
 
-    def get(self, uuid):
-        return self.api.get('/%s' % uuid)
-
     def delete(self, uuid):
         return self.api.delete('%s' % uuid)
 

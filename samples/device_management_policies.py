@@ -38,7 +38,7 @@ def main():
     partner = ormp.tenant(partner_id)
 
     policies = partner.policies()
-    dmps = policies.get('')
+    dmps = policies.get()
     pretty_dmps = json.dumps(dmps, sort_keys=True)
     print("All DMPs: %s\n" % pretty_dmps)
 
