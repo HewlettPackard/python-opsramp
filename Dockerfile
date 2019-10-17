@@ -22,6 +22,7 @@
 # limitations under the License.
 #
 FROM python:3.7.3-slim as build
+RUN pip install --upgrade pip
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
     && rm -rf /var/lib/apt/lists/*
