@@ -39,13 +39,12 @@ def main():
 
     policies = partner.policies()
     dmps = policies.get('')
-    pretty_dmps = json.dumps(dmps, sort_keys=True, indent=4, separators=('.', ': '))
+    pretty_dmps = json.dumps(dmps, sort_keys=True)
     print("All DMPs: %s\n" % pretty_dmps)
 
     my_dmp = policies.search(dmp_name)
-    pretty_dmps = json.dumps(my_dmp, sort_keys=True, indent=4, separators=('.', ': '))
+    pretty_dmps = json.dumps(my_dmp, sort_keys=True)
     print("Specific DMP: %s:\n%s" % (dmp_name, pretty_dmps))
-
 
 
 if __name__ == "__main__":
