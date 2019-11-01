@@ -191,6 +191,7 @@ def main():
         # this gives the same result.
         direct = group.get(p['id'])
         assert p == direct
+    print('')
 
     print('Credential sets on tenant', TENANT_ID)
     if tenant.is_client():
@@ -213,8 +214,15 @@ def main():
             print(yaml.dump(profile))
             direct = group.get(uuid)
             assert direct == profile
+        print('')
     else:
         print('<clients only>')
+
+    print('Escalation Policies on tenant', TENANT_ID)
+    group = tenant.escalations()
+    found = group.search()
+    print(found['totalResults'], 'escalation policies')
+    print(yaml.dump(found['results'], default_flow_style=False))
 
 
 if __name__ == "__main__":

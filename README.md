@@ -122,6 +122,7 @@ import opsramp.tenant
   - discovery() -> returns a Discovery object representing all OpsRamp Discovery profiles for this Tenant.
   - credential\_sets() -> returns a Credential set object representing all OpsRamp Discovery profiles for this Tenant.
   - roles() -> returns a Roles object representing all OpsRamp RBAC roles for this Tenant.
+  - escalations() -> returns an Escalations object representing the Alert Escalation Policies of this Tenant.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
@@ -294,6 +295,14 @@ import opsramp.integrations
   helper function that returns a Python dict suitable for creating or updating
   an integration instance of type AZUREASM. Note that ARM and ASM integrations
   are different and each has its own helper function.
+
+- class Escalations() _the subtree of Alert Escalation Policies that are defined for this specific Tenant_
+  - create(definition) -> Creates a new escalation policy in this Tenant. "definition" is a Python dict.
+  - update(uuid, definition) -> Updates an existing escalation policy.
+  - delete(uuid) -> Deletes an existing escalation policy.
+  - search(pattern) -> returns a list of dicts, each containing a single policy.
+  - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
+  - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp.
 
 ## Samples and examples
 The `samples` subdirectory contains a series of short Python scripts illustrating
