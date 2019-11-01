@@ -18,6 +18,7 @@
 
 from __future__ import print_function
 import os
+import yaml
 
 import opsramp.binding
 
@@ -92,8 +93,12 @@ def main():
         }]
     }
 
+    print('create integration using this payload')
+    print(yaml.dump(jdata, default_flow_style=False))
+
     resp = group.create('Email Alerts', jdata)
-    print(resp)
+    print('result:')
+    print(yaml.dump(resp, default_flow_style=False))
 
 
 if __name__ == "__main__":
