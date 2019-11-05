@@ -98,11 +98,7 @@ class ApiTest(unittest.TestCase):
         url = group.api.compute_url('search')
         with requests_mock.Mocker() as m:
             m.get(url, json=expected)
-            # one search variant
-            actual = group.search('whatever')
-            assert actual == expected
-            # the other search variant
-            actual = group.search_for_prefix('pre-whatever')
+            actual = group.search('id=whatever')
             assert actual == expected
 
         url = group.api.compute_url('minimal')
