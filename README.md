@@ -161,7 +161,7 @@ import opsramp.rba
   functions for creating them are provided below.
   - @staticmethod mkParameter(name, description, datatype, optional=False, default=None) -> helper function that returns a
   Python dict describing one parameter of a proposed new script.
-  - @staticmethod mkScript(name, description, platforms, execution\_type, payload=None, payload_file=None, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
+  - @staticmethod mkScript(name, description, platforms, execution\_type, payload=None, payload\_file=None, parameters=[], script\_name=None, install\_timeout=0, registry\_path=None, registry\_value=None, process\_name=None, service\_name=None, output\_directory=None, output\_file=None) -> helper function that returns
   a Python dict describing a proposed new script. There are lots of optional arguments because these structs
   have variable content depending on the type of script and also some are only applicable on Linux, some only on Windows.
   The function contains `assert` statements to flag violations of (some of) those rules.
@@ -180,8 +180,6 @@ import opsramp.msp
   See the OpsRamp API docs for detailed contents of these dicts.
   - search(self, pattern='') -> returns a list of client ids matching the specified search pattern, the format of
   which is described in the OpsRamp documentation.
-  - search\_for\_prefix(self, prefix) -> returns a list of client ids whose names begin with a specific prefix.
-  This is a convenience method which calls "search" internally with an appropriate search pattern.
   - create(definition) -> creates a new Client in this Tenant. "definition" is a Python dict
   specifying details of the client to be created.
   The content of these structs is complex so helper functions for creating them are provided below.
@@ -189,10 +187,10 @@ import opsramp.msp
   The contents are described in the OpsRamp docs and helper functions for creating these dicts are provided here.
   - activate(uuid) -> marks the client as "active" in OpsRamp.
   - suspend(uuid) -> marks the client as "suspended" in OpsRamp. _This takes 10+ seconds to run._
-  - terminate(uuid) -> terminates the client in OpsRamp. The API docs say that this call deletes the client but in
-  reality that does not appear to happen. Our experience has been that the client will still be listed in future
-  API calls and the OpsRamp UI. It's unclear what if anything this call actually does...
-  _We do not know at this time how to delete a client properly in OpsRamp._
+  - terminate(uuid) -> terminates the client in OpsRamp. _The API docs say that this call deletes the client but in
+  reality it just goes onto an "inactive" list that is retrievable through the API and visible in the UI. OpsRamp
+  say that clients on the inactive list will get garbage collected eventually, but I couldn't get clarity on
+  how long "eventually" is._
   - @staticmethod mkHours(day\_start=datetime.time(9, 0),
                 day\_end=datetime.time(17, 0),
                 week\_start=2, week\_end=6,
