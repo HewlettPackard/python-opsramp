@@ -16,9 +16,9 @@
 #
 version: 2
 jobs:
-  unit_py36:
+  unit_py37:
     docker:
-      - image: circleci/python:3.6.8
+      - image: circleci/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -78,5 +78,5 @@ workflows:
   version: 2
   workflow:
     jobs:
-    - unit_py36
+    - unit_py37
     - unit_py27
