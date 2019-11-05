@@ -32,10 +32,10 @@ class Clients(ApiWrapper):
         return self.api.get(suffix)
 
     def search(self, pattern=''):
-        return self.api.get('/search?%s' % pattern)
-
-    def search_for_prefix(self, prefix):
-        return self.api.get('/search?queryString=name:%s' % prefix)
+        path = '/search'
+        if pattern:
+            path += '?queryString=' + pattern
+        return self.api.get(path)
 
     def create(self, definition):
         assert 'name' in definition
