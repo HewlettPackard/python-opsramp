@@ -21,7 +21,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM python:3.7.3-slim as build
+FROM python:3.7.5-slim as build
 RUN pip install --upgrade pip
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ADD . /build
 RUN pip install /build
 
-FROM python:3.7.3-slim as prod
+FROM python:3.7.5-slim as prod
 LABEL description="OpsRamp CLI"
 LABEL maintainer "HPE Greenlake Talos <mercury.opsauto@hpe.com>"
 COPY --from=build /usr/local /usr/local
