@@ -73,6 +73,16 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: coverage
+  build_container:
+    docker:
+      - image: circleci/alpine
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+        name: docker build
+        command: |
+          docker build --no-cache --build-arg http_proxy=$http_proxy --build-arg https_proxy=$http_proxy --build-arg no_proxy=$no_proxy .
 
 workflows:
   version: 2
@@ -80,3 +90,4 @@ workflows:
     jobs:
     - unit_py37
     - unit_py27
+    - build_container
