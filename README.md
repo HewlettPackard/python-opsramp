@@ -123,6 +123,8 @@ import opsramp.tenant
   - credential\_sets() -> returns a Credential set object representing all OpsRamp Discovery profiles for this Tenant.
   - roles() -> returns a Roles object representing all OpsRamp RBAC roles for this Tenant.
   - escalations() -> returns an Escalations object representing the Alert Escalation Policies of this Tenant.
+  - mgmt\_profiles() -> returns a Profiles object representing the Management Profiles of this Tenant. These are used
+  to connect OpsRamp gateway node to the SaaS.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
@@ -301,6 +303,16 @@ import opsramp.integrations
   - search(pattern) -> returns a list of dicts, each containing a single policy.
   - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
   - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp.
+
+- class Profiles() _the subtree of Management Profiles that are defined for this specific Tenant_
+  - create(definition) -> Creates a new mgmt profile in this Tenant. "definition" is a Python dict.
+  - update(uuid, definition) -> Updates an existing mgmt profile.
+  - delete(uuid) -> Deletes an existing mgmt profile.
+  - search(pattern) -> returns a list of dicts, each containing a single profile.
+  - attach(uuid) -> This is used to attach OpsRamp Gateway and returns an activation token.
+  - detach(uuid) -> Detach the existing gateway and invalidate its activation token.
+  - reconnect(uuid) -> Error recovery should happen automatically but this can be called
+  to "do it now". _It's unclear at this time in what circumstances this would be used._
 
 ## Samples and examples
 The `samples` subdirectory contains a series of short Python scripts illustrating

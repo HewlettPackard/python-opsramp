@@ -224,6 +224,12 @@ def main():
     print(found['totalResults'], 'escalation policies')
     print(yaml.dump(found['results'], default_flow_style=False))
 
+    print('Management profiles on tenant', TENANT_ID)
+    group = tenant.mgmt_profiles()
+    found = group.search()
+    print(found['totalResults'], 'management profiles')
+    print(yaml.dump(found['results'], default_flow_style=False))
+
 
 if __name__ == "__main__":
     main()
