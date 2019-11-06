@@ -29,6 +29,7 @@ import opsramp.devmgmt
 import opsramp.integrations
 import opsramp.roles
 import opsramp.escalations
+import opsramp.mgmt_profiles
 
 
 class Tenant(ApiWrapper):
@@ -71,3 +72,6 @@ class Tenant(ApiWrapper):
 
     def escalations(self):
         return opsramp.escalations.Escalations(self)
+
+    def mgmt_profiles(self):
+        return opsramp.mgmt_profiles.Profiles(self)
