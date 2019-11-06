@@ -42,6 +42,17 @@ def main():
     pretty_set = yaml.dump(resp['results'])
     print(pretty_set)
 
+    # The links are weird in this part of OpsRamp. A search at partner level
+    # returns a list of all profiles from all clients, but you can't get an
+    # individual profile by ID from partner level. Instead you have to find
+    # the ID of the *client* the profile is in, and then navigate down from
+    # the top to that client object and use it to do the get().
+    profile0 = resp['results'][0]
+    clientid = profile0['client']['uniqueId']
+
+    obj = ormp.tenant(clientid).mgmt_profiles().get(profile0['id'])
+    print(yaml.dump(obj))
+
 
 if __name__ == "__main__":
     main()
