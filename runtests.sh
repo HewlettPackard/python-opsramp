@@ -22,7 +22,7 @@
 
 set -eux -o pipefail
 flake8 --ignore=none --exclude=.git,__pycache__,.tox,.eggs,*.egg,venv,venv2,venv3
-coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -v
+coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -vvv
 coverage report
 coverage html
 coverage xml -o ./cover/coverage.xml

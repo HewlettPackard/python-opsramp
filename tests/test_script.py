@@ -25,18 +25,19 @@ import opsramp.binding
 
 
 class StaticsTest(unittest.TestCase):
-    def test_encode_payload(self):
-        testfile = 'README.md'
-        with open(testfile, 'rb') as f:
-            expected = f.read()
-        actual64 = Helpers.b64encode_payload(testfile)
-        actual = base64.b64decode(actual64)
-        assert actual == expected
+    def setUp(self):
+        self.testfile = 'tox.ini'
+        with open(self.testfile, 'rb') as f:
+            self.content_raw = f.read()
+        self.content_64 = Helpers.b64encode_payload(self.testfile)
+        # assert that base64 encoding is working.
+        raw = base64.b64decode(self.content_64)
+        assert raw == self.content_raw
 
     def test_mkAttachment(self):
         tvalues = {
-            'name': 'whatever.sh',
-            'content': 'random stuff'
+            'name': self.testfile,
+            'content': self.content_raw
         }
         actual = Category.mkAttachment(
             name=tvalues['name'],
@@ -67,11 +68,6 @@ class StaticsTest(unittest.TestCase):
             description=tvalues['description'],
             datatype=tvalues['type']
         )
-        actual = Category.mkParameter(
-            name=tvalues['name'],
-            description=tvalues['description'],
-            datatype=tvalues['type']
-        )
         expected = {
             'name': tvalues['name'],
             'description': tvalues['description'],
@@ -82,21 +78,30 @@ class StaticsTest(unittest.TestCase):
         assert actual == expected
 
     def test_mkBadScript(self):
+        tvalues = {
+            'name': 'sname',
+            'description': 'pdesc',
+            'platforms': ['LINUX']
+        }
         with self.assertRaises(AssertionError):
             Category.mkScript(
-                name='sname', description='pdesc', platforms=['LINUX'],
                 execution_type='Firing squad is not valid',
-                payload_file='README.md'
+                name=tvalues['name'],
+                description=tvalues['description'],
+                platforms=tvalues['platforms'],
+                payload_file=self.testfile
             )
         with self.assertRaises(AssertionError):
             Category.mkScript(
-                name='sname', description='pdesc', platforms=['LINUX'],
                 execution_type='COMMAND',
+                name=tvalues['name'],
+                description=tvalues['description'],
+                platforms=tvalues['platforms'],
                 payload='if there is a payload',
                 payload_file='cannot have payload_file as well'
             )
 
-    def test_mkGoodScript(self):
+    def test_mkGoodCommandScript(self):
         p1 = Category.mkParameter(
             name='venue',
             description='Where am I today?',
@@ -125,6 +130,42 @@ class StaticsTest(unittest.TestCase):
             'executionType': tvalues['type'],
             'command': tvalues['payload'],
             'parameters': tvalues['parameters']
+        }
+        assert actual == expected
+
+    def test_mkGoodPythonScript(self):
+        tvalues = {
+            'name': 'Hello <venue>',
+            'description': 'Python rock star intro',
+            'platforms': ['LINUX'],
+            'type': 'PYTHON',
+            'process_name': 'jabberwocky',
+            'service_name': 'silmarilion',
+            'install_timeout': 'a really long time'
+        }
+        actual = Category.mkScript(
+            name=tvalues['name'],
+            description=tvalues['description'],
+            platforms=tvalues['platforms'],
+            execution_type=tvalues['type'],
+            script_name=self.testfile,
+            payload_file=self.testfile,
+            install_timeout=tvalues['install_timeout'],
+            process_name=tvalues['process_name'],
+            service_name=tvalues['service_name']
+        )
+        expected = {
+            'name': tvalues['name'],
+            'description': tvalues['description'],
+            'platforms': tvalues['platforms'],
+            'executionType': tvalues['type'],
+            'attachment': {
+                'name': self.testfile,
+                'file': self.content_64
+            },
+            'installTimeout': tvalues['install_timeout'],
+            'processName': tvalues['process_name'],
+            'serviceName': tvalues['service_name']
         }
         assert actual == expected
 
