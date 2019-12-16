@@ -125,12 +125,22 @@ import opsramp.tenant
   - escalations() -> returns an Escalations object representing the Alert Escalation Policies of this Tenant.
   - mgmt\_profiles() -> returns a Profiles object representing the Management Profiles of this Tenant. These are used
   to connect OpsRamp gateway node to the SaaS.
+  - sites() -> returns a Sites object. Sites are used to organize devices based on location.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
   - update(uuid, definition) -> Updates an existing role.
   - delete(uuid) -> Deletes an existing role.
   - search(pattern) -> returns a list of dicts, each containing a single role description.
+
+import opsramp.sites
+
+- class Sites() _the subtree of Sites that are defined for this specific Tenant_
+  - create(definition) -> Creates a new site in this Tenant. "definition" is a Python dict.
+  - update(uuid, definition) -> Updates an existing site
+  - delete(uuid) -> Deletes an existing site
+  - search(pattern) -> returns a list of dicts, each containing a single site.
+  - get() -> returns a list of dicts, each one containing minimal details for one site.
 
 import opsramp.monitoring
 

@@ -55,6 +55,12 @@ def main():
     print(found['totalResults'], 'roles')
     print(yaml.dump(found['results'], default_flow_style=False))
 
+    print('List the Sites on tenant', TENANT_ID)
+    group = tenant.sites()
+    found = group.search()
+    print(found['totalResults'], 'sites')
+    print(yaml.dump(found['results'], default_flow_style=False))
+
     print('List the integrations on tenant', TENANT_ID)
     integs = tenant.integrations()
     group = integs.itypes()
