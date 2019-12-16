@@ -86,38 +86,42 @@ class ApiTest(unittest.TestCase):
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_msp_id = 'msp_for_unit_test'
+        self.fake_msp_id = 'msp_123456'
         self.msp = self.ormp.tenant(self.fake_msp_id)
         assert not self.msp.is_client()
 
-    def test_api(self):
-        group = self.msp.clients()
-        assert group
+        self.clients = self.msp.clients()
+        assert self.clients
+
+    def test_search(self):
+        url = self.clients.api.compute_url('search')
         expected = ['unit', 'test', 'list']
-        assert expected
-        url = group.api.compute_url('search')
         with requests_mock.Mocker() as m:
             m.get(url, json=expected)
-            actual = group.search('id=whatever')
+            actual = self.clients.search('id=whatever')
             assert actual == expected
 
-        url = group.api.compute_url('minimal')
+    def test_minimal(self):
+        url = self.clients.api.compute_url('minimal')
+        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             m.get(url, json=expected)
             # default suffix
-            actual = group.get()
+            actual = self.clients.get()
             assert actual == expected
             # specific suffix
-            actual = group.get('minimal')
+            actual = self.clients.get('minimal')
             assert actual == expected
 
-        url = group.api.compute_url()
+    def test_create_update(self):
+        url = self.clients.api.compute_url()
+        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             m.post(url, json=expected)
             assert 'name' not in expected
             # the name field is missing so we should get an error.
             with self.assertRaises(AssertionError):
-                actual = group.create(definition=expected)
+                actual = self.clients.create(definition=expected)
         # now let's try a valid one.
         fake_definition = {
             'name': 'elvis',
@@ -127,36 +131,42 @@ class ApiTest(unittest.TestCase):
         }
         with requests_mock.Mocker() as m:
             m.post(url, json=fake_definition)
-            actual = group.create(definition=fake_definition)
+            actual = self.clients.create(definition=fake_definition)
             assert actual == fake_definition
-
+        # and try an update
         thisid = 123456
-        url = group.api.compute_url(thisid)
+        url = self.clients.api.compute_url(thisid)
         with requests_mock.Mocker() as m:
             m.post(url, json=fake_definition)
-            actual = group.update(
+            actual = self.clients.update(
                 uuid=thisid,
                 definition=fake_definition
             )
             assert actual == fake_definition
 
+    def test_suspend(self):
         thisid = 789012
-        url = group.api.compute_url('%s/suspend' % thisid)
+        url = self.clients.api.compute_url('%s/suspend' % thisid)
+        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             m.post(url, json=expected)
-            actual = group.suspend(uuid=thisid)
+            actual = self.clients.suspend(uuid=thisid)
             assert actual == expected
 
+    def test_activate(self):
         thisid = 345678
-        url = group.api.compute_url('%s/activate' % thisid)
+        url = self.clients.api.compute_url('%s/activate' % thisid)
+        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             m.post(url, json=expected)
-            actual = group.activate(uuid=thisid)
+            actual = self.clients.activate(uuid=thisid)
             assert actual == expected
 
+    def test_terminate(self):
         thisid = 901234
-        url = group.api.compute_url('%s/terminate' % thisid)
+        url = self.clients.api.compute_url('%s/terminate' % thisid)
+        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             m.post(url, json=expected)
-            actual = group.terminate(uuid=thisid)
+            actual = self.clients.terminate(uuid=thisid)
             assert actual == expected
