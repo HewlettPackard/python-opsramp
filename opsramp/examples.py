@@ -68,13 +68,6 @@ def main():
     print(found['totalResults'], 'integration types')
     print(yaml.dump(found['results']))
 
-    print('List the integrations on tenant', TENANT_ID)
-    integs = tenant.integrations()
-    group = integs.itypes()
-    found = group.search()
-    print(found['totalResults'], 'integration types')
-    print(yaml.dump(found['results']))
-
     print('Define new custom integrations on', TENANT_ID)
     group = integs.instances()
     for atype in ('OAUTH2', 'BASIC'):

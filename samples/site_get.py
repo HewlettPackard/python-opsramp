@@ -19,7 +19,7 @@
 from __future__ import print_function
 import os
 import sys
-import json
+import yaml
 
 import opsramp.binding
 
@@ -42,7 +42,7 @@ def main():
 
     group = tnt.sites()
     resp = group.get(uniqueId)
-    print(json.dumps(resp, sort_keys=True, indent=2))
+    print(yaml.dump(resp, default_flow_style=False))
 
 
 if __name__ == "__main__":
