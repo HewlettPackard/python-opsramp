@@ -21,6 +21,7 @@
 # limitations under the License.
 
 from __future__ import print_function
+from urllib import parse
 import base64
 import requests
 try:
@@ -127,6 +128,62 @@ class ApiObject(object):
             self.tracker.reset()
         return self.compute_url()
 
+    @staticmethod
+    def collate_pages(get_request, data):
+        """Given a GET request whose results span across multiple pages, crawl
+        each page and collate the results.
+
+        :param first_page_data: "results" dict for first pagefull of dat
+        :type first_page_data: dict
+        :param request: Request used to get first page
+        :type request: requests.PreparedRequest
+        """
+        # First, sanity check that all is good. Only process GET requests:
+        if get_request.method.upper().strip() != "GET":
+            return data
+
+        collated_data = data["results"]
+
+        # Only attempt to pull subsequent pages if we can verify that there are
+        # subsequent pages "to be pulled"...
+        if "results" in data.keys():
+            while "nextPage" in data.keys() and data["nextPage"]:
+                # Get the next page full of data.
+                next_page = requests.get(get_request.url,
+                                         params={'pageNo': data['nextPageNo']},
+                                         headers=get_request.headers)
+
+                if not next_page.ok:
+                    # At least return what we can.
+                    return collated_data
+
+                data = next_page.json()
+                collated_data = collated_data + data['results']
+                del next_page
+
+            # Dismantle the URL to see if data was requested in descending
+            # order...
+            query_params = dict(
+                parse.parse_qsl(parse.urlsplit(get_request.url).query)
+            )
+            descending_order = 'isDescendingOrder' in query_params.keys() and \
+                query_params['isDescendingOrder']
+
+            # Re-create the final data set as if it were a single page
+            # containing all records to ensure that existing stuff that expects
+            # this data structure doesn't fall over.
+            return {
+                'results': collated_data,
+                'totalResults': len(collated_data),
+                'pageNo': 1,
+                'pageSize': len(collated_data),
+                'nextPage': False,
+                'previousPageNo': 0,
+                'descendingOrder': descending_order
+            }
+        else:
+            return data
+
     def compute_url(self, suffix=''):
         retval = self.baseurl
         suffix = self.tracker.fullpath(suffix)
@@ -152,8 +209,17 @@ class ApiObject(object):
                 resp.content
             )
             raise RuntimeError(msg)
+
         try:
-            return resp.json()
+            data = resp.json()
+            # Some GET requests return paginated output. If all the data fits
+            # in one page, return just the contents of the "results" list,
+            # otherwise, we need to do an assembly job to collate the entire
+            # list of results from all pages and return the full list.
+            if resp.request.method == "GET" and "nextPage" in data.keys():
+                return ApiObject.collate_pages(resp.request, data=data)
+            else:
+                return data
         except JSONDecodeError:
             return resp.text
 
