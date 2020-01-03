@@ -1,12 +1,11 @@
 #!/usr/bin/env python
+# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
 #
 # A minimal Python language binding for the OpsRamp REST API.
 #
 # base.py
 # Containing various base classes used in other parts of the library
 # but not intended for direct use by callers.
-#
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -154,8 +153,9 @@ class ApiObject(object):
                                          headers=get_request.headers)
 
                 if not next_page.ok:
-                    # At least return what we can.
-                    return collated_data
+                    # Return an empty result.
+                    collated_data = []
+                    break
 
                 data = next_page.json()
                 collated_data = collated_data + data['results']
