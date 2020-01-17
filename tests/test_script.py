@@ -227,3 +227,14 @@ class ApiTest(unittest.TestCase):
                 uuid=scriptId, definition=expected
             )
             assert actual == expected
+
+    def test_delete_script(self):
+        this1 = self.rba.categories().category('unit-test-1')
+        assert this1
+        scriptId = 67890
+        expected = ''
+        with requests_mock.Mocker() as m:
+            url = this1.api.compute_url(scriptId)
+            m.delete(url, text=expected)
+            actual = this1.delete(uuid=scriptId)
+            assert actual == expected
