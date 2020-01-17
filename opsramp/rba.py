@@ -59,6 +59,9 @@ class Category(ApiWrapper):
     def update(self, uuid, definition):
         return self.api.post('%s' % uuid, json=definition)
 
+    def delete(self, uuid):
+        return self.api.delete('%s' % uuid)
+
     # A helper function for use with mkParameter & mkScript.
     @staticmethod
     def mkAttachment(name, payload):
