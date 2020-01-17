@@ -34,9 +34,11 @@ class FakeResp(object):
         self.request.method = 'FAKE'
 
     def json(self):
+        content = self.content
         if self.json_fail:
-            raise RuntimeError('deliberate json_fail')
-        return json.loads(self.content)
+            # deliberately cause a parsing exception
+            content = 'deliberately bad JSON for unit test purposes!!'
+        return json.loads(content)
 
 
 class ApiObjectTest(unittest.TestCase):
