@@ -23,6 +23,12 @@
 from __future__ import print_function
 import base64
 import requests
+try:
+    # Python 3
+    from json.decoder import JSONDecodeError
+except ImportError:
+    # Python 2
+    JSONDecodeError = ValueError
 
 
 class Helpers(object):
@@ -148,7 +154,7 @@ class ApiObject(object):
             raise RuntimeError(msg)
         try:
             return resp.json()
-        except: # noqa
+        except JSONDecodeError:
             return resp.text
 
     def get(self, suffix='', headers={}):
