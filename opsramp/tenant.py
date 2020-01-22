@@ -5,7 +5,7 @@
 # tenant.py
 # Classes dealing directly with OpsRamp Tenants.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import opsramp.roles
 import opsramp.escalations
 import opsramp.mgmt_profiles
 import opsramp.sites
+import opsramp.service_maps
 
 
 class Tenant(ApiWrapper):
@@ -79,3 +80,6 @@ class Tenant(ApiWrapper):
 
     def sites(self):
         return opsramp.sites.Sites(self)
+
+    def service_maps(self):
+        return opsramp.service_maps.Service_Maps(self)
