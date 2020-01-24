@@ -2,7 +2,7 @@
 #
 # A minimal Python language binding for the OpsRamp REST API.
 #
-# sites.py
+# service_maps.py
 # Classes dealing directly with OpsRamp Service Maps.
 # Service Maps are used to organise resources by any method and
 # create availability rules governing how they show problems.
@@ -29,7 +29,7 @@ class ServiceMaps(ApiWrapper):
     def __init__(self, parent):
         super(ServiceMaps, self).__init__(parent.api, 'serviceGroups')
 
-    def get(self, uuid=False, minimal=False):
+    def get(self, uuid=None, minimal=False):
         if uuid:
             temp_url = '/%s/childs/search' % uuid
         else:

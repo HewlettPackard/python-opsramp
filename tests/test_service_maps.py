@@ -52,8 +52,12 @@ class ApiTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             assert expected
             m.get(url, json=expected)
+            # test uuid parameter specifically.
+            actual = group.get(uuid=sgid)
+            assert actual == expected
+            # test that uuid is the first parameter
             actual = group.get(sgid)
-        assert actual == expected
+            assert actual == expected
 
     def test_service_maps_get_minimal(self):
         group = self.service_maps
