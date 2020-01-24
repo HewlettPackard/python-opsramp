@@ -82,4 +82,4 @@ class Tenant(ApiWrapper):
         return opsramp.sites.Sites(self)
 
     def service_maps(self):
-        return opsramp.service_maps.Service_Maps(self)
+        return opsramp.service_maps.ServiceMaps(self)

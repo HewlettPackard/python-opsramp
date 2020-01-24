@@ -25,9 +25,9 @@ from __future__ import print_function
 from opsramp.base import ApiWrapper
 
 
-class Service_Maps(ApiWrapper):
+class ServiceMaps(ApiWrapper):
     def __init__(self, parent):
-        super(Service_Maps, self).__init__(parent.api, 'serviceGroups')
+        super(ServiceMaps, self).__init__(parent.api, 'serviceGroups')
 
     def get(self, uuid=False, minimal=False):
         if uuid:
