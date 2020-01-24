@@ -3,8 +3,9 @@
 # A minimal Python language binding for the OpsRamp REST API.
 #
 # sites.py
-# Classes dealing directly with OpsRamp Sites.
-# Sites are used to organise resources by geographical location.
+# Classes dealing directly with OpsRamp Service Maps.
+# Service Maps are used to organise resources by any method and 
+# create availability rules governing how they show problems.
 #
 # (c) Copyright 2020 Hewlett Packard Enterprise Development LP
 #
