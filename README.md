@@ -138,6 +138,8 @@ import opsramp.service\_maps
   - delete(uuid) -> Deletes an existing service map
   - get(uuid=None, minimal=False) -> returns a list of dicts, each one containing details for one service map.
 
+import opsramp.roles
+
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
   - update(uuid, definition) -> Updates an existing role.
