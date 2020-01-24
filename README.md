@@ -16,7 +16,8 @@ limitations under the License.
 # python-opsramp
 A Python language binding for the OpsRamp API
 
-CI status: [![CircleCI](https://circleci.com/gh/HewlettPackard/python-opsramp.svg?style=svg)](https://circleci.com/gh/HewlettPackard/python-opsramp)
+TravisCI [![Build Status](https://travis-ci.org/HewlettPackard/python-opsramp.svg?branch=master)](https://travis-ci.org/HewlettPackard/python-opsramp)
+CircleCI [![CircleCI](https://circleci.com/gh/HewlettPackard/python-opsramp.svg?style=svg)](https://circleci.com/gh/HewlettPackard/python-opsramp)
 
 ## About
 This directory tree contains a Python module that provides a convenient way to
@@ -126,6 +127,16 @@ import opsramp.tenant
   - mgmt\_profiles() -> returns a Profiles object representing the Management Profiles of this Tenant. These are used
   to connect OpsRamp gateway node to the SaaS.
   - sites() -> returns a Sites object. Sites are used to organize devices based on location.
+  - service\_maps() -> returns a ServiceMaps object. Service maps are used to create directed graphs of dependencies
+  that are used in the OpsRamp UI to present human-readable graphs of the impact of service failures on each other.
+
+import opsramp.service\_maps
+
+- class ServiceMaps() _the ServiceMaps that are defined for this specific Tenant_
+  - create(definition) -> Creates a new service map in this Tenant. "definition" is a Python dict.
+  - update(uuid, definition) -> Updates an existing service map
+  - delete(uuid) -> Deletes an existing service map
+  - get(uuid=None, minimal=False) -> returns a list of dicts, each one containing details for one service map.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.

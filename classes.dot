@@ -19,7 +19,7 @@
 digraph {
   rankdir="LR";
   binding -> { globalconfig tenant }
-  tenant -> { clients integrations rba monitoring roles discovery policies escalations mgmt_profiles credential_sets sites }
+  tenant -> { clients integrations rba monitoring roles discovery policies escalations mgmt_profiles credential_sets sites service_maps }
   rba -> categories
   categories -> category
   monitoring -> templates
@@ -27,7 +27,7 @@ digraph {
 
   { rank=same binding globalconfig }
   { rank=same tenant clients }
-  { rank=same categories templates policies itypes instances discovery credential_sets roles escalations mgmt_profiles sites }
+  { rank=same categories templates policies itypes instances discovery credential_sets roles escalations mgmt_profiles sites service_maps }
 
   binding [label="opsramp\nbinding"]
   tenant [label="tenant(tid)"]
@@ -42,4 +42,5 @@ digraph {
   escalations [style="filled" fillcolor="turquoise"]
   mgmt_profiles [style="filled" fillcolor="turquoise"]
   sites [style="filled" fillcolor="turquoise"]
+  service_maps [style="filled" fillcolor="turquoise"]
 }
