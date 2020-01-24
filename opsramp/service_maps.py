@@ -4,7 +4,7 @@
 #
 # sites.py
 # Classes dealing directly with OpsRamp Service Maps.
-# Service Maps are used to organise resources by any method and 
+# Service Maps are used to organise resources by any method and
 # create availability rules governing how they show problems.
 #
 # (c) Copyright 2020 Hewlett Packard Enterprise Development LP
