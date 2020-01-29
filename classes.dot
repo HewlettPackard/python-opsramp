@@ -2,7 +2,7 @@
 # An input file for graphviz that produces a diagram of the relationship
 # between the various classes in the python-opsramp language binding.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,11 +19,14 @@
 digraph {
   rankdir="LR";
   binding -> { globalconfig tenant }
-  tenant -> { clients integrations rba monitoring roles discovery policies escalations mgmt_profiles credential_sets sites service_maps }
+  tenant -> { clients integrations rba kb monitoring roles discovery policies escalations mgmt_profiles credential_sets sites service_maps }
   rba -> categories
   categories -> category
   monitoring -> templates
   integrations -> { instances itypes }
+  kb -> kbcategories
+  kb -> kbarticles
+  kb -> kbtemplates
 
   { rank=same binding globalconfig }
   { rank=same tenant clients }
@@ -43,4 +46,7 @@ digraph {
   mgmt_profiles [style="filled" fillcolor="turquoise"]
   sites [style="filled" fillcolor="turquoise"]
   service_maps [style="filled" fillcolor="turquoise"]
+  kbcategories [style="filled" fillcolor="turquoise"]
+  kbarticles [style="filled" fillcolor="turquoise"]
+  kbtemplates [style="filled" fillcolor="turquoise"]
 }

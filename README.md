@@ -1,5 +1,5 @@
 <!---
-(c) Copyright 2019 Hewlett Packard Enterprise Development LP
+(c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -129,6 +129,8 @@ import opsramp.tenant
   - sites() -> returns a Sites object. Sites are used to organize devices based on location.
   - service\_maps() -> returns a ServiceMaps object. Service maps are used to create directed graphs of dependencies
   that are used in the OpsRamp UI to present human-readable graphs of the impact of service failures on each other.
+  - kb() -> returns a KnowledgeBase object. These are used to organize
+  knowledge base articles and categories related to this tenant.
 
 import opsramp.service\_maps
 
@@ -336,6 +338,37 @@ import opsramp.integrations
   - detach(uuid) -> Detach the existing gateway and invalidate its activation token.
   - reconnect(uuid) -> Error recovery should happen automatically but this can be called
   to "do it now". _It's unclear at this time in what circumstances this would be used._
+
+- class KnowledgeBase() _the subtree of knowledge base that is defined for this specific Tenant_
+  - categories() -> Returns a KBcategories object representing the knowledge base
+  categories for this tenant.
+  - articles() -> Returns a KBarticles object representing the knowledge base
+  articles for this tenant.
+  - templates() -> Returns a KBtemplates object representing the knowledge base
+  templates for this tenant.
+
+- class KBcategories() _the subtree of knowledge base categories for this specific Tenant_
+  - create(definition) -> creates a KB category.
+  - update(uuid, definition) -> updates an existing KB category.
+  - delete(uuid) -> deletes an existing KB category.
+  - search(pattern) -> searches for categories matching a pattern.
+  - children(uuid) -> returns a list of the child categories of uuid.
+  - restore(uuid) -> undeletes category uuid (if it has not been
+  garbage collected yet).
+
+- class KBarticles() _the subtree of knowledge base articles for this specific Tenant_
+  - create(definition) -> creates a KB article.
+  - update(uuid, definition) -> updates an existing KB article.
+  - delete(uuid) -> deletes an existing KB article.
+  - search(pattern) -> searches for articles matching a pattern.
+  - share(uuid) -> marks article uuid as "shared" _I don't know what that means_
+  - comments(uuid) -> returns a list of the comments on article uuid.
+
+- class KBtemplates() _the subtree of knowledge base templates for this specific Tenant_
+  - create(definition) -> creates a KB template.
+  - update(uuid, definition) -> updates an existing KB template.
+  - delete(uuid) -> deletes an existing KB template.
+  - search(pattern) -> searches for templates matching a pattern.
 
 ## Samples and examples
 The `samples` subdirectory contains a series of short Python scripts illustrating
