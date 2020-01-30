@@ -32,6 +32,7 @@ import opsramp.escalations
 import opsramp.mgmt_profiles
 import opsramp.sites
 import opsramp.service_maps
+import opsramp.kb
 
 
 class Tenant(ApiWrapper):
@@ -83,3 +84,6 @@ class Tenant(ApiWrapper):
 
     def service_maps(self):
         return opsramp.service_maps.ServiceMaps(self)
+
+    def kb(self):
+        return opsramp.kb.KnowledgeBase(self)
