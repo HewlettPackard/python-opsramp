@@ -150,9 +150,11 @@ class ApiObject(object):
         if "results" in data.keys():
             while "nextPage" in data.keys() and data["nextPage"]:
                 # Get the next page full of data.
-                next_page = requests.get(get_request.url,
-                                         params={'pageNo': data['nextPageNo']},
-                                         headers=get_request.headers)
+                next_page = requests.get(
+                    get_request.url,
+                    params={'pageNo': int(data['pageNo']) + 1},
+                    headers=get_request.headers
+                )
 
                 if not next_page.ok:
                     # Return an empty result.
@@ -218,7 +220,8 @@ class ApiObject(object):
             # in one page, return just the contents of the "results" list,
             # otherwise, we need to do an assembly job to collate the entire
             # list of results from all pages and return the full list.
-            if resp.request.method == "GET" and "nextPage" in data.keys():
+            if resp.request.method == "GET" and isinstance(data, dict) and \
+                    data.get("nextPage", None):
                 return ApiObject.collate_pages(resp.request, data=data)
             else:
                 return data

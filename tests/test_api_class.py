@@ -18,27 +18,25 @@ from __future__ import print_function
 import unittest
 import json
 from requests import codes as http_status
+import requests
 import requests_mock
-from mock import MagicMock
-
 import opsramp.binding
 
 
 class FakeResp(object):
-    def __init__(self, content):
+    def __init__(self, content, request):
         self.status_code = http_status.OK
         self.content = content
-        self.text = str(self.content)
+        self.text = json.dumps(self.content)
         self.json_fail = False
-        self.request = MagicMock()
-        self.request.method = 'FAKE'
+        self.request = request
 
     def json(self):
         content = self.content
         if self.json_fail:
             # deliberately cause a parsing exception
             content = 'deliberately bad JSON for unit test purposes!!'
-        return json.loads(content)
+        return content
 
 
 class ApiObjectTest(unittest.TestCase):
@@ -53,6 +51,7 @@ class ApiObjectTest(unittest.TestCase):
             self.fake_url,
             self.fake_auth.copy()
         )
+
         assert 'ApiObject' in str(self.ao)
         self.awrapper = opsramp.binding.ApiWrapper(self.ao, 'whatevs')
         assert 'ApiWrapper' in str(self.awrapper)
@@ -112,26 +111,114 @@ class ApiObjectTest(unittest.TestCase):
         assert actual == expected
 
     def test_results(self):
-        expected = {'hello': 'world'}
-        fake_resp = FakeResp(json.dumps(expected))
-        actual = self.ao.process_result(self.fake_url, fake_resp)
-        assert type(actual) is dict
-        assert actual == expected
+        # Test successful response
 
-        fake_resp.json_fail = True
-        actual = self.ao.process_result(self.fake_url, fake_resp)
-        assert type(actual) is str
-        assert json.loads(actual) == expected
+        with requests_mock.mock() as m:
+            expected = {'hello': 'world'}
+            m.get(self.fake_url, json=expected, status_code=200)
 
-        fake_resp.status_code = http_status.BAD_REQUEST
-        fake_resp.request.method = 'UNIT-TEST-VALUE'
-        failed = False
-        try:
-            self.ao.process_result(self.fake_url, fake_resp)
-        except RuntimeError as e:
-            assert fake_resp.request.method in str(e)
-            failed = True
-        assert failed
+            faked_response = FakeResp(
+                content=expected,
+                request=requests.get(self.fake_url).request
+            )
+            actual = self.ao.process_result(self.fake_url, faked_response)
+            assert type(actual) is dict
+            assert actual == expected
+
+        # Test response where result is not valid JSON
+        with requests_mock.mock() as m:
+            expected = 'deliberately bad JSON for unit test purposes!!'
+            m.get(self.fake_url, text=expected)
+
+            faked_response = FakeResp(
+                content=['nothing'],
+                request=requests.get(self.fake_url).request
+            )
+
+            faked_response.json_fail = True
+
+            actual = self.ao.process_result(self.fake_url, faked_response)
+            assert type(actual) is str
+            assert actual == expected
+
+        # Test that exception is thrown if unexpected HTTP status code returned
+        with requests_mock.mock() as m:
+            m.get(
+                self.fake_url,
+                status_code=http_status.BAD_REQUEST,
+                text='Pretending to fail horribly'
+            )
+
+            faked_response = FakeResp(
+                content=['nothing'],
+                request=requests.get(self.fake_url).request
+            )
+            faked_response.status_code = http_status.BAD_REQUEST
+
+            failed = False
+            try:
+                actual = self.ao.process_result(self.fake_url, faked_response)
+            except RuntimeError as e:
+                print(e)
+                failed = True
+            assert failed
+
+    def test_paginated_results(self):
+        # Define three pages of test data that return the following result
+        # data:
+        # Page 1: 1-10
+        # Page 2: 11-20
+        # Page 3: 21-30
+        # If the pagination works, the result should be the range 1-30.
+        request_responses = []
+        for result_page in range(3):
+            result_data = list(
+                range((10 * result_page) + 1, (10 * result_page) + 11)
+            )
+
+            response_body = {
+                'results': result_data,
+                'totalResults': 30,
+                'pageNo': result_page + 1,
+                'pageSize': 10,
+                'nextPage': (result_page < 2),
+                'previousPageNo': result_page,
+                'descendingOrder': False
+            }
+
+            response = {
+                'status_code': 200,
+                'json': response_body,
+            }
+
+            request_responses.append(response)
+
+        # Build up the list of expected result data based on what we're feeding
+        # in to the mock.
+        expected = []
+        for response in request_responses:
+            expected = expected + response['json']['results']
+
+        with requests_mock.mock() as m:
+            # Feed the mock with the three responses it should return
+            m.get(self.fake_url, request_responses)
+
+            # Build the initial (faked) response based on the above
+            faked_response = FakeResp(
+                content=request_responses[0]['json'],
+                request=requests.get(self.fake_url).request
+            )
+            actual = self.ao.process_result(self.fake_url, faked_response)
+            assert type(actual) is dict
+
+            # So that no existing code is broken, the behaviour emulates the
+            # existing behaviour of the API except that it acts as if the data
+            # was in one big page.
+            assert actual['results'] == expected
+            assert actual['totalResults'] == len(expected)
+            assert actual['nextPage'] is False
+            assert actual['pageNo'] == 1
+            assert actual['previousPageNo'] == 0
 
     def test_get(self):
         with requests_mock.Mocker() as m:
