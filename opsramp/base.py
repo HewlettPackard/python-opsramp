@@ -143,11 +143,10 @@ class ApiObject(object):
         if get_request.method.upper().strip() != "GET":
             return data
 
-        collated_data = data["results"]
-
         # Only attempt to pull subsequent pages if we can verify that there are
         # subsequent pages "to be pulled"...
-        if "results" in data.keys():
+        if isinstance(data, dict) and "results" in data.keys():
+            collated_data = data["results"]
             while "nextPage" in data.keys() and data["nextPage"]:
                 # Get the next page full of data.
                 next_page = requests.get(

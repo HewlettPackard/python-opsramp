@@ -18,6 +18,8 @@ from __future__ import print_function
 import unittest
 import json
 from requests import codes as http_status
+from mock import MagicMock
+from opsramp.base import ApiObject
 import requests
 import requests_mock
 import opsramp.binding
@@ -114,7 +116,7 @@ class ApiObjectTest(unittest.TestCase):
 
         with requests_mock.mock() as m:
             expected = {'hello': 'world'}
-            m.get(self.fake_url, json=expected, status_code=200)
+            m.get(self.fake_url, json=expected, status_code=http_status.OK)
 
             faked_response = FakeResp(
                 content=expected,
@@ -186,7 +188,7 @@ class ApiObjectTest(unittest.TestCase):
             }
 
             response = {
-                'status_code': 200,
+                'status_code': http_status.OK,
                 'json': response_body,
             }
 
@@ -218,6 +220,44 @@ class ApiObjectTest(unittest.TestCase):
             assert actual['nextPage'] is False
             assert actual['pageNo'] == 1
             assert actual['previousPageNo'] == 0
+
+        # Test that if the request is not a HTTP GET, complain:
+        fake_get_request = MagicMock()
+        fake_get_request.method = 'FAKE'
+        expected = ['request is not GET']
+        actual = ApiObject.collate_pages(fake_get_request, expected)
+        assert actual == expected
+
+        # Test that it handles the lack of a "results" fields in the data
+        # correctly
+        fake_get_request.method = 'GET'
+        expected = ['request does not contain results key']
+        actual = ApiObject.collate_pages(fake_get_request, expected)
+        assert actual == expected
+
+        # Test that if the next page is not retrieved successfully, an empty
+        # result is returned.
+        with requests_mock.mock() as m:
+            m.get(
+                self.fake_url,
+                status_code=http_status.BAD_REQUEST,
+                json=['should not be seen']
+            )
+
+            fake_get_request = MagicMock()
+            fake_get_request.method = 'GET'
+            fake_get_request.url = self.fake_url
+
+            page_1_data = {
+                'results': ['should not be seen'],
+                'nextPage': True,
+                'pageNo': 1
+            }
+
+            actual = ApiObject.collate_pages(fake_get_request, page_1_data)
+            assert actual['results'] == []
+            assert actual['totalResults'] == 0
+            assert actual['pageSize'] == 0
 
     def test_get(self):
         with requests_mock.Mocker() as m:
