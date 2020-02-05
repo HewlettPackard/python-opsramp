@@ -115,11 +115,28 @@ class InstancesTest(unittest.TestCase):
         group = self.integs.instances()
         thisid = 999999
         url = group.api.compute_url('%s' % thisid)
-        expected = ''
+
+        expected_response = {'id': thisid}
+
+        # Test that a delete works as expected if reason not provided
+        expected_send = {"uninstallReason": "<Not specified>"}
         with requests_mock.Mocker() as m:
-            m.delete(url, text='')
-            actual = group.delete(uuid=thisid)
-        assert actual == expected
+            adapter = m.delete(url, json=expected_response)
+            actual_response = group.delete(uuid=thisid)
+            assert adapter.last_request.json() == expected_send
+            assert actual_response == expected_response
+
+        # Test that a delete works as expected if we provide a reason
+        delete_reason = 'Totally fake reason to delete something'
+        expected_send = {"uninstallReason": delete_reason}
+        with requests_mock.Mocker() as m:
+            adapter = m.delete(url, json=expected_response)
+            actual_response = group.delete(
+                uuid=thisid,
+                uninstall_reason=delete_reason
+            )
+            assert adapter.last_request.json() == expected_send
+            assert actual_response == expected_response
 
     def test_instance_notifier(self):
         group = self.integs.instances()
