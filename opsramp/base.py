@@ -244,10 +244,10 @@ class ApiObject(object):
         resp = requests.put(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def delete(self, suffix='', headers={}):
+    def delete(self, suffix='', headers={}, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = requests.delete(url, headers=hdr)
+        resp = requests.delete(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
 

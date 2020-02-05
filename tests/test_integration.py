@@ -111,6 +111,16 @@ class InstancesTest(unittest.TestCase):
             actual = group.disable(uuid=thisid)
         assert actual == expected
 
+    def test_instance_delete(self):
+        group = self.integs.instances()
+        thisid = 999999
+        url = group.api.compute_url('%s' % thisid)
+        expected = ''
+        with requests_mock.Mocker() as m:
+            m.delete(url, text='')
+            actual = group.delete(uuid=thisid)
+        assert actual == expected
+
     def test_instance_notifier(self):
         group = self.integs.instances()
         thisid = 901234
