@@ -56,6 +56,11 @@ class ApiObjectTest(unittest.TestCase):
         self.awrapper = opsramp.binding.ApiWrapper(self.ao, 'whatevs')
         assert 'ApiWrapper' in str(self.awrapper)
 
+    def test_shared_session(self):
+        '''All clones should share the requests session'''
+        ao2 = self.ao.clone()
+        assert ao2.session is self.ao.session
+
     def test_compute_url(self):
         suffix = 'unit/test/value'
         expected = self.ao.compute_url() + '/' + suffix

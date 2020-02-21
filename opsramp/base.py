@@ -93,14 +93,17 @@ class PathTracker(object):
 
 
 class ApiObject(object):
-    def __init__(self, url, auth, tracker=None):
-        self.session = requests.Session()
+    def __init__(self, url, auth, tracker=None, session=None):
         self.baseurl = url.rstrip('/')
         self.auth = auth
         if tracker:
             self.tracker = tracker
         else:
             self.tracker = PathTracker()
+        if session:
+            self.session = session
+        else:
+            self.session = requests.Session()
 
     def __str__(self):
         return '%s "%s" "%s"' % (
@@ -108,7 +111,12 @@ class ApiObject(object):
         )
 
     def clone(self):
-        new1 = ApiObject(self.baseurl, self.auth, self.tracker.clone())
+        new1 = ApiObject(
+            self.baseurl,
+            self.auth,
+            self.tracker.clone(),
+            self.session
+        )
         return new1
 
     def cd(self, path):
