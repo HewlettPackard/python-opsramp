@@ -94,6 +94,7 @@ class PathTracker(object):
 
 class ApiObject(object):
     def __init__(self, url, auth, tracker=None):
+        self.session = requests.Session()
         self.baseurl = url.rstrip('/')
         self.auth = auth
         if tracker:
@@ -129,8 +130,7 @@ class ApiObject(object):
             self.tracker.reset()
         return self.compute_url()
 
-    @staticmethod
-    def collate_pages(get_request, data):
+    def collate_pages(self, get_request, data):
         """Given a GET request whose results span across multiple pages, crawl
         each page and collate the results.
 
@@ -149,7 +149,7 @@ class ApiObject(object):
             collated_data = data["results"]
             while "nextPage" in data.keys() and data["nextPage"]:
                 # Get the next page full of data.
-                next_page = requests.get(
+                next_page = self.session.get(
                     get_request.url,
                     params={'pageNo': int(data['pageNo']) + 1},
                     headers=get_request.headers
@@ -202,8 +202,7 @@ class ApiObject(object):
         hdr.update(headers)
         return hdr
 
-    @staticmethod
-    def process_result(url, resp):
+    def process_result(self, url, resp):
         if resp.status_code != requests.codes.OK:
             msg = '%s %s %s %s' % (
                 resp,
@@ -220,7 +219,7 @@ class ApiObject(object):
             # list of results from all pages and return the full list.
             if resp.request.method == "GET" and isinstance(data, dict) and \
                     data.get("nextPage", None):
-                return ApiObject.collate_pages(resp.request, data=data)
+                return self.collate_pages(resp.request, data=data)
             else:
                 return data
         except JSONDecodeError:
@@ -229,25 +228,25 @@ class ApiObject(object):
     def get(self, suffix='', headers={}):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = requests.get(url, headers=hdr)
+        resp = self.session.get(url, headers=hdr)
         return self.process_result(url, resp)
 
     def post(self, suffix='', headers={}, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = requests.post(url, headers=hdr, data=data, json=json)
+        resp = self.session.post(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
     def put(self, suffix='', headers={}, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = requests.put(url, headers=hdr, data=data, json=json)
+        resp = self.session.put(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
     def delete(self, suffix='', headers={}, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = requests.delete(url, headers=hdr, data=data, json=json)
+        resp = self.session.delete(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
 

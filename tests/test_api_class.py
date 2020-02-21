@@ -19,7 +19,6 @@ import unittest
 import json
 from requests import codes as http_status
 from mock import MagicMock
-from opsramp.base import ApiObject
 import requests
 import requests_mock
 import opsramp.binding
@@ -225,14 +224,14 @@ class ApiObjectTest(unittest.TestCase):
         fake_get_request = MagicMock()
         fake_get_request.method = 'FAKE'
         expected = ['request is not GET']
-        actual = ApiObject.collate_pages(fake_get_request, expected)
+        actual = self.ao.collate_pages(fake_get_request, expected)
         assert actual == expected
 
         # Test that it handles the lack of a "results" fields in the data
         # correctly
         fake_get_request.method = 'GET'
         expected = ['request does not contain results key']
-        actual = ApiObject.collate_pages(fake_get_request, expected)
+        actual = self.ao.collate_pages(fake_get_request, expected)
         assert actual == expected
 
         # Test that if the next page is not retrieved successfully, an empty
@@ -254,7 +253,7 @@ class ApiObjectTest(unittest.TestCase):
                 'pageNo': 1
             }
 
-            actual = ApiObject.collate_pages(fake_get_request, page_1_data)
+            actual = self.ao.collate_pages(fake_get_request, page_1_data)
             assert actual['results'] == []
             assert actual['totalResults'] == 0
             assert actual['pageSize'] == 0
