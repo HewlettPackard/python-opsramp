@@ -201,6 +201,35 @@ class ApiTest(unittest.TestCase):
             )
             assert actual == expected
 
+    def test_delete_category(self):
+        category_group = self.rba.categories()
+        assert category_group
+        categoryID = 12345
+        expected = ''
+        with requests_mock.Mocker() as m:
+            url = category_group.api.compute_url(categoryID)
+            m.delete(url, text=expected)
+            actual = category_group.delete(uuid=categoryID)
+            assert actual == expected
+
+    def test_update_category(self):
+        category_group = self.rba.categories()
+        assert category_group
+        categoryID = 12345
+        updated_name = 'some new name'
+        expected = {
+            'id': categoryID,
+            'name': updated_name
+        }
+
+        with requests_mock.Mocker() as m:
+            url = category_group.api.compute_url()
+            m.put(url, json=expected)
+            actual = category_group.update(categoryID, {
+                'name': updated_name
+            })
+            assert actual == expected
+
     def test_create_script(self):
         this1 = self.rba.categories().category('unit-test-1')
         assert this1
