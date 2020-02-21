@@ -178,6 +178,8 @@ import opsramp.rba
   - create(name, optional parent\_uuid) -> creates a new *category* on this Tenant and
   returns its uuid. Optionally takes the uuid of a pre-existing category under which to nest the new one.
   - category(uuid) -> returns a Category object representing the API subtree for one specific category.
+  - update(uuid, definition) -> Updates an existing category
+  - delete(uuid) -> Deletes an existing category
 
 - class Category() _the subtree for one RBA category_
   - get() -> returns a list of the scripts in this category.
