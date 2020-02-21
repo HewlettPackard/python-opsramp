@@ -46,6 +46,17 @@ class Categories(ApiWrapper):
     def category(self, uuid):
         return Category(self, uuid)
 
+    # Updates an RBA category based on its ID.
+    def update(self, uuid, definition):
+        # Making sure the UUID is specified in the request body as it's not
+        # specified in the URL for some reason.
+        definition['id'] = uuid
+        return self.api.put('', json=definition)
+
+    # Deletes an RBA category based on its ID
+    def delete(self, uuid):
+        return self.api.delete('%s' % uuid)
+
 
 class Category(ApiWrapper):
     def __init__(self, parent, uuid):
@@ -59,6 +70,7 @@ class Category(ApiWrapper):
     def update(self, uuid, definition):
         return self.api.post('%s' % uuid, json=definition)
 
+    # Deletes a script given by the id
     def delete(self, uuid):
         return self.api.delete('%s' % uuid)
 
