@@ -40,7 +40,9 @@ class Categories(ApiWrapper):
     def create(self, name, parent_uuid=None):
         jjj = {'name': name}
         if parent_uuid:
-            jjj['parent'] = parent_uuid
+            jjj['parent'] = {
+                'id': parent_uuid
+            }
         return self.api.post(json=jjj)
 
     def category(self, uuid):
