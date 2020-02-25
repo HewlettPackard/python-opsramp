@@ -185,26 +185,27 @@ class ApiTest(unittest.TestCase):
 
     def test_categories(self):
         group = self.rba.categories()
-        assert group
-        expected = [
-            {'id': 123456, 'name': 'unit-test-category-A'},
-            {'id': 123457, 'name': 'unit-test-category-B'},
-        ]
 
-        assert expected
+        parent = {'id': 123456, 'name': 'unit-test-parent-category'}
+        child = {'id': 789012, 'name': 'unit-test-child-category'}
+
         with requests_mock.Mocker() as m:
+            # we will be doing two posts so mock both results now.
             url = group.api.compute_url()
-            m.post(url, [{'json': e} for e in expected])
-            # Create a category with no parent ID specified
-            actual = group.create(name=expected[0]['name'])
-            assert actual == expected[0]
+            m.post(url, [{'json': parent}, {'json': child}])
 
-            # Create a category with the parent ID specified
+            # Create a category with no parent ID specified
             actual = group.create(
-                name=expected[1]['name'],
-                parent_uuid=expected[0]['id']
+                name=parent['name']
             )
-            assert actual == expected[1]
+            assert actual == parent
+
+            # Create a category with parent ID specified
+            actual = group.create(
+                name=child['name'],
+                parent_uuid=parent['id']
+            )
+            assert actual == child
 
     def test_delete_category(self):
         category_group = self.rba.categories()
