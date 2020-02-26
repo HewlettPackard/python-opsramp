@@ -16,11 +16,16 @@
 
 from __future__ import print_function
 import unittest
-import json
 from requests import codes as http_status
 from mock import MagicMock
 import requests
 import requests_mock
+
+# Note we are deliberately using simplejson (instead of json) because
+# that's what the requests module uses and we want to raise the same
+# types of exceptions, not exceptions from the generic "json" module.
+import simplejson
+
 import opsramp.binding
 
 
@@ -28,7 +33,7 @@ class FakeResp(object):
     def __init__(self, content, request):
         self.status_code = http_status.OK
         self.content = content
-        self.text = json.dumps(self.content)
+        self.text = simplejson.dumps(self.content)
         self.json_fail = False
         self.request = request
 
