@@ -18,7 +18,6 @@ from __future__ import print_function
 import unittest
 from requests import codes as http_status
 from mock import MagicMock
-import requests
 import requests_mock
 
 # Note we are deliberately using simplejson (instead of json) because
@@ -129,7 +128,7 @@ class ApiObjectTest(unittest.TestCase):
 
             faked_response = FakeResp(
                 content=expected,
-                request=requests.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request
             )
             actual = self.ao.process_result(self.fake_url, faked_response)
             assert type(actual) is dict
@@ -142,7 +141,7 @@ class ApiObjectTest(unittest.TestCase):
 
             faked_response = FakeResp(
                 content=['nothing'],
-                request=requests.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request
             )
 
             faked_response.json_fail = True
@@ -161,7 +160,7 @@ class ApiObjectTest(unittest.TestCase):
 
             faked_response = FakeResp(
                 content=['nothing'],
-                request=requests.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request
             )
             faked_response.status_code = http_status.BAD_REQUEST
 
@@ -216,7 +215,7 @@ class ApiObjectTest(unittest.TestCase):
             # Build the initial (faked) response based on the above
             faked_response = FakeResp(
                 content=request_responses[0]['json'],
-                request=requests.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request
             )
             actual = self.ao.process_result(self.fake_url, faked_response)
             assert type(actual) is dict
