@@ -6,7 +6,7 @@
 # Containing various base classes used in other parts of the library
 # but not intended for direct use by callers.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import requests
 try:
     # Python 3
     from urllib import parse as urlparse
-    from json.decoder import JSONDecodeError
+    from simplejson.errors import JSONDecodeError
 except ImportError:
     # Python 2
     import urlparse
