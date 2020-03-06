@@ -18,7 +18,6 @@
 
 from __future__ import print_function
 import os
-import json
 
 import opsramp.binding
 
@@ -41,10 +40,8 @@ def main():
 
     collection = partner.clients()
     clist = collection.get()
-    print('[')
     for cdata in clist:
-        print('  ', json.dumps(cdata))
-    print(']')
+        print('{0:12s} "{1}"'.format(cdata['uniqueId'], cdata['name']))
 
 
 if __name__ == "__main__":
