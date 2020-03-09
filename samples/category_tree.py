@@ -34,11 +34,19 @@ def main():
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
+    tid_list = [(tenant_id, '')]
+    if not tenant.is_client():
+        children = tenant.clients().get()
+        cdata = [(x['uniqueId'], x['name']) for x in children]
+        tid_list.extend(cdata)
 
-    categs = tenant.rba().categories()
-    clist = categs.get()
-    for cdata in clist:
-        show_contents(categs, cdata, 1)
+    for uuid, name in tid_list:
+        child = ormp.tenant(uuid)
+        categs = child.rba().categories()
+        clist = categs.get()
+        print('{0} "{1}"'.format(uuid, name))
+        for cdata in clist:
+            show_contents(categs, cdata, 1)
 
 
 def show_contents(categs, cdata, indent):
