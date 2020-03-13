@@ -3,9 +3,9 @@
 # A minimal Python language binding for the OpsRamp REST API.
 #
 # roles.py
-# Classes dealing directly with OpsRamp RBAC Roles.
+# Classes dealing directly with OpsRamp RBAC.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,3 +38,11 @@ class Roles(ApiWrapper):
 
     def delete(self, uuid):
         return self.api.delete('%s' % uuid)
+
+
+class PermissionSets(ApiWrapper):
+    def __init__(self, parent):
+        super(PermissionSets, self).__init__(parent.api, 'permissionSets')
+
+    def search(self, pattern=''):
+        return self.api.get('?%s' % pattern)
