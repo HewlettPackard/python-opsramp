@@ -31,8 +31,32 @@ class ApiTest(unittest.TestCase):
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
+        self.permission_sets = self.client.permission_sets()
+        assert 'PermissionSets' in str(self.permission_sets)
+
         self.roles = self.client.roles()
         assert 'Roles' in str(self.roles)
+
+    def test_permission_sets_get(self):
+        group = self.permission_sets
+        url = group.api.compute_url()
+        expected = ['unit', 'test', 'list']
+        with requests_mock.Mocker() as m:
+            m.get(url, json=expected)
+            actual = group.get()
+        assert actual == expected
+
+    def test_permission_sets_search(self):
+        group = self.permission_sets
+        for pattern, expected in (
+            ('', ['unit', 'test', 'results']),
+            ('pageNo=1&pageSize=100&is&sortName=id', ['more', 'nonsense'])
+        ):
+            url = group.api.compute_url('?%s' % pattern)
+            with requests_mock.Mocker() as m:
+                m.get(url, json=expected)
+                actual = group.search(pattern)
+            assert actual == expected
 
     def test_role_search(self):
         group = self.roles

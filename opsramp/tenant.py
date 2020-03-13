@@ -73,6 +73,9 @@ class Tenant(ApiWrapper):
     def roles(self):
         return opsramp.roles.Roles(self)
 
+    def permission_sets(self):
+        return opsramp.roles.PermissionSets(self)
+
     def escalations(self):
         return opsramp.escalations.Escalations(self)
 
