@@ -122,6 +122,7 @@ import opsramp.tenant
   this is only valid for MSP-level tenants because an OpsRamp client cannot contain other clients._
   - discovery() -> returns a Discovery object representing all OpsRamp Discovery profiles for this Tenant.
   - credential\_sets() -> returns a Credential set object representing all OpsRamp Discovery profiles for this Tenant.
+  - permission\_sets() -> returns a PermissionSets object representing all OpsRamp RBAC permission sets for this Tenant.
   - roles() -> returns a Roles object representing all OpsRamp RBAC roles for this Tenant.
   - escalations() -> returns an Escalations object representing the Alert Escalation Policies of this Tenant.
   - mgmt\_profiles() -> returns a Profiles object representing the Management Profiles of this Tenant. These are used
@@ -141,6 +142,9 @@ import opsramp.service\_maps
   - get(uuid=None, minimal=False) -> returns a list of dicts, each one containing details for one service map.
 
 import opsramp.roles
+
+- class PermissionSets() _the RBAC permission sets that are defined for this specific Tenant_
+  - search(pattern) -> returns a list of dicts, each containing a single description.
 
 - class Roles() _the subtree of RBAC roles that are defined for this specific Tenant_
   - create(definition) -> Creates a new RBAC role in this Tenant. "definition" is a Python dict.
