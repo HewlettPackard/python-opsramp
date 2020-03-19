@@ -33,6 +33,7 @@ import opsramp.mgmt_profiles
 import opsramp.sites
 import opsramp.service_maps
 import opsramp.kb
+import opsramp.resources
 
 
 class Tenant(ApiWrapper):
@@ -69,6 +70,9 @@ class Tenant(ApiWrapper):
 
     def credential_sets(self):
         return opsramp.devmgmt.CredentialSets(self)
+
+    def resources(self):
+        return opsramp.resources.Resources(self)
 
     def roles(self):
         return opsramp.roles.Roles(self)
