@@ -381,6 +381,14 @@ import opsramp.resources
 
 - class Resources() _the subtree of Resources that are defined for this specific Tenant_
   - create(definition) -> Creates a new resource in this Tenant. "definition" is a Python dict.
+  - update(uuid, definition) -> updates an existing resource.
+  - delete(uuid) -> deletes an existing resource.
+  - search(pattern) -> searches for resources matching a pattern.
+  - minimal(pattern) -> similar to search but returns minimal details about each resource to
+  improve performance and reduce runtime. _This appears to work only on OpsRamp *clients.*_
+  - applications(uuid) -> This endpoint is used to fetch list of applications running on a resource.
+  - availability(uuid, start\_epoch, end\_epoch) -> fetch the availability details of a resource
+  within a specific time frame. The times are Unix epoch timestamps.
 
 ## Samples and examples
 The `samples` subdirectory contains a series of short Python scripts illustrating

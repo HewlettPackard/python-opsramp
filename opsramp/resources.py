@@ -23,9 +23,64 @@ from __future__ import print_function
 from opsramp.base import ApiWrapper
 
 
+def list2ormp(result_list):
+    '''Bizarrely, OpsRamp returns a simple list for some of
+    the Resources API calls. This function wraps it up into
+    a fake of the typical OpsRamp return struct so that callers
+    don't have to special case this.'''
+    count = len(result_list)
+    retval = {
+        'totalResults': count,
+        'pageSize': count,
+        'totalPages': 1,
+        'pageNo': 1,
+        'previousPageNo': 0,
+        'nextPage': False,
+        'descendingOrder': False,
+        'results': result_list
+    }
+    return retval
+
+
 class Resources(ApiWrapper):
     def __init__(self, parent):
         super(Resources, self).__init__(parent.api, 'resources')
 
     def create(self, definition):
-        return self.api.post('', json=definition)
+        url_suffix = ''
+        return self.api.post(url_suffix, json=definition)
+
+    def update(self, uuid, definition):
+        url_suffix = uuid
+        return self.api.post(url_suffix, json=definition)
+
+    def delete(self, uuid):
+        url_suffix = uuid
+        return self.api.delete(url_suffix)
+
+    def search(self, pattern=''):
+        '''returns *verbose* details about resources on this tenant'''
+        url_suffix = 'search'
+        if pattern:
+            url_suffix += '?{0}'.format(pattern)
+        simple_list = self.api.get(url_suffix)
+        return list2ormp(simple_list)
+
+    def minimal(self, pattern=''):
+        '''returns *minimal* details about resources on this tenant'''
+        url_suffix = 'minimal'
+        if pattern:
+            url_suffix += '?{0}'.format(pattern)
+        simple_list = self.api.get(url_suffix)
+        return list2ormp(simple_list)
+
+    def applications(self, uuid):
+        url_suffix = '{0}/applications'.format(uuid)
+        simple_list = self.api.get(url_suffix)
+        return list2ormp(simple_list)
+
+    def availability(self, uuid, start_epoch, end_epoch):
+        url_suffix = '{0}/availability?startTime={1}&endTime={2}'.format(
+            uuid, start_epoch, end_epoch
+        )
+        return self.api.get(url_suffix)
