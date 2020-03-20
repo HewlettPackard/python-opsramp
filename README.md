@@ -132,6 +132,7 @@ import opsramp.tenant
   that are used in the OpsRamp UI to present human-readable graphs of the impact of service failures on each other.
   - kb() -> returns a KnowledgeBase object. These are used to organize
   knowledge base articles and categories related to this tenant.
+  - resources() -> returns a Resources object representing all OpsRamp resources on this Tenant
 
 import opsramp.service\_maps
 
@@ -375,6 +376,11 @@ import opsramp.integrations
   - update(uuid, definition) -> updates an existing KB template.
   - delete(uuid) -> deletes an existing KB template.
   - search(pattern) -> searches for templates matching a pattern.
+
+import opsramp.resources
+
+- class Resources() _the subtree of Resources that are defined for this specific Tenant_
+  - create(definition) -> Creates a new resource in this Tenant. "definition" is a Python dict.
 
 ## Samples and examples
 The `samples` subdirectory contains a series of short Python scripts illustrating
