@@ -23,12 +23,17 @@ from __future__ import print_function
 from opsramp.base import ApiWrapper
 
 
-def list2ormp(result_list):
-    '''Bizarrely, OpsRamp returns a simple list for some of
-    the Resources API calls. This function wraps it up into
-    a fake of the typical OpsRamp return struct so that callers
-    don't have to special case this.'''
-    count = len(result_list)
+def list2ormp(result_obj):
+    '''Bizarrely, OpsRamp sometimes returns a simple list for
+    Resources API calls instead of its usual results struct.'''
+    if isinstance(result_obj, dict):
+        assert 'results' in result_obj
+        assert 'totalResults' in result_obj
+        return result_obj
+    # Wrap it up in a fake of the typical OpsRamp results struct
+    # so that callers don't have to special case it.
+    assert isinstance(result_obj, list)
+    count = len(result_obj)
     retval = {
         'totalResults': count,
         'pageSize': count,
@@ -37,7 +42,7 @@ def list2ormp(result_list):
         'previousPageNo': 0,
         'nextPage': False,
         'descendingOrder': False,
-        'results': result_list
+        'results': result_obj
     }
     return retval
 

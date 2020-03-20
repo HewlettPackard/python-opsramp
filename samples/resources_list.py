@@ -36,19 +36,15 @@ def main():
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
 
-    jdata = {
-        "hostName": "testdevice-api",
-        "resourceType": "server",
-        "managementProfile": "dummy-profile",
-        "resourceNetworkInterface": [{
-            "ipAddressType": "STATIC",
-            "ipAddress": "10.10.10.10"
-        }
-        ]
-    }
-    resources = tenant.resources()
-    resp = resources.create(jdata)
-    print(yaml.dump(resp, default_flow_style=False))
+    group = tenant.resources()
+    if tenant.is_client():
+        resp = group.minimal()
+    else:
+        # I would prefer minimal but it doesn't work on partner.
+        resp = group.search()
+
+    print(resp['totalResults'], 'resources')
+    print(yaml.dump(resp['results'], default_flow_style=False))
 
 
 if __name__ == "__main__":

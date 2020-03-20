@@ -107,6 +107,7 @@ def main():
         agent_script = tenant.get_agent_script()
         print('length', len(agent_script))
         print(agent_script.split('\n')[0])
+        print('')
     else:
         print('List the clients of tenant', TENANT_ID)
         group = tenant.clients()
@@ -127,6 +128,15 @@ def main():
         # uncomment these lines to actually create the client.
         # resp = group.create(cdef)
         # print(resp)
+
+    print('List the Resources on tenant', TENANT_ID)
+    if tenant.is_client():
+        group = tenant.resources()
+        found = group.minimal()
+        print(found['totalResults'], 'resources')
+        print(yaml.dump(found['results']))
+    else:
+        print('<clients only>')
 
     print('List the monitoring templates on tenant', TENANT_ID)
     monitoring = tenant.monitoring()
