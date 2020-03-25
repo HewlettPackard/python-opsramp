@@ -45,23 +45,35 @@ class Tenant(ApiWrapper):
         return self.uuid[:7] == 'client_'
 
     def rba(self):
-        return opsramp.rba.Rba(self)
+        if not hasattr(self, 'rba_object'):
+            self.rba_object = opsramp.rba.Rba(self)
+        return self.rba_object
 
     def monitoring(self):
-        return opsramp.monitoring.Monitoring(self)
+        if not hasattr(self, 'monitoring_object'):
+            self.monitoring_object = opsramp.monitoring.Monitoring(self)
+        return self.monitoring_object
 
     def clients(self):
         assert not self.is_client()
-        return opsramp.msp.Clients(self)
+        if not hasattr(self, 'clients_object'):
+            self.clients_object = opsramp.msp.Clients(self)
+        return self.clients_object
 
     def policies(self):
-        return opsramp.devmgmt.Policies(self)
+        if not hasattr(self, 'policies_object'):
+            self.policies_object = opsramp.devmgmt.Policies(self)
+        return self.policies_object
 
     def discovery(self):
-        return opsramp.devmgmt.Discovery(self)
+        if not hasattr(self, 'discovery_object'):
+            self.discovery_object = opsramp.devmgmt.Discovery(self)
+        return self.discovery_object
 
     def integrations(self):
-        return opsramp.integrations.Integrations(self)
+        if not hasattr(self, 'integrations_object'):
+            self.integrations_object = opsramp.integrations.Integrations(self)
+        return self.integrations_object
 
     def get_agent_script(self):
         assert self.is_client()
@@ -69,28 +81,46 @@ class Tenant(ApiWrapper):
         return self.api.get('agents/deployAgentsScript', headers=hdr)
 
     def credential_sets(self):
-        return opsramp.devmgmt.CredentialSets(self)
+        if not hasattr(self, 'cred_sets_object'):
+            self.cred_sets_object = opsramp.devmgmt.CredentialSets(self)
+        return self.cred_sets_object
 
     def resources(self):
-        return opsramp.resources.Resources(self)
+        if not hasattr(self, 'resources_object'):
+            self.resources_object = opsramp.resources.Resources(self)
+        return self.resources_object
 
     def roles(self):
-        return opsramp.roles.Roles(self)
+        if not hasattr(self, 'roles_object'):
+            self.roles_object = opsramp.roles.Roles(self)
+        return self.roles_object
 
     def permission_sets(self):
-        return opsramp.roles.PermissionSets(self)
+        if not hasattr(self, 'perm_sets_object'):
+            self.perm_sets_object = opsramp.roles.PermissionSets(self)
+        return self.perm_sets_object
 
     def escalations(self):
-        return opsramp.escalations.Escalations(self)
+        if not hasattr(self, 'escalations_object'):
+            self.escalations_object = opsramp.escalations.Escalations(self)
+        return self.escalations_object
 
     def mgmt_profiles(self):
-        return opsramp.mgmt_profiles.Profiles(self)
+        if not hasattr(self, 'dmps_object'):
+            self.dmps_object = opsramp.mgmt_profiles.Profiles(self)
+        return self.dmps_object
 
     def sites(self):
-        return opsramp.sites.Sites(self)
+        if not hasattr(self, 'sites_object'):
+            self.sites_object = opsramp.sites.Sites(self)
+        return self.sites_object
 
     def service_maps(self):
-        return opsramp.service_maps.ServiceMaps(self)
+        if not hasattr(self, 'service_maps_object'):
+            self.service_maps_object = opsramp.service_maps.ServiceMaps(self)
+        return self.service_maps_object
 
     def kb(self):
-        return opsramp.kb.KnowledgeBase(self)
+        if not hasattr(self, 'kb_object'):
+            self.kb_object = opsramp.kb.KnowledgeBase(self)
+        return self.kb_object
