@@ -6,7 +6,7 @@
 # outside of this script using pip install -r test-requirements.txt and
 # that command is already folded into our tox.ini
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
 set -eux -o pipefail
 flake8 --ignore=none --exclude=.git,__pycache__,.tox,.eggs,*.egg,venv,venv2,venv3
-coverage run --concurrency=eventlet --include='opsramp/*' -m pytest -vvv
+coverage run --include='opsramp/*' -m pytest -vvv
 coverage report
 coverage html
 coverage xml -o ./cover/coverage.xml
