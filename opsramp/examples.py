@@ -25,7 +25,7 @@ import opsramp.rba
 import opsramp.msp
 
 
-CATEGORY_NAME = 'Testing 123'
+CATEGORY_NAME = 'python-opsramp test category'
 
 
 def main():
@@ -159,40 +159,43 @@ def main():
             cid = c['id']
             break
     else:
-        resp = group.create(CATEGORY_NAME)
-        cid = resp['id']
+        # resp = group.create(CATEGORY_NAME)
+        # cid = resp['id']
+        print('Category {} not found'.format(CATEGORY_NAME))
+        cid = None
 
-    print('Scripts in category', cid)
-    cobj = group.category(cid)
-    slist = cobj.get()
-    print(len(slist), 'scripts')
-    for s in slist:
-        print('...', s['id'], s['name'])
-        direct = cobj.get(s['id'])
-        assert s == direct
+    if cid:
+        print('Scripts in category', cid)
+        cobj = group.category(cid)
+        slist = cobj.get()
+        print(len(slist), 'scripts')
+        for s in slist:
+            print('...', s['id'], s['name'])
+            direct = cobj.get(s['id'])
+            assert s == direct
 
-    # Create a new RBA script in this category, with one parameter. You can
-    # see from the "payload" that this gets passed to the script as $1
-    p1 = cobj.mkParameter(
-        name='venue',
-        description='Where am I today?',
-        datatype='STRING'
-    )
-    print('Parameter definition struct')
-    print(yaml.dump(p1))
-    s1 = cobj.mkScript(
-        name='Hello <venue>',
-        description='Stereotypical rock star intro',
-        platforms=['LINUX'],
-        execution_type='COMMAND',
-        payload='echo "hello $1"',
-        parameters=[p1]
-    )
-    print('Script definition struct')
-    print(yaml.dump(s1))
-    # uncomment these lines to actually create the script.
-    # resp = cobj.create(s1)
-    # print(resp)
+        # Create a new RBA script in this category with one parameter. You can
+        # see from the "payload" that this gets passed to the script as $1
+        p1 = cobj.mkParameter(
+            name='venue',
+            description='Where am I today?',
+            datatype='STRING'
+        )
+        print('Parameter definition struct')
+        print(yaml.dump(p1))
+        s1 = cobj.mkScript(
+            name='Hello <venue>',
+            description='Stereotypical rock star intro',
+            platforms=['LINUX'],
+            execution_type='COMMAND',
+            payload='echo "hello $1"',
+            parameters=[p1]
+        )
+        print('Script definition struct')
+        print(yaml.dump(s1))
+        # uncomment these lines to actually create the script.
+        # resp = cobj.create(s1)
+        # print(resp)
 
     print('Management policies on tenant', TENANT_ID)
     group = tenant.policies()
