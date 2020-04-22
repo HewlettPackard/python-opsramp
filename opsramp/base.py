@@ -233,25 +233,25 @@ class ApiObject(object):
         except JSONDecodeError:
             return resp.text
 
-    def get(self, suffix='', headers={}):
+    def get(self, suffix='', headers=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.get(url, headers=hdr)
         return self.process_result(url, resp)
 
-    def post(self, suffix='', headers={}, data=None, json=None):
+    def post(self, suffix='', headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.post(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def put(self, suffix='', headers={}, data=None, json=None):
+    def put(self, suffix='', headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.put(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def delete(self, suffix='', headers={}, data=None, json=None):
+    def delete(self, suffix='', headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.delete(url, headers=hdr, data=data, json=json)
@@ -267,5 +267,5 @@ class ApiWrapper(object):
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
 
-    def get(self, suffix='', headers={}):
+    def get(self, suffix='', headers=None):
         return self.api.get(suffix, headers)

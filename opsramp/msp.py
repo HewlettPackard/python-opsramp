@@ -5,7 +5,7 @@
 # msp.py
 # Classes related to partner-level actions.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,10 +59,14 @@ class Clients(ApiWrapper):
     # Helper functions to create the complex structures that OpsRamp
     # uses to manipulate client definitions.
     @staticmethod
-    def mkHours(day_start=datetime.time(9, 0),
-                day_end=datetime.time(17, 0),
+    def mkHours(day_start=None,
+                day_end=None,
                 week_start=2, week_end=6,
                 sms_voice_notification=False):
+        if not day_start:
+            day_start = datetime.time(9, 0)
+        if not day_end:
+            day_end = datetime.time(17, 0)
         retval = {
             'businessStartHour': day_start.hour,
             'businessStartMin': day_start.minute,
