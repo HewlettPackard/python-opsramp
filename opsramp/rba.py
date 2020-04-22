@@ -5,7 +5,7 @@
 # rba.py
 # Runbook Automation related classes
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ class Category(ApiWrapper):
     def mkScript(name, description, platforms, execution_type,
                  payload=None,
                  payload_file=None,
-                 parameters=[],
+                 parameters=None,
                  script_name=None,
                  install_timeout=0,
                  registry_path=None,
