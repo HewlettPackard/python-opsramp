@@ -44,10 +44,10 @@ class Profiles(ApiWrapper):
         return self.api.delete('%s' % uuid)
 
     def attach(self, uuid):
-        return self.api.post('%s/attach' % uuid)
+        return self.api.get('%s/attach' % uuid)
 
     def detach(self, uuid):
-        return self.api.post('%s/detach' % uuid)
+        return self.api.get('%s/detach' % uuid)
 
     def reconnect(self, uuid):
         return self.api.get('%s/reconnectTunnel' % uuid)
