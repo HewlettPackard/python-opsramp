@@ -79,7 +79,7 @@ class ApiTest(unittest.TestCase):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.get(url, json=expected)
             actual = self.group.attach(uuid=thisid)
         assert actual == expected
 
@@ -89,7 +89,7 @@ class ApiTest(unittest.TestCase):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.get(url, json=expected)
             actual = self.group.detach(uuid=thisid)
         assert actual == expected
 
