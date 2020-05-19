@@ -44,6 +44,52 @@ class Helpers(object):
             content = base64.b64encode(f.read())
         return content.decode()
 
+    # (DW) Add support for retries of requests to the OpsRamp API in the event
+    # of receiving a HTTP 429 (Too Many Requests) response from the API to
+    # suggest that it has activated rate limiting. This implements progressive
+    # backoff (i.e. gradually increasing the delay between attempts) until the
+    # maximum number of retries is reached.
+    # By wrapping this retry handler around the session instance being used
+    # inside instances of the ApiWrapper class the effect of this should be
+    # more or less transparent to the rest of the code; at least until rate
+    # limiting kicks in, at which point it will hopefully slow down but still
+    # "get there" so to speak, and seems to be non-"hacky".
+    # The defaults *should* be sensible.
+    # Note: if the status_forcelist tuple only has one value (e.g 429) then a
+    # trailing comma is REQUIRED for Python to interpret it correctly as a
+    # tuple: type((429)) is 'int', whereas type((429,)) is 'tuple'.
+    # Borrowed from:
+    # https://www.peterbe.com/plog/best-practice-with-retries-with-requests
+    @staticmethod
+    def session_add_retry_handler(
+        retries=5, backoff_factor=0.3, status_forcelist=(429,), session=None
+    ):
+        session = session or requests.Session()
+        retry = Helpers.create_retry_handler(
+            retries, backoff_factor, status_forcelist
+        )
+
+        adapter = requests.adapters.HTTPAdapter(max_retries=retry)
+
+        session.mount(prefix='http://', adapter=adapter)
+        session.mount(prefix='https://', adapter=adapter)
+        return session
+
+    @staticmethod
+    def create_retry_handler(retries, backoff_factor, status_forcelist):
+        assert isinstance(retries, int)
+        assert retries >= 1
+        assert backoff_factor > 0
+        assert isinstance(status_forcelist, tuple)
+
+        return requests.packages.urllib3.util.retry.Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=status_forcelist
+        )
+
 
 class PathTracker(object):
     def __init__(self):
@@ -100,10 +146,8 @@ class ApiObject(object):
             self.tracker = tracker
         else:
             self.tracker = PathTracker()
-        if session:
-            self.session = session
-        else:
-            self.session = requests.Session()
+
+        self.session = Helpers.session_add_retry_handler(session=session)
 
     def __str__(self):
         return '%s "%s" "%s"' % (
@@ -142,7 +186,7 @@ class ApiObject(object):
         """Given a GET request whose results span across multiple pages, crawl
         each page and collate the results.
 
-        :param first_page_data: "results" dict for first pagefull of dat
+        :param first_page_data: "results" dict for first pageful of data
         :type first_page_data: dict
         :param request: Request used to get first page
         :type request: requests.PreparedRequest
