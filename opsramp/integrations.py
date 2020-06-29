@@ -28,6 +28,7 @@ POST install/{intgld} e.g. CUSTOM
 
 GET installed/search?queryString=
 GET installed/{installedIntgld}
+GET installed/{installedIntgld}/configFile/kubernetes
 DELETE installed/{installedIntgld}
 POST installed/{installedIntgld}
 POST installed/{installedIntgld}/notifier
@@ -87,6 +88,9 @@ class Instances(ApiWrapper):
         if pattern:
             suffix += '?' + pattern
         return self.api.get(suffix)
+
+    def get_kubernetes_configuration(self, uuid):
+        return self.api.get('%s/configFile/kubernetes' % uuid)
 
     def create(self, type_name, definition):
         resp = self.creator_api.post(type_name, json=definition)

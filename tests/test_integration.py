@@ -67,6 +67,17 @@ class InstancesTest(unittest.TestCase):
         # all of the tests for it.
         assert isinstance(self.integs.installed(), type(group))
 
+    def test_instance_kubernetes_configuration(self):
+        group = self.integs.instances()
+        thisid = 123456
+        url = group.api.compute_url('%s/configFile/kubernetes' % thisid)
+        expected = [{'unit': 'test'}]
+        with requests_mock.Mocker() as m:
+            assert expected
+            m.get(url, json=expected)
+            actual = group.get_kubernetes_configuration(uuid=thisid)
+        assert actual == expected
+
     def test_instance_create(self):
         group = self.integs.instances()
         name = 'unit-test-integration'
