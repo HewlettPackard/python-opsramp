@@ -46,6 +46,10 @@ def main():
     group.redact_response(resp)
     print(yaml.dump(resp, indent=2))
 
+    resp_config = group.get_kubernetes_configuration(uniqueId)
+    resp_list = list(yaml.load_all(resp_config, Loader=yaml.FullLoader))
+    print(yaml.dump(resp_list, indent=2))
+
 
 if __name__ == "__main__":
     main()
