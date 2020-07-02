@@ -300,6 +300,9 @@ import opsramp.integrations
   - update(definition) -> "definition" is a Python dict specifying the changes
   to be made to this instance. The contents are described in the OpsRamp docs
   and helper functions to construct them exist in the Integrations class.
+  - get\_kubernetes\_configuration(uuid) -> Returns the content of the Kubernetes
+  configuation file for a given integration as a string. Raises an exception if
+  that concept has no meaning for the type of integration specified.
   - set\_auth\_type(self, auth\_type) -> sets the authentication type for this
   integration to one of "OAUTH2", "WEBHOOK", "BASIC" and returns a dict that
   contains the keys etc that are needed to connect to this integration using
