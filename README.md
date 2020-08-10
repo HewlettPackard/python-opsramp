@@ -133,6 +133,7 @@ import opsramp.tenant
   - kb() -> returns a KnowledgeBase object. These are used to organize
   knowledge base articles and categories related to this tenant.
   - resources() -> returns a Resources object representing all OpsRamp resources on this Tenant
+  - first_response() -> returns an First_Response object representing the Alert First Response Policies of this Tenant
 
 import opsramp.service\_maps
 
@@ -338,7 +339,7 @@ import opsramp.integrations
   - search(pattern) -> returns a list of dicts, each containing a single policy.
   - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
   - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp.
-
+  
 - class Profiles() _the subtree of Management Profiles that are defined for this specific Tenant_
   - create(definition) -> Creates a new mgmt profile in this Tenant. "definition" is a Python dict.
   - update(uuid, definition) -> Updates an existing mgmt profile.
@@ -356,6 +357,15 @@ import opsramp.integrations
   articles for this tenant.
   - templates() -> Returns a KBtemplates object representing the knowledge base
   templates for this tenant.
+
+- class First_Response() _the subtree of Alert First Response Policies that are defined for this specific Tenant_
+  - create(definition) -> Creates a new first response policy in this Tenant. "definition" is a Python dict.
+  - policy_detail(uuid) -> returns the detaail for a specific first response policy
+  - update(uuid, definition) -> Updates an existing first response policy.
+  - delete(uuid) -> Deletes an existing first response policy.
+  - search(pattern) -> returns a list of dicts, each containing in a client.
+  - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
+  - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp. 
 
 - class KBcategories() _the subtree of knowledge base categories for this specific Tenant_
   - create(definition) -> creates a KB category.
