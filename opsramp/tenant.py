@@ -34,6 +34,7 @@ import opsramp.sites
 import opsramp.service_maps
 import opsramp.kb
 import opsramp.resources
+import opsramp.first_response
 
 
 class Tenant(ApiWrapper):
@@ -94,3 +95,6 @@ class Tenant(ApiWrapper):
 
     def kb(self):
         return opsramp.kb.KnowledgeBase(self)
+
+    def first_response(self):
+        return opsramp.first_response.First_Response(self)
