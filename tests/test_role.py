@@ -52,7 +52,10 @@ class ApiTest(unittest.TestCase):
             ('', ['unit', 'test', 'results']),
             ('pageNo=1&pageSize=100&is&sortName=id', ['more', 'nonsense'])
         ):
-            url = group.api.compute_url('?%s' % pattern)
+            if pattern:
+                url = group.api.compute_url('?' + pattern)
+            else:
+                url = group.api.compute_url()
             with requests_mock.Mocker() as m:
                 m.get(url, json=expected)
                 actual = group.search(pattern)

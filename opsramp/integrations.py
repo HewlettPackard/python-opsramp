@@ -69,7 +69,7 @@ class Types(ApiWrapper):
         super(Types, self).__init__(parent.api, 'available')
 
     def search(self, pattern=''):
-        suffix = '/search'
+        suffix = 'search'
         if pattern:
             suffix += '?' + pattern
         return self.api.get(suffix)
@@ -84,7 +84,7 @@ class Instances(ApiWrapper):
         self.creator_api.chroot('install')
 
     def search(self, pattern=''):
-        suffix = '/search'
+        suffix = 'search'
         if pattern:
             suffix += '?' + pattern
         return self.api.get(suffix)

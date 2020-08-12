@@ -65,10 +65,10 @@ class Resources(ApiWrapper):
 
     def search(self, pattern=''):
         '''returns *verbose* details about resources on this tenant'''
-        url_suffix = 'search'
+        suffix = 'search'
         if pattern:
-            url_suffix += '?{0}'.format(pattern)
-        simple_list = self.api.get(url_suffix)
+            suffix += '?' + pattern
+        simple_list = self.api.get(suffix)
         return list2ormp(simple_list)
 
     def minimal(self, pattern=''):

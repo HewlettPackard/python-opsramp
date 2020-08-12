@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,13 +36,18 @@ class ApiTest(unittest.TestCase):
 
     def test_search(self):
         group = self.first_response
-        url = group.api.compute_url()
-        expected = ['unit', 'test', 'list']
-        with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
-            actual = group.search()
-        assert actual == expected
+        for pattern, expected in (
+            ('', ['unit', 'test', 'results']),
+            ('pageNo=1&pageSize=100&is&sortName=id', ['more', 'nonsense'])
+        ):
+            if pattern:
+                url = group.api.compute_url('?' + pattern)
+            else:
+                url = group.api.compute_url()
+            with requests_mock.Mocker() as m:
+                m.get(url, json=expected)
+                actual = group.search(pattern)
+            assert actual == expected
 
     def test_policy_detail(self):
         group = self.first_response

@@ -5,7 +5,7 @@
 # devmgmt.py
 # Device management classes.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,8 +27,11 @@ class Policies(ApiWrapper):
     def __init__(self, parent):
         super(Policies, self).__init__(parent.api, 'policies/management')
 
-    def search(self, pattern=''):
-        return self.api.get('/search?name=%s' % pattern)
+    def search(self, policy_name=''):
+        suffix = 'search'
+        if policy_name:
+            suffix += '?name=' + policy_name
+        return self.api.get(suffix)
 
     def create(self, definition):
         return self.api.post('', json=definition)
@@ -48,8 +51,11 @@ class Discovery(ApiWrapper):
         assert parent.is_client()
         super(Discovery, self).__init__(parent.api, 'policies/discovery')
 
-    def search(self, pattern=''):
-        return self.api.get('/search?name=%s' % pattern)
+    def search(self, profile_name=''):
+        suffix = 'search'
+        if profile_name:
+            suffix += '?name=' + profile_name
+        return self.api.get(suffix)
 
     def create(self, definition):
         return self.api.post('', json=definition)
