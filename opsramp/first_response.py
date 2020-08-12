@@ -5,7 +5,7 @@
 # first_response.py
 # Classes dealing directly with OpsRamp First Response Policies.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,8 +28,10 @@ class First_Response(ApiWrapper):
         super(First_Response, self).__init__(parent.api,
                                              'policies/firstResponse')
 
-    def search(self):
-        return self.api.get()
+    def search(self, pattern=''):
+        if pattern:
+            pattern = '?' + pattern
+        return self.api.get(pattern)
 
     def policy_detail(self, uuid):
         return self.api.get('%s' % uuid)

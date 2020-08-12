@@ -31,11 +31,11 @@ class Clients(ApiWrapper):
     def get(self, suffix='/minimal'):
         return self.api.get(suffix)
 
-    def search(self, pattern=''):
-        path = '/search'
-        if pattern:
-            path += '?queryString=' + pattern
-        return self.api.get(path)
+    def search(self, query_string=''):
+        suffix = 'search'
+        if query_string:
+            suffix += '?queryString=' + query_string
+        return self.api.get(suffix)
 
     def create(self, definition):
         assert 'name' in definition

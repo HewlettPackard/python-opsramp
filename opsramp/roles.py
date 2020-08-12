@@ -28,7 +28,10 @@ class Roles(ApiWrapper):
         super(Roles, self).__init__(parent.api, 'roles')
 
     def search(self, pattern=''):
-        return self.api.get('/search?%s' % pattern)
+        suffix = 'search'
+        if pattern:
+            suffix += '?' + pattern
+        return self.api.get(suffix)
 
     def create(self, definition):
         return self.api.post('', json=definition)
@@ -45,4 +48,6 @@ class PermissionSets(ApiWrapper):
         super(PermissionSets, self).__init__(parent.api, 'permissionSets')
 
     def search(self, pattern=''):
-        return self.api.get('?%s' % pattern)
+        if pattern:
+            pattern = '?' + pattern
+        return self.api.get(pattern)

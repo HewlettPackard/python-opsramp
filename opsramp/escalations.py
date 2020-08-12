@@ -5,7 +5,7 @@
 # escalations.py
 # Classes dealing directly with OpsRamp Alert Escalation Policies.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,10 @@ class Escalations(ApiWrapper):
         super(Escalations, self).__init__(parent.api, 'escalations')
 
     def search(self, pattern=''):
-        return self.api.get('/search?%s' % pattern)
+        suffix = 'search'
+        if pattern:
+            suffix += '?' + pattern
+        return self.api.get(suffix)
 
     def create(self, definition):
         return self.api.post('', json=definition)

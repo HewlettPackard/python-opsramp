@@ -5,7 +5,7 @@
 # monitoring.py
 # Classes related to monitoring templates and similar things.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class Templates(ApiWrapper):
         super(Templates, self).__init__(parent.api, 'templates')
 
     def search(self, pattern=''):
-        suffix = '/search'
+        suffix = 'search'
         if pattern:
             suffix += '?' + pattern
         return self.api.get(suffix)
