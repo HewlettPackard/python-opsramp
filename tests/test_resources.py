@@ -19,9 +19,46 @@ import unittest
 import requests_mock
 
 import opsramp.binding
+import opsramp.resources
 
 
-class ResourcesText(unittest.TestCase):
+class StaticsTest(unittest.TestCase):
+    def test_list2ormp_passthru(self):
+        good1 = {'results': 'exist', 'totalResults': 12}
+        result = opsramp.resources.list2ormp(good1)
+        assert result is good1
+
+    def test_list2ormp_conversion(self):
+        list_form = [1, 2, 3, 4, 5, 6, 7, 8]
+        count = len(list_form)
+        canonical_form = {
+            'totalResults': count,
+            'pageSize': count,
+            'totalPages': 1,
+            'pageNo': 1,
+            'previousPageNo': 0,
+            'nextPage': False,
+            'descendingOrder': False,
+            'results': list_form
+        }
+        result = opsramp.resources.list2ormp(list_form)
+        assert result == canonical_form
+
+    def test_list2ormp_invalid(self):
+        bad_ones = (
+            3.14159,
+            'string not allowed',
+            {},
+            {'big cow': 'close', 'small cow': 'far away'},
+            {'results': 'not enough on their own'},
+            {'totalResults': 0, 'noresults': 'bad'}
+        )
+        for bad1 in bad_ones:
+            with self.assertRaises(AssertionError):
+                opsramp.resources.list2ormp(bad1)
+
+
+class ApiTest(unittest.TestCase):
     def setUp(self):
         fake_url = 'https://api.example.com'
         fake_token = 'unit-test-fake-token'
