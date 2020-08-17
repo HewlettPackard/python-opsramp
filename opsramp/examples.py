@@ -49,6 +49,20 @@ def main():
     # Focus on a specific tenant.
     tenant = ormp.tenant(TENANT_ID)
 
+    if tenant.is_client():
+        print('List the First Response Policies on tenant', TENANT_ID)
+        group = tenant.first_response()
+        found = group.search()
+        print(found['totalResults'], 'first response policies')
+        print(yaml.dump(found['results'], default_flow_style=False))
+
+    if tenant.is_client():
+        print('List the Service Maps on tenant', TENANT_ID)
+        group = tenant.service_maps()
+        found = group.get(minimal=True)
+        print(len(found), 'service maps')
+        print(yaml.dump(found, default_flow_style=False))
+
     print('List the RBAC permission sets on tenant', TENANT_ID)
     group = tenant.permission_sets()
     found = group.search()
