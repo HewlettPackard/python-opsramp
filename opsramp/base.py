@@ -62,7 +62,7 @@ class Helpers(object):
     # https://www.peterbe.com/plog/best-practice-with-retries-with-requests
     @staticmethod
     def session_add_retry_handler(
-        retries=5, backoff_factor=0.3, status_forcelist=(429,), session=None
+        retries=7, backoff_factor=1, status_forcelist=(429,), session=None
     ):
         session = session or requests.Session()
         retry = Helpers.create_retry_handler(
