@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -297,6 +297,14 @@ class ApiObjectTest(unittest.TestCase):
             expected = 'unit test delete result'
             m.delete(url, text=expected)
             actual = self.ao.delete()
+            assert actual == expected
+
+    def test_patch(self):
+        with requests_mock.Mocker() as m:
+            url = self.ao.compute_url()
+            expected = 'unit test patch result'
+            m.patch(url, text=expected)
+            actual = self.ao.patch()
             assert actual == expected
 
     # We're not testing an exhaustive set of suffix patterns here because
