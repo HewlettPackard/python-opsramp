@@ -19,7 +19,7 @@
 digraph {
   rankdir="LR";
   binding -> { globalconfig tenant }
-  tenant -> { clients integrations rba kb monitoring permission_sets roles discovery policies escalations mgmt_profiles credential_sets sites service_maps resources first_response}
+  tenant -> { clients integrations rba kb monitoring permission_sets roles discovery policies escalations mgmt_profiles credential_sets sites service_maps resources first_response metrics}
   rba -> categories
   categories -> category
   monitoring -> templates
@@ -30,7 +30,7 @@ digraph {
 
   { rank=same binding globalconfig }
   { rank=same tenant clients }
-  { rank=same categories templates policies itypes instances discovery credential_sets permission_sets roles escalations mgmt_profiles sites service_maps resources first_response}
+  { rank=same categories templates policies itypes instances discovery credential_sets permission_sets roles escalations mgmt_profiles sites service_maps resources first_response metrics}
 
   binding [label="opsramp\nbinding"]
   tenant [label="tenant(tid)"]
@@ -51,4 +51,5 @@ digraph {
   kbtemplates [style="filled" fillcolor="turquoise"]
   resources [style="filled" fillcolor="turquoise"]
   first_response [style="filled" fillcolor="turquoise"]
+  metrics [style="filled" fillcolor="turquoise"]
 }
