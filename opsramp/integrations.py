@@ -28,7 +28,7 @@ POST install/{intgld} e.g. CUSTOM
 
 GET installed/search?queryString=
 GET installed/{installedIntgld}
-GET installed/{installedIntgld}/configFile/kubernetes
+GET installed/{installedIntgld}/configFile/Kubernetes
 DELETE installed/{installedIntgld}
 POST installed/{installedIntgld}
 POST installed/{installedIntgld}/notifier
