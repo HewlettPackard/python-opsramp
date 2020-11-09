@@ -35,6 +35,7 @@ import opsramp.service_maps
 import opsramp.kb
 import opsramp.resources
 import opsramp.first_response
+import opsramp.metrics
 
 
 class Tenant(ApiWrapper):
@@ -98,3 +99,6 @@ class Tenant(ApiWrapper):
 
     def first_response(self):
         return opsramp.first_response.First_Response(self)
+
+    def metrics(self):
+        return opsramp.metrics.Metrics(self)
