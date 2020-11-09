@@ -134,6 +134,7 @@ import opsramp.tenant
   knowledge base articles and categories related to this tenant.
   - resources() -> returns a Resources object representing all OpsRamp resources on this Tenant
   - first_response() -> returns an First_Response object representing the Alert First Response Policies of this Tenant
+  - metrics() -> returns the metric values for resources in a client.
 
 import opsramp.service\_maps
 
@@ -366,6 +367,9 @@ import opsramp.integrations
   - search(pattern) -> returns a list of dicts, each containing in a client.
   - enable(uuid) -> marks a specific instance as "enabled" in OpsRamp.
   - disable(uuid) -> marks a specific instance as "disabled" in OpsRamp. 
+
+- class Metrics() _the subtree of metrics defined for this specific Tenant_
+  - getMetricsValues(pattern) -> returns metric values based on the pattern.
 
 - class KBcategories() _the subtree of knowledge base categories for this specific Tenant_
   - create(definition) -> creates a KB category.
