@@ -517,4 +517,9 @@ calls yourself.
   and should be avoided._
   - delete(suffix='', headers={}) -> performs a DELETE to the specified REST endpoint and returns the body of
   the server's reply. "headers" is an optional dict containing any additional HTTP headers that you want to send.
+  - patch(suffix='', headers={}, data=None, json=None) -> performs a PATCH to the specified REST endpoint and
+  returns the body of the server's reply. "headers" is an optional dict containing any additional HTTP headers
+  that you want to send, "data" is the text body, or "json" is a Python struct to be converted to a JSON
+  string and sent as a body. _Specifying both "data" and "json" in the same call results in undefined behavior
+  and should be avoided._
   - _we will add other http actions if/when a specific need for them arises_

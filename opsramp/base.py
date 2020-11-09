@@ -301,6 +301,12 @@ class ApiObject(object):
         resp = self.session.delete(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
+    def patch(self, suffix='', headers=None, data=None, json=None):
+        url = self.compute_url(suffix)
+        hdr = self.prep_headers(headers)
+        resp = self.session.patch(url, headers=hdr, data=data, json=json)
+        return self.process_result(url, resp)
+
 
 class ApiWrapper(object):
     def __init__(self, apiobject, suffix=''):
