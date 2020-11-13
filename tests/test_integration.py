@@ -39,14 +39,14 @@ class InstancesTest(unittest.TestCase):
 
     def test_itypes(self):
         group = self.integs.itypes()
+        thisid = 111111
+        expected = {'id': thisid}
         pattern = 'whatever'
-        url = group.api.compute_url('search?%s' % pattern)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('search?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
-        assert actual == expected
+            assert actual == expected
         # check the compatibility function would return the
         # same type of object, so there's no need to repeat
         # all of the tests for it.
@@ -54,14 +54,14 @@ class InstancesTest(unittest.TestCase):
 
     def test_instances(self):
         group = self.integs.instances()
+        thisid = 222222
+        expected = {'id': thisid}
         pattern = 'whatever'
-        url = group.api.compute_url('search?%s' % pattern)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('search?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
-        assert actual == expected
+            assert actual == expected
         # check the compatibility function would return the
         # same type of object, so there's no need to repeat
         # all of the tests for it.
@@ -70,57 +70,55 @@ class InstancesTest(unittest.TestCase):
     def test_instance_kubernetes_configuration(self):
         group = self.integs.instances()
         thisid = 123456
-        url = group.api.compute_url('%s/configFile/kubernetes' % thisid)
-        expected = [{'unit': 'test'}]
+        expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('%s/configFile/kubernetes' % thisid)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get_kubernetes_configuration(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_instance_create(self):
         group = self.integs.instances()
+        thisid = 789012
+        expected = {'id': thisid}
         name = 'unit-test-integration'
-        url = group.creator_api.compute_url(name)
-        expected = {'unit': 'test'}
+        fake_defn = {'name': 'fr larry duff'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.create(type_name=name, definition=expected)
-        assert actual == expected
+            url = group.creator_api.compute_url(name)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.create(type_name=name, definition=fake_defn)
+            assert actual == expected
 
     def test_instance_update(self):
         group = self.integs.instances()
-        newid = 123456
-        url = group.api.compute_url(newid)
-        expected = {'unit': 'test'}
+        thisid = 123456
+        expected = {'id': thisid}
+        fake_defn = {'name': 'fr paul stone'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.update(uuid=newid, definition=expected)
-        assert actual == expected
+            url = group.api.compute_url(thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.update(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_instance_enable(self):
         group = self.integs.instances()
         thisid = 789012
-        url = group.api.compute_url('%s/enable' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
+            url = group.api.compute_url('%s/enable' % thisid)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.enable(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_instance_disable(self):
         group = self.integs.instances()
         thisid = 345678
-        url = group.api.compute_url('%s/disable' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
+            url = group.api.compute_url('%s/disable' % thisid)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.disable(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_instance_delete(self):
         group = self.integs.instances()
@@ -129,19 +127,20 @@ class InstancesTest(unittest.TestCase):
 
         expected_response = {'id': thisid}
 
-        # Test that a delete works as expected if reason not provided
+        # Test that the delete function inserts a default reason
+        # if we don't provide one.
         expected_send = {"uninstallReason": "<Not specified>"}
         with requests_mock.Mocker() as m:
-            adapter = m.delete(url, json=expected_response)
+            adapter = m.delete(url, json=expected_response, complete_qs=True)
             actual_response = group.delete(uuid=thisid)
             assert adapter.last_request.json() == expected_send
             assert actual_response == expected_response
 
-        # Test that a delete works as expected if we provide a reason
+        # Test that the delete function sends the reason we specified.
         delete_reason = 'Totally fake reason to delete something'
         expected_send = {"uninstallReason": delete_reason}
         with requests_mock.Mocker() as m:
-            adapter = m.delete(url, json=expected_response)
+            adapter = m.delete(url, json=expected_response, complete_qs=True)
             actual_response = group.delete(
                 uuid=thisid,
                 uninstall_reason=delete_reason
@@ -152,26 +151,28 @@ class InstancesTest(unittest.TestCase):
     def test_instance_notifier(self):
         group = self.integs.instances()
         thisid = 901234
-        url = group.api.compute_url('%s/notifier' % thisid)
         expected = {'id': thisid}
+        fake_defn = {'name': 'fr fintan stack'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.notifier(uuid=thisid, definition=expected)
-        assert actual == expected
+            url = group.api.compute_url('%s/notifier' % thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.notifier(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_instance_auth_type(self):
         group = self.integs.instances()
         thisid = 567890
         url = group.api.compute_url('%s/inbound/authentication' % thisid)
-        with requests_mock.Mocker() as m:
-            for key in 'OAUTH2', 'WEBHOOK', 'BASIC':
-                expected = {'type': key}
-                m.post(url, json=expected)
+        for key in 'OAUTH2', 'WEBHOOK', 'BASIC':
+            expected = {'type': key}
+            with requests_mock.Mocker() as m:
+                m.post(url, json=expected, complete_qs=True)
                 actual = group.set_auth_type(uuid=thisid, auth_type=key)
                 assert actual == expected
+        with requests_mock.Mocker() as m:
             with self.assertRaises(AssertionError):
                 group.set_auth_type(uuid=thisid, auth_type='unit test value')
+            assert m.call_count == 0
 
     def base_display_name(self, fn):
         with self.assertRaises(AssertionError):

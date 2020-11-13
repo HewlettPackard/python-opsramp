@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,70 +35,67 @@ class ApiTest(unittest.TestCase):
         assert 'Profiles' in str(self.group)
 
     def test_search(self):
+        thisid = 111111
+        expected = {'id': thisid}
         pattern = 'whatever'
-        url = self.group.api.compute_url('search?%s' % pattern)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = self.group.api.compute_url('search?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
             actual = self.group.search(pattern)
-        assert actual == expected
+            assert actual == expected
 
     def test_create(self):
-        url = self.group.api.compute_url()
-        expected = {'id': 345678}
+        thisid = 345678
+        expected = {'id': thisid}
+        fake_defn = {'name': 'jack'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = self.group.create(definition=expected)
-        assert actual == expected
+            url = self.group.api.compute_url()
+            m.post(url, json=expected, complete_qs=True)
+            actual = self.group.create(definition=fake_defn)
+            assert actual == expected
 
     def test_update(self):
         thisid = 123456
-        url = self.group.api.compute_url(thisid)
         expected = {'id': thisid}
+        fake_defn = {'name': 'mrs doyle'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = self.group.update(uuid=thisid, definition=expected)
-        assert actual == expected
+            url = self.group.api.compute_url(thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = self.group.update(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_delete(self):
         thisid = 789012
-        url = self.group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.delete(url, json=expected)
+            url = self.group.api.compute_url(thisid)
+            m.delete(url, json=expected, complete_qs=True)
             actual = self.group.delete(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_attach(self):
         thisid = 345678
-        url = self.group.api.compute_url('%s/attach' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = self.group.api.compute_url('%s/attach' % thisid)
+            m.get(url, json=expected, complete_qs=True)
             actual = self.group.attach(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_detach(self):
         thisid = 901234
-        url = self.group.api.compute_url('%s/detach' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = self.group.api.compute_url('%s/detach' % thisid)
+            m.get(url, json=expected, complete_qs=True)
             actual = self.group.detach(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_reconnect(self):
         thisid = 901234
-        url = self.group.api.compute_url('%s/reconnectTunnel' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = self.group.api.compute_url('%s/reconnectTunnel' % thisid)
+            m.get(url, json=expected, complete_qs=True)
             actual = self.group.reconnect(uuid=thisid)
-        assert actual == expected
+            assert actual == expected

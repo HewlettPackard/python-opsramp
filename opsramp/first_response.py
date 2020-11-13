@@ -29,9 +29,10 @@ class First_Response(ORapi):
                                              'policies/firstResponse')
 
     def search(self, pattern=''):
-        if pattern:
-            pattern = '?' + pattern
-        return self.api.get(pattern)
+        return super(First_Response, self).search(
+            pattern=pattern,
+            suffix=''
+        )
 
     def policy_detail(self, uuid):
         return self.api.get('%s' % uuid)

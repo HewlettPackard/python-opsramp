@@ -34,9 +34,3 @@ class Monitoring(ORapi):
 class Templates(ORapi):
     def __init__(self, parent):
         super(Templates, self).__init__(parent.api, 'templates')
-
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)

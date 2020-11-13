@@ -45,71 +45,67 @@ class ApiTest(unittest.TestCase):
             else:
                 url = group.api.compute_url()
             with requests_mock.Mocker() as m:
-                m.get(url, json=expected)
+                m.get(url, json=expected, complete_qs=True)
                 actual = group.search(pattern)
             assert actual == expected
 
     def test_policy_detail(self):
         group = self.first_response
         thisid = 789012
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url(thisid)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.policy_detail(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_create(self):
         group = self.first_response
-        url = group.api.compute_url()
         expected = {'id': 345678}
+        fake_defn = {'name': 'dougal'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.create(definition=expected)
-        assert actual == expected
+            url = group.api.compute_url()
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.create(definition=fake_defn)
+            assert actual == expected
 
     def test_update(self):
         group = self.first_response
         thisid = 123456
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
+        fake_defn = {'name': 'ted'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.update(uuid=thisid, definition=expected)
-        assert actual == expected
+            url = group.api.compute_url(thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.update(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_delete(self):
         group = self.first_response
         thisid = 789012
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.delete(url, json=expected)
+            url = group.api.compute_url(thisid)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_enable(self):
         group = self.first_response
         thisid = 345678
-        url = group.api.compute_url('%s/enable' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
+            url = group.api.compute_url('%s/enable' % thisid)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.enable(uuid=thisid)
-        assert actual == expected
+            assert actual == expected
 
     def test_disable(self):
         group = self.first_response
         thisid = 901234
-        url = group.api.compute_url('%s/disable' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
+            url = group.api.compute_url('%s/disable' % thisid)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.disable(uuid=thisid)
-        assert actual == expected
+            assert actual == expected

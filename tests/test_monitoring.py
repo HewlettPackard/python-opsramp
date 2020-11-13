@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ class MonitoringTest(unittest.TestCase):
 
     def test_templates(self):
         group = self.monitoring.templates()
-        assert group
-        expected = ['unit', 'test', 'list']
-        assert expected
+        thisid = 888888
+        expected = {'id': thisid}
+        pattern = 'whatever'
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?whatever')
-            m.get(url, json=expected)
-            actual = group.search('whatever')
-        assert actual == expected
+            url = group.api.compute_url('search?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
+            actual = group.search(pattern)
+            assert actual == expected

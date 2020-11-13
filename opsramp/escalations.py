@@ -27,12 +27,6 @@ class Escalations(ORapi):
     def __init__(self, parent):
         super(Escalations, self).__init__(parent.api, 'escalations')
 
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
     def create(self, definition):
         return self.api.post('', json=definition)
 

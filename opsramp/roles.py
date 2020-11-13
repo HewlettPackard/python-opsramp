@@ -27,12 +27,6 @@ class Roles(ORapi):
     def __init__(self, parent):
         super(Roles, self).__init__(parent.api, 'roles')
 
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
     def create(self, definition):
         return self.api.post('', json=definition)
 
@@ -48,6 +42,7 @@ class PermissionSets(ORapi):
         super(PermissionSets, self).__init__(parent.api, 'permissionSets')
 
     def search(self, pattern=''):
-        if pattern:
-            pattern = '?' + pattern
-        return self.api.get(pattern)
+        return super(PermissionSets, self).search(
+            pattern=pattern,
+            suffix=''
+        )

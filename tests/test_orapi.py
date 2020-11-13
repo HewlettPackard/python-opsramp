@@ -48,7 +48,37 @@ class ClassTest(unittest.TestCase):
         assert 'ORapi' in str(self.testobj)
 
     def test_get(self):
+        hdrs = {'fake-header': 'fake-value'}
         expected = 'unit test get result'
         self.mock_ao.get.return_value = expected
-        actual = self.testobj.get(suffix='whatever', headers={})
+
+        suffix = 'milk'
+        actual = self.testobj.get(suffix=suffix, headers=hdrs)
+        self.mock_ao.get.assert_called_with(suffix, hdrs)
+        assert actual == expected
+
+    def test_search(self):
+        hdrs = {'fake-header': 'fake-value'}
+        expected = 'unit test search result'
+        self.mock_ao.get.return_value = expected
+
+        # the leading ? character is optional so try both.
+        qstring = '?name=marmaduke'
+        qs2 = qstring[1:]
+
+        # default suffix should be "search"
+        actual = self.testobj.search(pattern=qstring)
+        self.mock_ao.get.assert_called_with('search' + qstring, None)
+        assert actual == expected
+        actual = self.testobj.search(pattern=qs2, headers=hdrs)
+        self.mock_ao.get.assert_called_with('search' + qstring, hdrs)
+        assert actual == expected
+
+        # try a different suffix
+        suffix = 'toraiocht'
+        actual = self.testobj.search(pattern=qstring, suffix=suffix)
+        self.mock_ao.get.assert_called_with(suffix + qstring, None)
+        assert actual == expected
+        actual = self.testobj.search(pattern=qs2, headers=hdrs, suffix=suffix)
+        self.mock_ao.get.assert_called_with(suffix + qstring, hdrs)
         assert actual == expected
