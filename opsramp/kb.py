@@ -21,10 +21,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class KnowledgeBase(ApiWrapper):
+class KnowledgeBase(ORapi):
     def __init__(self, parent):
         super(KnowledgeBase, self).__init__(parent.api, 'kb')
 
@@ -38,7 +38,7 @@ class KnowledgeBase(ApiWrapper):
         return KBtemplates(self)
 
 
-class KBcategories(ApiWrapper):
+class KBcategories(ORapi):
     def __init__(self, parent):
         super(KBcategories, self).__init__(parent.api, 'category')
         # weirdly, calls to "categorylist" need to be made at "kb" level
@@ -72,7 +72,7 @@ class KBcategories(ApiWrapper):
         return self.api.post('restore/%s' % uuid)
 
 
-class KBarticles(ApiWrapper):
+class KBarticles(ORapi):
     def __init__(self, parent):
         super(KBarticles, self).__init__(parent.api, 'article')
         # weirdly, calls to "articlesList" need to be made at "kb" level
@@ -103,7 +103,7 @@ class KBarticles(ApiWrapper):
         return self.api.get('%s/comments' % uuid)
 
 
-class KBtemplates(ApiWrapper):
+class KBtemplates(ORapi):
     def __init__(self, parent):
         super(KBtemplates, self).__init__(parent.api, 'template')
         # weirdly, calls to "templatesList" need to be made at "kb" level

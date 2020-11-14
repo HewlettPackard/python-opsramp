@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
 
 from __future__ import print_function
 import unittest
-import base64
 import requests_mock
 
-from opsramp.base import Helpers
+from opsramp.api import ORapi
 from opsramp.rba import Category
 import opsramp.binding
 
 
 class StaticsTest(unittest.TestCase):
     def setUp(self):
-        self.testfile = 'tox.ini'
+        # Several of the tests need a filename, its contents and
+        # the base64 encoded version, so compute all of that up
+        # front and store the data for later use. The actual
+        # contents are not important so use any file that we know
+        # will exist.
+        self.testfile = 'setup.py'
         with open(self.testfile, 'rb') as f:
             self.content_raw = f.read()
-        self.content_64 = Helpers.b64encode_payload(self.testfile)
-        # assert that base64 encoding is working.
-        raw = base64.b64decode(self.content_64)
-        assert raw == self.content_raw
+        # check it's not empty.
+        assert self.content_raw
+        self.content_64 = ORapi.b64encode_payload(self.testfile)
 
     def test_mkAttachment(self):
         tvalues = {

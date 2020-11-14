@@ -20,10 +20,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class First_Response(ApiWrapper):
+class First_Response(ORapi):
     def __init__(self, parent):
         super(First_Response, self).__init__(parent.api,
                                              'policies/firstResponse')

@@ -21,7 +21,8 @@
 
 from __future__ import print_function
 import os
-from opsramp.base import ApiWrapper, Helpers
+
+from opsramp.api import ORapi
 
 '''
 POST install/{intgld} e.g. CUSTOM
@@ -43,7 +44,7 @@ GET available/{intgld}/mappingAttr/{entityType}
 '''
 
 
-class Integrations(ApiWrapper):
+class Integrations(ORapi):
     def __init__(self, parent):
         super(Integrations, self).__init__(parent.api, 'integrations')
 
@@ -64,7 +65,7 @@ class Integrations(ApiWrapper):
         return self.instances()
 
 
-class Types(ApiWrapper):
+class Types(ORapi):
     def __init__(self, parent):
         super(Types, self).__init__(parent.api, 'available')
 
@@ -75,7 +76,7 @@ class Types(ApiWrapper):
         return self.api.get(suffix)
 
 
-class Instances(ApiWrapper):
+class Instances(ORapi):
     def __init__(self, parent):
         super(Instances, self).__init__(parent.api, 'installed')
         # The OpsRamp "create instance" API endpoint is in an
@@ -161,7 +162,7 @@ class Instances(ApiWrapper):
             'displayName': display_name,
         }
         if logo_fname:
-            payload = Helpers.b64encode_payload(logo_fname)
+            payload = ORapi.b64encode_payload(logo_fname)
             retval['logo'] = {
                 'name': os.path.basename(logo_fname),
                 'file': payload

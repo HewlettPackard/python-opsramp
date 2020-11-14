@@ -22,10 +22,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class ServiceMaps(ApiWrapper):
+class ServiceMaps(ORapi):
     def __init__(self, parent):
         super(ServiceMaps, self).__init__(parent.api, 'serviceGroups')
 

@@ -25,7 +25,7 @@ import requests_mock
 # types of exceptions, not exceptions from the generic "json" module.
 import simplejson
 
-import opsramp.binding
+import opsramp.base
 
 
 class FakeResp(object):
@@ -52,12 +52,12 @@ class ApiObjectTest(unittest.TestCase):
             'Authorization': 'Bearer %s' % self.fake_token,
             'Accept': 'application/json'
         }
-        self.ao = opsramp.binding.ApiObject(
+        self.ao = opsramp.base.ApiObject(
             self.fake_url,
             self.fake_auth.copy()
         )
         assert 'ApiObject' in str(self.ao)
-        self.awrapper = opsramp.binding.ApiWrapper(self.ao, 'whatevs')
+        self.awrapper = opsramp.base.ApiWrapper(self.ao, 'whatevs')
         assert 'ApiWrapper' in str(self.awrapper)
 
     def test_shared_session(self):
@@ -305,20 +305,4 @@ class ApiObjectTest(unittest.TestCase):
             expected = 'unit test patch result'
             m.patch(url, text=expected)
             actual = self.ao.patch()
-            assert actual == expected
-
-    # We're not testing an exhaustive set of suffix patterns here because
-    # that is already being done by the ApiObject unit tests. Just
-    # get() and get(something) is enough.
-    def test_wrapped_get(self):
-        with requests_mock.Mocker() as m:
-            url = self.awrapper.api.compute_url()
-            expected = 'unit test wrapped get result'
-            m.get(url, text=expected)
-            actual = self.awrapper.get()
-            assert actual == expected
-            suffix = 'some/where/random'
-            url = self.awrapper.api.compute_url(suffix)
-            m.get(url, text=expected)
-            actual = self.awrapper.get(suffix)
             assert actual == expected

@@ -21,10 +21,10 @@
 
 from __future__ import print_function
 
-from opsramp.base import ApiWrapper, Helpers
+from opsramp.api import ORapi
 
 
-class Rba(ApiWrapper):
+class Rba(ORapi):
     def __init__(self, parent):
         super(Rba, self).__init__(parent.api, 'rba')
 
@@ -32,7 +32,7 @@ class Rba(ApiWrapper):
         return Categories(self)
 
 
-class Categories(ApiWrapper):
+class Categories(ORapi):
     def __init__(self, parent):
         super(Categories, self).__init__(parent.api, 'categories')
 
@@ -60,7 +60,7 @@ class Categories(ApiWrapper):
         return self.api.delete('%s' % uuid)
 
 
-class Category(ApiWrapper):
+class Category(ORapi):
     def __init__(self, parent, uuid):
         super(Category, self).__init__(parent.api, '%s/scripts' % uuid)
 
@@ -125,7 +125,7 @@ class Category(ApiWrapper):
         assert execution_type
         if payload_file:
             assert not payload
-            payload = Helpers.b64encode_payload(payload_file)
+            payload = ORapi.b64encode_payload(payload_file)
         assert payload
         if execution_type not in ('DOWNLOAD', 'EXE', 'MSI'):
             assert not output_directory

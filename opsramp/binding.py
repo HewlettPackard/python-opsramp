@@ -5,7 +5,7 @@
 # binding.py
 # Defines the primary entry points for callers of this library.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@
 
 from __future__ import print_function
 
-from opsramp.base import ApiObject, ApiWrapper
+from opsramp.base import ApiObject
+from opsramp.api import ORapi
 from opsramp.globalconfig import GlobalConfig
 from opsramp.tenant import Tenant
 
@@ -41,7 +42,7 @@ def connect(url, key, secret):
     return Opsramp(url, token)
 
 
-class Opsramp(ApiWrapper):
+class Opsramp(ORapi):
     def __init__(self, url, token):
         self.auth = {
             'Authorization': 'Bearer ' + token,

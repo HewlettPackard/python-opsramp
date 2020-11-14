@@ -4,7 +4,7 @@
 #
 # globalconfig.py
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class GlobalConfig(ApiWrapper):
+class GlobalConfig(ORapi):
     def __init__(self, parent):
         super(GlobalConfig, self).__init__(parent.api, '')
 
