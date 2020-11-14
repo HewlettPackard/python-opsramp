@@ -65,18 +65,18 @@ class Resources(ORapi):
 
     def search(self, pattern=''):
         '''returns *verbose* details about resources on this tenant'''
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        simple_list = self.api.get(suffix)
+        simple_list = super(Resources, self).search(
+            pattern=pattern,
+            suffix='search'
+        )
         return list2ormp(simple_list)
 
     def minimal(self, pattern=''):
         '''returns *minimal* details about resources on this tenant'''
-        url_suffix = 'minimal'
-        if pattern:
-            url_suffix += '?{0}'.format(pattern)
-        simple_list = self.api.get(url_suffix)
+        simple_list = super(Resources, self).search(
+            pattern=pattern,
+            suffix='minimal'
+        )
         return list2ormp(simple_list)
 
     def applications(self, uuid):

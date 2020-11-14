@@ -68,15 +68,6 @@ class ApiTest(unittest.TestCase):
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
-    def test_get(self):
-        group = self.client.resources()
-        fake_result = ['unit', 'test', 'get']
-        with requests_mock.Mocker() as m:
-            url = group.api.compute_url()
-            m.get(url, json=fake_result)
-            actual = group.get()
-            assert actual == fake_result
-
     def test_create(self):
         group = self.client.resources()
         fake_create_json = {
@@ -87,10 +78,11 @@ class ApiTest(unittest.TestCase):
             'os': 'Ubuntu 14.04.6 LTS',
             'serialNumber': '1234-5678-901234'
         }
-        fake_result = ['unit', 'test', 'create', 'result']
+        thisid = 333333
+        fake_result = {'id': thisid}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url()
-            m.post(url, json=fake_result)
+            m.post(url, json=fake_result, complete_qs=True)
             actual = group.create(definition=fake_create_json)
             assert actual == fake_result
 
@@ -100,10 +92,10 @@ class ApiTest(unittest.TestCase):
         fake_update_json = {
             'os': 'Ubuntu 18.04.4 LTS'
         }
-        fake_result = ['unit', 'test', 'update', 'result']
+        fake_result = {'id': fake_resource_id}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(fake_resource_id)
-            m.post(url, json=fake_result)
+            m.post(url, json=fake_result, complete_qs=True)
             actual = group.update(
                 uuid=fake_resource_id,
                 definition=fake_update_json
@@ -113,17 +105,22 @@ class ApiTest(unittest.TestCase):
     def test_delete(self):
         group = self.client.resources()
         fake_resource_id = '789012'
-        fake_result = ['unit', 'test', 'delete', 'result']
+        fake_result = {'id': fake_resource_id}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(fake_resource_id)
-            m.delete(url, json=fake_result)
+            m.delete(url, json=fake_result, complete_qs=True)
             actual = group.delete(uuid=fake_resource_id)
             assert actual == fake_result
 
     def test_search(self):
+        # The OpsRamp "resources" API returns flat lists of results
+        # instead of the usual multi-value result struct, for no
+        # apparent reason. Our Python classes are supposed to handle
+        # that and return a normal result struct so that the caller
+        # doesn't need to know. Check that it's doing this.
         group = self.client.resources()
         fake_search_pattern = 'queryString=agentInstalled:true'
-        fake_raw_result = ['unit', 'test', 'search', 'result']
+        fake_raw_result = ['unit', 'test', 'search', 'values']
         count = len(fake_raw_result)
         fake_cooked_result = {
             'totalResults': count,
@@ -138,11 +135,16 @@ class ApiTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             url_suffix = 'search?{0}'.format(fake_search_pattern)
             url = group.api.compute_url(url_suffix)
-            m.get(url, json=fake_raw_result)
+            m.get(url, json=fake_raw_result, complete_qs=True)
             actual = group.search(pattern=fake_search_pattern)
             assert actual == fake_cooked_result
 
     def test_minimal(self):
+        # The OpsRamp "resources" API returns flat lists of results
+        # instead of the usual multi-value result struct, for no
+        # apparent reason. Our Python classes are supposed to handle
+        # that and return a normal result struct so that the caller
+        # doesn't need to know. Check that it's doing this.
         group = self.client.resources()
         fake_search_pattern = 'queryString=agentInstalled:true'
         fake_raw_result = ['unit', 'test', 'minimal', 'result']
@@ -160,11 +162,16 @@ class ApiTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             url_suffix = 'minimal?{0}'.format(fake_search_pattern)
             url = group.api.compute_url(url_suffix)
-            m.get(url, json=fake_raw_result)
+            m.get(url, json=fake_raw_result, complete_qs=True)
             actual = group.minimal(pattern=fake_search_pattern)
             assert actual == fake_cooked_result
 
     def test_applications(self):
+        # The OpsRamp "resources" API returns flat lists of results
+        # instead of the usual multi-value result struct, for no
+        # apparent reason. Our Python classes are supposed to handle
+        # that and return a normal result struct so that the caller
+        # doesn't need to know. Check that it's doing this.
         group = self.client.resources()
         fake_resource_id = '789012'
         fake_raw_result = ['unit', 'test', 'applications', 'result']
@@ -182,7 +189,7 @@ class ApiTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             url_suffix = '{0}/applications'.format(fake_resource_id)
             url = group.api.compute_url(url_suffix)
-            m.get(url, json=fake_raw_result)
+            m.get(url, json=fake_raw_result, complete_qs=True)
             actual = group.applications(uuid=fake_resource_id)
             assert actual == fake_cooked_result
 
@@ -199,7 +206,7 @@ class ApiTest(unittest.TestCase):
                 fake_resource_id, fake_start, fake_end
             )
             url = group.api.compute_url(url_suffix)
-            m.get(url, json=fake_result)
+            m.get(url, json=fake_result, complete_qs=True)
             actual = group.availability(
                 uuid=fake_resource_id,
                 start_epoch=fake_start,

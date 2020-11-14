@@ -28,12 +28,6 @@ class Profiles(ORapi):
     def __init__(self, parent):
         super(Profiles, self).__init__(parent.api, 'managementProfiles')
 
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
     def create(self, definition):
         return self.api.post('', json=definition)
 

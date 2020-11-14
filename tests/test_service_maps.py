@@ -36,22 +36,22 @@ class ApiTest(unittest.TestCase):
 
     def test_service_maps_get_root(self):
         group = self.service_maps
-        url = group.api.compute_url('search')
-        expected = ['unit', 'test', 'list']
+        thisid = 111111
+        expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('search')
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get()
-        assert actual == expected
+            assert actual == expected
 
     def test_service_maps_get_child(self):
         group = self.service_maps
+        thisid = 222222
+        expected = {'id': thisid}
         sgid = 'some-sgid'
-        url = group.api.compute_url('%s/childs/search' % sgid)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('%s/childs/search' % sgid)
+            m.get(url, json=expected, complete_qs=True)
             # test uuid parameter specifically.
             actual = group.get(uuid=sgid)
             assert actual == expected
@@ -61,42 +61,42 @@ class ApiTest(unittest.TestCase):
 
     def test_service_maps_get_minimal(self):
         group = self.service_maps
-        url = group.api.compute_url('minimal')
-        expected = ['unit', 'test', 'list']
+        thisid = 333333
+        expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('minimal')
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(minimal=True)
-        assert actual == expected
+            assert actual == expected
 
     def test_service_maps_create(self):
         group = self.service_maps
-        url = group.api.compute_url()
-        expected = {'id': 345678}
+        thisid = 444444
+        expected = {'id': thisid}
+        fake_defn = {'name': 'fr dick byrne'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.create(definition=expected)
-        assert actual == expected
+            url = group.api.compute_url()
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.create(definition=fake_defn)
+            assert actual == expected
 
     def test_service_maps_update(self):
         group = self.service_maps
         thisid = 123456
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
+        fake_defn = {'name': 'fr todd unctious'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.update(uuid=thisid, definition=expected)
-        assert actual == expected
+            url = group.api.compute_url(thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.update(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_service_maps_delete(self):
         group = self.service_maps
         thisid = 789012
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.delete(url, json=expected)
+            url = group.api.compute_url(thisid)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
-        assert actual == expected
+            assert actual == expected

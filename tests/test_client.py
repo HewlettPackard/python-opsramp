@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -94,79 +94,82 @@ class ApiTest(unittest.TestCase):
         assert self.clients
 
     def test_search(self):
-        url = self.clients.api.compute_url('search')
-        expected = ['unit', 'test', 'list']
+        thisid = 444444
+        expected = {'id': thisid}
+        url = self.clients.api.compute_url('search?queryString=id:%s' % thisid)
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
-            actual = self.clients.search('id=whatever')
+            m.get(url, json=expected, complete_qs=True)
+            actual = self.clients.search('id:%s' % thisid)
             assert actual == expected
 
     def test_minimal(self):
+        thisid = 555555
+        expected = {'id': thisid}
         url = self.clients.api.compute_url('minimal')
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
-            # default suffix
-            actual = self.clients.get()
-            assert actual == expected
-            # specific suffix
+            m.get(url, json=expected, complete_qs=True)
+            # specific suffix.
             actual = self.clients.get('minimal')
+            assert actual == expected
+            # default suffix should be the same.
+            actual = self.clients.get()
             assert actual == expected
 
     def test_create_update(self):
-        url = self.clients.api.compute_url()
-        expected = ['unit', 'test', 'list']
+        bad_definition = {'bogus': 'dude'}
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected)
-            assert 'name' not in expected
             # the name field is missing so we should get an error.
+            assert 'name' not in bad_definition
             with self.assertRaises(AssertionError):
-                actual = self.clients.create(definition=expected)
+                actual = self.clients.create(definition=bad_definition)
+            assert m.call_count == 0
         # now let's try a valid one.
-        fake_definition = {
+        good_definition = {
             'name': 'elvis',
             'address': 'graceland',
             'timeZone': 'UTC',
             'country': 'US'
         }
+        thisid = 555555
+        expected = {'id': thisid}
+        url = self.clients.api.compute_url()
         with requests_mock.Mocker() as m:
-            m.post(url, json=fake_definition)
-            actual = self.clients.create(definition=fake_definition)
-            assert actual == fake_definition
-        # and try an update
-        thisid = 123456
+            m.post(url, json=expected, complete_qs=True)
+            actual = self.clients.create(definition=good_definition)
+            assert actual == expected
+        # now try update
         url = self.clients.api.compute_url(thisid)
         with requests_mock.Mocker() as m:
-            m.post(url, json=fake_definition)
+            m.post(url, json=expected, complete_qs=True)
             actual = self.clients.update(
                 uuid=thisid,
-                definition=fake_definition
+                definition=good_definition
             )
-            assert actual == fake_definition
+            assert actual == expected
 
     def test_suspend(self):
         thisid = 789012
+        expected = {'id': thisid}
         url = self.clients.api.compute_url('%s/suspend' % thisid)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = self.clients.suspend(uuid=thisid)
             assert actual == expected
 
     def test_activate(self):
         thisid = 345678
+        expected = {'id': thisid}
         url = self.clients.api.compute_url('%s/activate' % thisid)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = self.clients.activate(uuid=thisid)
             assert actual == expected
 
     def test_terminate(self):
         thisid = 901234
+        expected = {'id': thisid}
         url = self.clients.api.compute_url('%s/terminate' % thisid)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = self.clients.terminate(uuid=thisid)
             assert actual == expected

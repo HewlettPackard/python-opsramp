@@ -37,69 +37,56 @@ class ApiTest(unittest.TestCase):
         self.roles = self.client.roles()
         assert 'Roles' in str(self.roles)
 
-    def test_permission_sets_get(self):
-        group = self.permission_sets
-        url = group.api.compute_url()
-        expected = ['unit', 'test', 'list']
-        with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
-            actual = group.get()
-        assert actual == expected
-
     def test_permission_sets_search(self):
         group = self.permission_sets
-        for pattern, expected in (
-            ('', ['unit', 'test', 'results']),
-            ('pageNo=1&pageSize=100&is&sortName=id', ['more', 'nonsense'])
-        ):
-            if pattern:
-                url = group.api.compute_url('?' + pattern)
-            else:
-                url = group.api.compute_url()
-            with requests_mock.Mocker() as m:
-                m.get(url, json=expected)
-                actual = group.search(pattern)
+        thisid = 111111
+        expected = {'id': thisid}
+        pattern = 'whatever'
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
+            actual = group.search(pattern)
             assert actual == expected
 
     def test_role_search(self):
         group = self.roles
+        thisid = 222222
+        expected = {'id': thisid}
         pattern = 'whatever'
-        url = group.api.compute_url('search?%s' % pattern)
-        expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
-            assert expected
-            m.get(url, json=expected)
+            url = group.api.compute_url('search?%s' % pattern)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
-        assert actual == expected
+            assert actual == expected
 
     def test_role_create(self):
         group = self.roles
-        url = group.api.compute_url()
-        expected = {'id': 345678}
+        thisid = 345678
+        expected = {'id': thisid}
+        fake_defn = {'name': 'bishop brennan'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.create(definition=expected)
-        assert actual == expected
+            url = group.api.compute_url()
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.create(definition=fake_defn)
+            assert actual == expected
 
     def test_role_update(self):
         group = self.roles
         thisid = 123456
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
+        fake_defn = {'name': 'fr noel furlong'}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.post(url, json=expected)
-            actual = group.update(uuid=thisid, definition=expected)
-        assert actual == expected
+            url = group.api.compute_url(thisid)
+            m.post(url, json=expected, complete_qs=True)
+            actual = group.update(uuid=thisid, definition=fake_defn)
+            assert actual == expected
 
     def test_role_delete(self):
         group = self.roles
         thisid = 789012
-        url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            assert expected
-            m.delete(url, json=expected)
+            url = group.api.compute_url(thisid)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
         assert actual == expected

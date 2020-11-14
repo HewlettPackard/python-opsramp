@@ -31,12 +31,6 @@ class Sites(ORapi):
     def get(self, suffix='/minimal'):
         return self.api.get(suffix)
 
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
     def create(self, definition):
         return self.api.post('', json=definition)
 

@@ -69,12 +69,6 @@ class Types(ORapi):
     def __init__(self, parent):
         super(Types, self).__init__(parent.api, 'available')
 
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
-
 
 class Instances(ORapi):
     def __init__(self, parent):
@@ -83,12 +77,6 @@ class Instances(ORapi):
         # atypical place in the tree so need to compute it.
         self.creator_api = parent.api.clone()
         self.creator_api.chroot('install')
-
-    def search(self, pattern=''):
-        suffix = 'search'
-        if pattern:
-            suffix += '?' + pattern
-        return self.api.get(suffix)
 
     def get_kubernetes_configuration(self, uuid):
         return self.api.get('%s/configFile/kubernetes' % uuid)
@@ -120,6 +108,7 @@ class Instances(ORapi):
         return self.api.post('%s/disable' % uuid)
 
     def notifier(self, uuid, definition):
+        # Create or update installed integration base notifier
         return self.api.post('%s/notifier' % uuid, json=definition)
 
     # A helper function that extracts the authentication types from typical

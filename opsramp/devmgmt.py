@@ -28,10 +28,15 @@ class Policies(ORapi):
         super(Policies, self).__init__(parent.api, 'policies/management')
 
     def search(self, policy_name=''):
-        suffix = 'search'
-        if policy_name:
-            suffix += '?name=' + policy_name
-        return self.api.get(suffix)
+        '''For historical reasons this class's search function might be
+        called with just a name. We have to cope and convert it into a
+        proper query string.'''
+        if policy_name and '=' not in policy_name:
+            qstring = 'name=' + policy_name
+        else:
+            qstring = policy_name
+        # we have assembled a proper query string now so use regular search.
+        return super(Policies, self).search(pattern=qstring)
 
     def create(self, definition):
         return self.api.post('', json=definition)
@@ -52,10 +57,15 @@ class Discovery(ORapi):
         super(Discovery, self).__init__(parent.api, 'policies/discovery')
 
     def search(self, profile_name=''):
-        suffix = 'search'
-        if profile_name:
-            suffix += '?name=' + profile_name
-        return self.api.get(suffix)
+        '''For historical reasons this class's search function might be
+        called with just a name. We have to cope and convert it into a
+        proper query string.'''
+        if profile_name and '=' not in profile_name:
+            qstring = 'name=' + profile_name
+        else:
+            qstring = profile_name
+        # we have assembled a proper query string now so use regular search.
+        return super(Discovery, self).search(pattern=qstring)
 
     def create(self, definition):
         return self.api.post('', json=definition)

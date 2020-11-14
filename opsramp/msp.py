@@ -32,10 +32,14 @@ class Clients(ORapi):
         return self.api.get(suffix)
 
     def search(self, query_string=''):
-        suffix = 'search'
-        if query_string:
-            suffix += '?queryString=' + query_string
-        return self.api.get(suffix)
+        # For historical reasons the caller is allowed to omit the
+        # queryString prefix, so add it if necessary.
+        key = 'queryString='
+        if query_string and key not in query_string:
+            query_string = key + query_string
+        return super(Clients, self).search(
+            pattern=query_string
+        )
 
     def create(self, definition):
         assert 'name' in definition
