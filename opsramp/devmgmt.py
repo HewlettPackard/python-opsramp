@@ -20,10 +20,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Policies(ApiWrapper):
+class Policies(ORapi):
     def __init__(self, parent):
         super(Policies, self).__init__(parent.api, 'policies/management')
 
@@ -46,7 +46,7 @@ class Policies(ApiWrapper):
         return self.api.delete('%s' % uuid)
 
 
-class Discovery(ApiWrapper):
+class Discovery(ORapi):
     def __init__(self, parent):
         assert parent.is_client()
         super(Discovery, self).__init__(parent.api, 'policies/discovery')
@@ -70,7 +70,7 @@ class Discovery(ApiWrapper):
         return self.api.delete('/%s' % uuid)
 
 
-class CredentialSets(ApiWrapper):
+class CredentialSets(ORapi):
     def __init__(self, parent):
         super(CredentialSets, self).__init__(parent.api, 'credentialSets')
 

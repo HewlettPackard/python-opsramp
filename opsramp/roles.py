@@ -20,10 +20,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Roles(ApiWrapper):
+class Roles(ORapi):
     def __init__(self, parent):
         super(Roles, self).__init__(parent.api, 'roles')
 
@@ -43,7 +43,7 @@ class Roles(ApiWrapper):
         return self.api.delete('%s' % uuid)
 
 
-class PermissionSets(ApiWrapper):
+class PermissionSets(ORapi):
     def __init__(self, parent):
         super(PermissionSets, self).__init__(parent.api, 'permissionSets')
 

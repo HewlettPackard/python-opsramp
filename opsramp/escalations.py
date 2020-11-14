@@ -20,10 +20,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Escalations(ApiWrapper):
+class Escalations(ORapi):
     def __init__(self, parent):
         super(Escalations, self).__init__(parent.api, 'escalations')
 

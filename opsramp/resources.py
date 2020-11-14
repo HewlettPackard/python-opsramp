@@ -20,7 +20,7 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
 def list2ormp(result_obj):
@@ -47,7 +47,7 @@ def list2ormp(result_obj):
     return retval
 
 
-class Resources(ApiWrapper):
+class Resources(ORapi):
     def __init__(self, parent):
         super(Resources, self).__init__(parent.api, 'resources')
 

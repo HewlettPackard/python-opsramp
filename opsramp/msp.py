@@ -21,10 +21,10 @@
 
 from __future__ import print_function
 import datetime
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Clients(ApiWrapper):
+class Clients(ORapi):
     def __init__(self, parent):
         super(Clients, self).__init__(parent.api, 'clients')
 

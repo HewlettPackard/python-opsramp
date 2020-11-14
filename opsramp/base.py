@@ -21,7 +21,6 @@
 # limitations under the License.
 
 from __future__ import print_function
-import base64
 import requests
 try:
     # Python 3
@@ -34,16 +33,6 @@ except ImportError:
 
 
 class Helpers(object):
-    # Returns a string containing a base64 encoded version of the
-    # content of the specified file. It was quite finicky to come
-    # up with a method that works on both Python 2 and 3 so please
-    # don't modify this, or test carefully if you do.
-    @staticmethod
-    def b64encode_payload(fname):
-        with open(fname, 'rb') as f:
-            content = base64.b64encode(f.read())
-        return content.decode()
-
     # (DW) Add support for retries of requests to the OpsRamp API in the event
     # of receiving a HTTP 429 (Too Many Requests) response from the API to
     # suggest that it has activated rate limiting. This implements progressive
@@ -316,6 +305,3 @@ class ApiWrapper(object):
 
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
-
-    def get(self, suffix='', headers=None):
-        return self.api.get(suffix, headers)

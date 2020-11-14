@@ -21,10 +21,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Sites(ApiWrapper):
+class Sites(ORapi):
     def __init__(self, parent):
         super(Sites, self).__init__(parent.api, 'sites')
 

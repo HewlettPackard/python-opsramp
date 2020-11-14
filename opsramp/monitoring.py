@@ -20,10 +20,10 @@
 # limitations under the License.
 
 from __future__ import print_function
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 
 
-class Monitoring(ApiWrapper):
+class Monitoring(ORapi):
     def __init__(self, parent):
         super(Monitoring, self).__init__(parent.api, 'monitoring')
 
@@ -31,7 +31,7 @@ class Monitoring(ApiWrapper):
         return Templates(self)
 
 
-class Templates(ApiWrapper):
+class Templates(ORapi):
     def __init__(self, parent):
         super(Templates, self).__init__(parent.api, 'templates')
 

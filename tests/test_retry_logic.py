@@ -193,7 +193,7 @@ class TestMockServer(unittest.TestCase):
 
         api_endpoint = "foo"
         with captured_output() as (out, err):
-            api_wrapper.get("/%s" % api_endpoint)
+            api_wrapper.api.get("/%s" % api_endpoint)
 
         expected_requests = []
         for resp in CANNED_RESPONSES:

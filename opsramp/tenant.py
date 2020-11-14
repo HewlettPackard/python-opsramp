@@ -21,7 +21,7 @@
 
 from __future__ import print_function
 
-from opsramp.base import ApiWrapper
+from opsramp.api import ORapi
 import opsramp.rba
 import opsramp.monitoring
 import opsramp.msp
@@ -37,7 +37,7 @@ import opsramp.resources
 import opsramp.first_response
 
 
-class Tenant(ApiWrapper):
+class Tenant(ORapi):
     def __init__(self, parent, uuid):
         super(Tenant, self).__init__(parent.api, 'tenants/%s' % uuid)
         self.uuid = uuid
