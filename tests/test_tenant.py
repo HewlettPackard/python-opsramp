@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,16 +23,16 @@ import opsramp.binding
 
 class TenantTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'http://api.example.com'
+        fake_url = 'https://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
-        self.client = self.ormp.tenant(self.fake_client_id)
+        fake_client_id = 'client_for_unit_test'
+        self.client = self.ormp.tenant(fake_client_id)
         assert self.client.is_client()
 
-        self.fake_msp_id = 'msp_for_unit_test'
-        self.msp = self.ormp.tenant(self.fake_msp_id)
+        fake_msp_id = 'msp_for_unit_test'
+        self.msp = self.ormp.tenant(fake_msp_id)
         assert not self.msp.is_client()
 
     def test_agent_script(self):
@@ -42,6 +42,7 @@ class TenantTest(unittest.TestCase):
             m.get(url, text=expected)
             actual = self.client.get_agent_script()
             assert actual == expected
+            assert m.call_count == 1
 
     def test_clients(self):
         # A partner object can have clients contained within it.
