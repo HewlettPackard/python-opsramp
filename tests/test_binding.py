@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,19 +23,23 @@ import opsramp.binding
 
 class BindingTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'http://api.example.com'
-        fake_key = 'opensesame'
-        fake_secret = 'thereisnospoon'
-        fake_token = 'fake-unit-test-token'
+        endpoint = 'https://api.example.com'
+        key = 'opensesame'
+        secret = 'thereisnospoon'
+        token = 'fake-unit-test-token'
+        hshake = 'grant_type=client_credentials&client_id=%s&client_secret=%s'
         with requests_mock.Mocker() as m:
-            url = fake_url + '/auth/oauth/token'
-            expected = '{"access_token": "%s"}' % fake_token
-            m.post(url, text=expected)
+            url = endpoint + '/auth/oauth/token'
+            expected_send = hshake % (key, secret)
+            expected_receive = {'access_token': token}
+            adapter = m.post(url, json=expected_receive, complete_qs=True)
             self.ormp = opsramp.binding.connect(
-                fake_url,
-                fake_key,
-                fake_secret
+                endpoint,
+                key,
+                secret
             )
+            assert m.call_count == 1
+            assert adapter.last_request.text == expected_send
         assert type(self.ormp) is opsramp.binding.Opsramp
         assert 'Opsramp' in str(self.ormp)
 

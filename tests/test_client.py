@@ -131,21 +131,24 @@ class ApiTest(unittest.TestCase):
             'country': 'US'
         }
         thisid = 555555
-        expected = {'id': thisid}
+        expected_send = good_definition
+        expected_receive = {'id': thisid}
         url = self.clients.api.compute_url()
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected, complete_qs=True)
+            adapter = m.post(url, json=expected_receive, complete_qs=True)
             actual = self.clients.create(definition=good_definition)
-            assert actual == expected
+            assert adapter.last_request.json() == expected_send
+            assert actual == expected_receive
         # now try update
         url = self.clients.api.compute_url(thisid)
         with requests_mock.Mocker() as m:
-            m.post(url, json=expected, complete_qs=True)
+            adapter = m.post(url, json=expected_receive, complete_qs=True)
             actual = self.clients.update(
                 uuid=thisid,
                 definition=good_definition
             )
-            assert actual == expected
+            assert adapter.last_request.json() == expected_send
+            assert actual == expected_receive
 
     def test_suspend(self):
         thisid = 789012
