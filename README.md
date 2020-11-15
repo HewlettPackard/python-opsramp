@@ -28,7 +28,7 @@ that I ran into that are not obvious from the API docs.
 
 ### Scope
 The basic framework of this library is in place and the
-scope will increase incrementally over time. The supplied samples
+scope has increased incrementally over time. The supplied samples
 exercise most of the main API sections and are described
 later in this document.
 
@@ -50,7 +50,7 @@ what the API gave us, or an equivalent Python object if it returned JSON.
 This module is primarily designed for use on Python 3.
 
 We also run the unit tests against Python 2.7 and it *should* work correctly there
-too. Note however that Python 2 is going end-of-life in late 2019 and we reserve
+too. Note however that Python 2 went end-of-life in late 2019 and we reserve
 the right to drop support for it in a future version of this module.
 
 ## Public Object Tree
@@ -96,6 +96,7 @@ import opsramp.binding
 - class Opsramp(url, token) _an object representing the complete API tree of one OpsRamp instance_
   - config() -> returns a GlobalConfig object that can be used to access global settings for this OpsRamp instance.
   - tenant(uuid) -> returns a Tenant object representing the API subtree for one specific tenant.
+  - metrics() -> returns a MetricsApi object that can be used to access the raw metrics api of this OpsRamp instance.
 
 import opsramp.globalconfig
 
@@ -107,6 +108,15 @@ import opsramp.globalconfig
   - get\_alert\_technologies() -> a list of dicts each describing one alert technology known to this OpsRamp instance.
   - get\_nocs() -> a list of dicts each describing one NOC known to this OpsRamp instance.
   - get\_device\_types() -> a list of dicts each describing device type known to this OpsRamp instance.
+
+import opsramp.metrics
+
+- class MetricsApi() _the metrics API subtree for this OpsRamp instance_
+  - get(pattern) -> returns metric definitions or time series values, depending on the pattern.
+  This a raw interface to the GET portions of the OpsRamp metrics API and you should consult the OpsRamp
+  documentation for the syntax that is permitted in pattern.
+  - search(pattern) -> returns metric _time series_ values matching the pattern. These patterns
+  can be quite complex and you should refer to the OpsRamp API documentation for the syntax.
 
 import opsramp.tenant
 

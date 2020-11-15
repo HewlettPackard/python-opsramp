@@ -25,6 +25,7 @@ from opsramp.base import ApiObject
 from opsramp.api import ORapi
 from opsramp.globalconfig import GlobalConfig
 from opsramp.tenant import Tenant
+from opsramp.metrics import MetricsApi
 
 
 def connect(url, key, secret):
@@ -59,3 +60,6 @@ class Opsramp(ORapi):
 
     def tenant(self, name):
         return Tenant(self, name)
+
+    def metrics(self):
+        return MetricsApi(self)
