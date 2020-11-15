@@ -40,9 +40,6 @@ class ORapi(ApiWrapper):
             content = base64.b64encode(f.read())
         return content.decode()
 
-    def get(self, suffix='', headers=None):
-        return self.api.get(suffix, headers)
-
     def search(self, pattern='', headers=None, suffix='search'):
         if pattern:
             if pattern[0] != '?':
