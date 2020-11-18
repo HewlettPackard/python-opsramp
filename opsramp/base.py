@@ -267,31 +267,31 @@ class ApiObject(object):
         except JSONDecodeError:
             return resp.text
 
-    def get(self, suffix='', headers=None):
+    def get(self, suffix=None, headers=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.get(url, headers=hdr)
         return self.process_result(url, resp)
 
-    def post(self, suffix='', headers=None, data=None, json=None):
+    def post(self, suffix=None, headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.post(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def put(self, suffix='', headers=None, data=None, json=None):
+    def put(self, suffix=None, headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.put(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def delete(self, suffix='', headers=None, data=None, json=None):
+    def delete(self, suffix=None, headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.delete(url, headers=hdr, data=data, json=json)
         return self.process_result(url, resp)
 
-    def patch(self, suffix='', headers=None, data=None, json=None):
+    def patch(self, suffix=None, headers=None, data=None, json=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
         resp = self.session.patch(url, headers=hdr, data=data, json=json)
@@ -299,7 +299,7 @@ class ApiObject(object):
 
 
 class ApiWrapper(object):
-    def __init__(self, apiobject, suffix=''):
+    def __init__(self, apiobject, suffix=None):
         self.api = apiobject.clone()
         if suffix:
             self.api.chroot(suffix)
@@ -308,4 +308,4 @@ class ApiWrapper(object):
         return '%s %s' % (str(type(self)), self.api)
 
     def get(self, suffix=None, headers=None):
-        return self.api.get(suffix, headers)
+        return self.api.get(suffix, headers=headers)

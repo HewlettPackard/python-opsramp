@@ -53,8 +53,8 @@ class ClassTest(unittest.TestCase):
         self.mock_ao.get.return_value = expected
 
         suffix = 'milk'
-        actual = self.testobj.get(suffix=suffix, headers=hdrs)
-        self.mock_ao.get.assert_called_with(suffix, hdrs)
+        actual = self.testobj.get(suffix, headers=hdrs)
+        self.mock_ao.get.assert_called_with(suffix, headers=hdrs)
         assert actual == expected
 
     def test_search(self):
