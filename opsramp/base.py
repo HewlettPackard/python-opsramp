@@ -309,3 +309,15 @@ class ApiWrapper(object):
 
     def get(self, suffix=None, headers=None):
         return self.api.get(suffix, headers=headers)
+
+    def post(self, suffix=None, headers=None, data=None, json=None):
+        return self.api.post(suffix, headers=headers, data=data, json=json)
+
+    def put(self, suffix=None, headers=None, data=None, json=None):
+        return self.api.put(suffix, headers=headers, data=data, json=json)
+
+    def delete(self, suffix=None, headers=None, data=None, json=None):
+        return self.api.delete(suffix, headers=headers, data=data, json=json)
+
+    def patch(self, suffix=None, headers=None, data=None, json=None):
+        return self.api.patch(suffix, headers=headers, data=data, json=json)
