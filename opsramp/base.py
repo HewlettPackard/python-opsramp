@@ -97,7 +97,8 @@ class PathTracker(object):
         new1.stack = self.stack
         return new1
 
-    def cd(self, path):
+    def cd(self, path=None):
+        path = str(path or '/')
         # no support for '..' right now, maybe in the future
         if path[0] == '/':
             self.prefix = path
@@ -106,7 +107,7 @@ class PathTracker(object):
         self.prefix = self.prefix.strip('/')
         return self.prefix
 
-    def pushd(self, path):
+    def pushd(self, path=None):
         self.stack.append(self.prefix)
         return self.cd(path)
 
@@ -114,8 +115,8 @@ class PathTracker(object):
         self.prefix = self.stack.pop()
         return self.prefix
 
-    def fullpath(self, suffix=''):
-        suffix = str(suffix)
+    def fullpath(self, suffix=None):
+        suffix = str(suffix or '')
         if len(suffix) > 0 and suffix[0] == '/':
             retval = suffix
         else:
@@ -152,11 +153,11 @@ class ApiObject(object):
         )
         return new1
 
-    def cd(self, path):
+    def cd(self, path=None):
         self.tracker.cd(path)
         return self.compute_url()
 
-    def pushd(self, path):
+    def pushd(self, path=None):
         self.tracker.pushd(path)
         return self.compute_url()
 
@@ -306,5 +307,5 @@ class ApiWrapper(object):
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
 
-    def get(self, suffix='', headers=None):
+    def get(self, suffix=None, headers=None):
         return self.api.get(suffix, headers)

@@ -66,18 +66,46 @@ class ApiObjectTest(unittest.TestCase):
         assert ao2.session is self.ao.session
 
     def test_compute_url(self):
+        # some value, doesn't really matter.
         suffix = 'unit/test/value'
-        expected = self.ao.compute_url() + '/' + suffix
+        expected = self.ao.baseurl + '/' + suffix
         assert self.ao.compute_url(suffix) == expected
+        # empty string and None should both return the root path.
+        rootdir = self.ao.baseurl
+        assert self.ao.compute_url() == rootdir
+        assert self.ao.compute_url('/') == rootdir
+        assert self.ao.compute_url('') == rootdir
+        assert self.ao.compute_url(None) == rootdir
 
     # We're not testing an exhaustive set of suffix patterns here because
     # that is already being done by the PathTracker unit tests.
     def test_cd(self):
+        # some value, doesn't really matter.
         suffix = 'unit/test/cd'
         expected = self.ao.compute_url() + '/' + suffix
         actual = self.ao.cd(suffix)
         assert actual == expected
         assert self.ao.compute_url() == expected
+        # check the root path works.
+        rootdir = self.ao.baseurl
+        self.ao.cd('/random/place1')
+        assert self.ao.compute_url() != rootdir
+        assert self.ao.cd('/') == rootdir
+        assert self.ao.compute_url() == rootdir
+        # no args should default to the root path.
+        self.ao.cd('/random/place0')
+        assert self.ao.compute_url() != rootdir
+        assert self.ao.cd() == rootdir
+        assert self.ao.compute_url() == rootdir
+        # empty string should default to the root path.
+        self.ao.cd('/random/place2')
+        assert self.ao.compute_url() != rootdir
+        assert self.ao.cd('') == rootdir
+        assert self.ao.compute_url() == rootdir
+        # None should default to the root path.
+        self.ao.cd('/random/place3')
+        assert self.ao.cd(None) == rootdir
+        assert self.ao.compute_url() == rootdir
 
     # We're not testing an exhaustive set of suffix patterns here because
     # that is already being done by the PathTracker unit tests.
