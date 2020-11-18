@@ -68,17 +68,17 @@ class ClassTest(unittest.TestCase):
 
         # default suffix should be "search"
         actual = self.testobj.search(pattern=qstring)
-        self.mock_ao.get.assert_called_with('search' + qstring, None)
+        self.mock_ao.get.assert_called_with('search' + qstring, headers=None)
         assert actual == expected
         actual = self.testobj.search(pattern=qs2, headers=hdrs)
-        self.mock_ao.get.assert_called_with('search' + qstring, hdrs)
+        self.mock_ao.get.assert_called_with('search' + qstring, headers=hdrs)
         assert actual == expected
 
         # try a different suffix
         suffix = 'toraiocht'
         actual = self.testobj.search(pattern=qstring, suffix=suffix)
-        self.mock_ao.get.assert_called_with(suffix + qstring, None)
+        self.mock_ao.get.assert_called_with(suffix + qstring, headers=None)
         assert actual == expected
         actual = self.testobj.search(pattern=qs2, headers=hdrs, suffix=suffix)
-        self.mock_ao.get.assert_called_with(suffix + qstring, hdrs)
+        self.mock_ao.get.assert_called_with(suffix + qstring, headers=hdrs)
         assert actual == expected

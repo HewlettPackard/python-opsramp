@@ -45,4 +45,4 @@ class ORapi(ApiWrapper):
             if pattern[0] != '?':
                 pattern = '?' + pattern
             suffix += pattern
-        return self.api.get(suffix, headers)
+        return super(ORapi, self).get(suffix, headers)
