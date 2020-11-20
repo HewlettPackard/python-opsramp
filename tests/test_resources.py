@@ -214,7 +214,6 @@ class ApiTest(unittest.TestCase):
             )
             assert actual == fake_result
 
-
     def test_get_templates(self):
         group = self.client.resources()
         fake_resource_id = '789012'
