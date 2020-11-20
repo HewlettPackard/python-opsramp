@@ -206,3 +206,19 @@ class ApiTest(unittest.TestCase):
                 end_epoch=fake_end
             )
             assert actual == fake_result
+
+    def test_get_templates(self):
+        group = self.client.resources()
+        fake_resource_id = '789012'
+        fake_result = ['unit', 'test', 'availability', 'result']
+        with requests_mock.Mocker() as m:
+            url_suffix = '{0}/templates/search'.format(
+                fake_resource_id
+            )
+            url = group.api.compute_url(url_suffix)
+            m.get(url, json=fake_result, complete_qs=True)
+            actual = group.get_templates(
+                uuid=fake_resource_id,
+                pattern=''
+            )
+            assert actual == fake_result

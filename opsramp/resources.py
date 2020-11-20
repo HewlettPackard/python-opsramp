@@ -89,3 +89,9 @@ class Resources(ApiWrapper):
             uuid, start_epoch, end_epoch
         )
         return self.api.get(url_suffix)
+
+    def get_templates(self, uuid, pattern=''):
+        url_suffix = '{0}/templates/search?{1}'.format(
+            uuid, pattern
+        )
+        return self.api.get(url_suffix)
