@@ -219,13 +219,13 @@ class ApiTest(unittest.TestCase):
         fake_resource_id = '789012'
         fake_result = ['unit', 'test', 'availability', 'result']
         with requests_mock.Mocker() as m:
-            url_suffix = '{0}/templates/search'.format(
-                fake_resource_id
+            url_suffix = '{0}/templates/search?{1}'.format(
+                fake_resource_id, "fake_pattern"
             )
             url = group.api.compute_url(url_suffix)
             m.get(url, json=fake_result, complete_qs=True)
             actual = group.get_templates(
                 uuid=fake_resource_id,
-                pattern=''
+                pattern="fake_pattern"
             )
-            assert actual == fake_result
+            assert actual['results'] == fake_result
