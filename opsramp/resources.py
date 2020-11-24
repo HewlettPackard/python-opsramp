@@ -97,4 +97,3 @@ class Resources(ORapi):
         resp = self.search(pattern)
         self.api.popd()
         return resp
-
