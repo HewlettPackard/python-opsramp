@@ -49,29 +49,39 @@ class Helpers(object):
     # tuple: type((429)) is 'int', whereas type((429,)) is 'tuple'.
     # Borrowed from:
     # https://www.peterbe.com/plog/best-practice-with-retries-with-requests
+
+    retryclass = requests.packages.urllib3.util.Retry
+
     @staticmethod
-    def session_add_retry_handler(
-        retries=7, backoff_factor=1, status_forcelist=(429,), session=None
-    ):
-        session = session or requests.Session()
+    def session_add_retry_handler(session=None):
+        # urllib3 does not retry on POST by default, but we want to iff the
+        # return status is 429 rate limiting, on the assumption that this
+        # means the POST did not happen and is therefore safe to retry.
+        http_verbs = set(Helpers.retryclass.DEFAULT_ALLOWED_METHODS)
+        http_verbs.add('POST')
         retry = Helpers.create_retry_handler(
-            retries, backoff_factor, status_forcelist
+            retries=7,
+            backoff_factor=0.5,
+            status_forcelist=(429,),
+            allowed_methods=http_verbs
         )
 
         adapter = requests.adapters.HTTPAdapter(max_retries=retry)
 
+        session = session or requests.Session()
         session.mount(prefix='http://', adapter=adapter)
         session.mount(prefix='https://', adapter=adapter)
         return session
 
     @staticmethod
-    def create_retry_handler(retries, backoff_factor, status_forcelist):
+    def create_retry_handler(retries, backoff_factor, status_forcelist,
+                             allowed_methods):
         assert isinstance(retries, int)
-        assert retries >= 1
-        assert backoff_factor > 0
+        assert retries >= 0
+        assert backoff_factor >= 0
         assert isinstance(status_forcelist, tuple)
 
-        return requests.packages.urllib3.util.retry.Retry(
+        return Helpers.retryclass(
             total=retries,
             read=retries,
             connect=retries,
