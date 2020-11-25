@@ -89,3 +89,11 @@ class Resources(ORapi):
             uuid, start_epoch, end_epoch
         )
         return self.api.get(url_suffix)
+
+    def get_templates(self, uuid, pattern=None):
+        url_suffix = '{0}/templates'.format(uuid)
+        self.api.pushd(url_suffix)
+        resp = super(Resources, self).search(pattern)
+        resp = self.search(pattern)
+        self.api.popd()
+        return resp
