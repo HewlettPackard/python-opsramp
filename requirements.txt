@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-requests
+requests>=2.25.0
 simplejson
