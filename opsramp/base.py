@@ -57,7 +57,11 @@ class Helpers(object):
         # urllib3 does not retry on POST by default, but we want to iff the
         # return status is 429 rate limiting, on the assumption that this
         # means the POST did not happen and is therefore safe to retry.
-        http_verbs = set(Helpers.retryclass.DEFAULT_ALLOWED_METHODS)
+        try:
+            http_verbs = set(Helpers.retryclass.DEFAULT_ALLOWED_METHODS)
+        except AttributeError:
+            # it has a different name in older versions of urllib3
+            http_verbs = set(Helpers.retryclass.DEFAULT_METHOD_WHITELIST)
         http_verbs.add('POST')
         retry = Helpers.create_retry_handler(
             retries=7,
