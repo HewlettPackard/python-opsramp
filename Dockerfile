@@ -7,7 +7,7 @@
 # ormpcli tenant agent script
 # ormpcli tenant monitoring templates
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ RUN pip install /build
 
 FROM python:3.7.5-slim as prod
 LABEL description="OpsRamp CLI"
-LABEL maintainer "HPE Greenlake Talos <mercury.opsauto@hpe.com>"
+LABEL maintainer "HPE GreenLake CSO <eemz@hpe.com>"
 COPY --from=build /usr/local /usr/local
 
 ENTRYPOINT ["/bin/bash"]

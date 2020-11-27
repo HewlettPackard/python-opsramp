@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ setuptools.setup(
     name='python-opsramp',
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
-    author='HPE Greenlake Talos',
-    author_email='hcss_kalpana@hpe.com',
+    author='HPE GreenLake CSO',
+    author_email='eemz@hpe.com',
     description='Python language binding for the Opsramp API',
     long_description=long_description,
     long_description_content_type=long_description_content_type,
