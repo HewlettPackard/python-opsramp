@@ -21,6 +21,7 @@
 # limitations under the License.
 
 set -eux -o pipefail
+pip freeze
 flake8
 coverage run --include='opsramp/*' -m pytest -vvv
 coverage report
