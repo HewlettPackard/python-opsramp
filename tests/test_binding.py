@@ -23,15 +23,20 @@ import opsramp.binding
 
 class BindingTest(unittest.TestCase):
     def setUp(self):
-        endpoint = 'https://api.example.com'
+        endpoint = 'mock://api.example.com'
         key = 'opensesame'
         secret = 'thereisnospoon'
         token = 'fake-unit-test-token'
+
+        url = endpoint + '/auth/oauth/token'
         hshake = 'grant_type=client_credentials&client_id=%s&client_secret=%s'
+        expected_send = hshake % (key, secret)
+        expected_receive = {'access_token': token}
+        expected_auth = {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json,application/xml'
+        }
         with requests_mock.Mocker() as m:
-            url = endpoint + '/auth/oauth/token'
-            expected_send = hshake % (key, secret)
-            expected_receive = {'access_token': token}
             adapter = m.post(url, json=expected_receive, complete_qs=True)
             self.ormp = opsramp.binding.connect(
                 endpoint,
@@ -40,7 +45,10 @@ class BindingTest(unittest.TestCase):
             )
             assert m.call_count == 1
             assert adapter.last_request.text == expected_send
-        assert type(self.ormp) is opsramp.binding.Opsramp
+            assert type(self.ormp) is opsramp.binding.Opsramp
+            assert self.ormp.auth == expected_auth
+
+    def test_str(self):
         assert 'Opsramp' in str(self.ormp)
 
     def test_config(self):

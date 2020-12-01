@@ -175,7 +175,7 @@ class StaticsTest(unittest.TestCase):
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'https://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
@@ -195,7 +195,7 @@ class ApiTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             # we will be doing two posts so mock both results now.
             url = group.api.compute_url()
-            m.post(url, [{'json': parent}, {'json': child}])
+            m.post(url, [{'json': parent}, {'json': child}], complete_qs=True)
 
             # Create a category with no parent ID specified
             actual = group.create(
@@ -217,7 +217,7 @@ class ApiTest(unittest.TestCase):
         expected = ''
         with requests_mock.Mocker() as m:
             url = category_group.api.compute_url(categoryID)
-            m.delete(url, text=expected)
+            m.delete(url, text=expected, complete_qs=True)
             actual = category_group.delete(uuid=categoryID)
             assert actual == expected
 
@@ -233,7 +233,7 @@ class ApiTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             url = category_group.api.compute_url()
-            m.put(url, json=expected)
+            m.put(url, json=expected, complete_qs=True)
             actual = category_group.update(categoryID, {
                 'name': updated_name
             })
@@ -246,7 +246,7 @@ class ApiTest(unittest.TestCase):
         assert expected
         with requests_mock.Mocker() as m:
             url = this1.api.compute_url()
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = this1.create(
                 definition=expected
             )
@@ -260,7 +260,7 @@ class ApiTest(unittest.TestCase):
         assert expected
         with requests_mock.Mocker() as m:
             url = this1.api.compute_url(scriptId)
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = this1.update(
                 uuid=scriptId, definition=expected
             )
@@ -273,6 +273,6 @@ class ApiTest(unittest.TestCase):
         expected = ''
         with requests_mock.Mocker() as m:
             url = this1.api.compute_url(scriptId)
-            m.delete(url, text=expected)
+            m.delete(url, text=expected, complete_qs=True)
             actual = this1.delete(uuid=scriptId)
             assert actual == expected

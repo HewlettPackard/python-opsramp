@@ -46,7 +46,7 @@ class FakeResp(object):
 
 class ApiObjectTest(unittest.TestCase):
     def setUp(self):
-        self.fake_url = 'http://api.example.com'
+        self.fake_url = 'mock://api.example.com'
         self.fake_token = 'ffffffffffffffff'
         self.fake_auth = {
             'Authorization': 'Bearer %s' % self.fake_token,

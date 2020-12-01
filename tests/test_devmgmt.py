@@ -21,9 +21,9 @@ import requests_mock
 import opsramp.binding
 
 
-class DevmgmtText(unittest.TestCase):
+class DevmgmtTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'https://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
@@ -52,7 +52,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 111111
             expected = {'id': thisid}
             url = group.api.compute_url()
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
             assert actual == expected
 
@@ -60,7 +60,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 123456
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.put(url, json=expected)
+            m.put(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
             assert actual == expected
 
@@ -68,7 +68,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 789012
             expected = {'id': thisid}
             url = group.api.compute_url('%s/action/run' % thisid)
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.run(uuid=thisid)
             assert actual == expected
 
@@ -76,7 +76,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 345678
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
             assert actual == expected
 
@@ -101,7 +101,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 111111
             expected = {'id': thisid}
             url = group.api.compute_url()
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
             assert actual == expected
 
@@ -109,7 +109,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 123456
             expected = {'id': thisid}
             url = group.api.compute_url()
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.update(definition=expected)
             assert actual == expected
 
@@ -117,7 +117,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 789012
             expected = {'id': thisid}
             url = group.api.compute_url('action/scan/%s' % thisid)
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.rescan(uuid=thisid)
             assert actual == expected
 
@@ -125,7 +125,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 345678
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
             assert actual == expected
 
@@ -136,7 +136,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 111111
             expected = {'id': thisid}
             url = group.api.compute_url()
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get()
             assert actual == expected
 
@@ -144,7 +144,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 222222
             expected = {'id': thisid}
             url = group.api.compute_url()
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
             assert actual == expected
 
@@ -152,7 +152,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 123456
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(uuid=thisid)
             assert actual == expected
 
@@ -160,7 +160,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 789012
             expected = {'id': thisid}
             url = group.api.compute_url('%s/minimal' % thisid)
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(uuid=thisid, minimal=True)
             assert actual == expected
 
@@ -168,7 +168,7 @@ class DevmgmtText(unittest.TestCase):
             thisid = 345678
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
             assert actual == expected
 
@@ -176,6 +176,6 @@ class DevmgmtText(unittest.TestCase):
             thisid = 901234
             expected = {'id': thisid}
             url = group.api.compute_url(thisid)
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
             assert actual == expected

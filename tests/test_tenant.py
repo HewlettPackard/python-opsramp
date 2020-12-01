@@ -23,7 +23,7 @@ import opsramp.binding
 
 class TenantTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'https://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
@@ -39,7 +39,7 @@ class TenantTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             url = self.client.api.compute_url('agents/deployAgentsScript')
             expected = 'unit test fake agent content'
-            m.get(url, text=expected)
+            m.get(url, text=expected, complete_qs=True)
             actual = self.client.get_agent_script()
             assert actual == expected
             assert m.call_count == 1
