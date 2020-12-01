@@ -60,7 +60,7 @@ class StaticsTest(unittest.TestCase):
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'https://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 

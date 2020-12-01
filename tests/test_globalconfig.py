@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import opsramp.binding
 
 class GlobalConfigTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'http://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
         self.gconfig = self.ormp.config()
@@ -45,7 +45,7 @@ class GlobalConfigTest(unittest.TestCase):
                 expected = ['unit', 'test']
                 expected.extend(suffix.split('/'))
                 assert expected
-                m.get(url, json=expected)
+                m.get(url, json=expected, complete_qs=True)
                 actual = fn()
                 assert actual == expected
 

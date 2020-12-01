@@ -23,7 +23,7 @@ import opsramp.binding
 
 class Metrics(unittest.TestCase):
     def setUp(self):
-        fake_url = 'http://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 

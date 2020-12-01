@@ -23,7 +23,7 @@ import opsramp.binding
 
 class KBtest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'http://api.example.com'
+        fake_url = 'mock://api.example.com'
         fake_token = 'unit-test-fake-token'
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
@@ -47,7 +47,7 @@ class CategoriesTest(KBtest):
         expected = {'id': 345678}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
         assert actual == expected
 
@@ -58,7 +58,7 @@ class CategoriesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
         assert actual == expected
 
@@ -69,7 +69,7 @@ class CategoriesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
         assert actual == expected
 
@@ -80,7 +80,7 @@ class CategoriesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.restore(uuid=thisid)
         assert actual == expected
 
@@ -90,7 +90,7 @@ class CategoriesTest(KBtest):
         url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
             assert actual == expected
 
@@ -102,7 +102,7 @@ class CategoriesTest(KBtest):
         expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             assert expected
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.children(thisid)
         assert actual == expected
 
@@ -114,7 +114,7 @@ class CategoriesTest(KBtest):
         expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             assert expected
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern=pattern)
         assert actual == expected
 
@@ -131,7 +131,7 @@ class ArticlesTest(KBtest):
         expected = {'id': 345678}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
         assert actual == expected
 
@@ -142,7 +142,7 @@ class ArticlesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
         assert actual == expected
 
@@ -153,7 +153,7 @@ class ArticlesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
         assert actual == expected
 
@@ -164,7 +164,7 @@ class ArticlesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.share(uuid=thisid, definition=expected)
         assert actual == expected
 
@@ -174,7 +174,7 @@ class ArticlesTest(KBtest):
         url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
             assert actual == expected
 
@@ -184,7 +184,7 @@ class ArticlesTest(KBtest):
         url = group.api.compute_url('%s/comments/' % thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.comments(thisid)
             assert actual == expected
 
@@ -196,7 +196,7 @@ class ArticlesTest(KBtest):
         expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             assert expected
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
         assert actual == expected
 
@@ -213,7 +213,7 @@ class TemplatesTest(KBtest):
         expected = {'id': 345678}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
         assert actual == expected
 
@@ -224,7 +224,7 @@ class TemplatesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.post(url, json=expected)
+            m.post(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
         assert actual == expected
 
@@ -235,7 +235,7 @@ class TemplatesTest(KBtest):
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
             assert expected
-            m.delete(url, json=expected)
+            m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
         assert actual == expected
 
@@ -245,7 +245,7 @@ class TemplatesTest(KBtest):
         url = group.api.compute_url(thisid)
         expected = {'id': thisid}
         with requests_mock.Mocker() as m:
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
             assert actual == expected
 
@@ -257,6 +257,6 @@ class TemplatesTest(KBtest):
         expected = ['unit', 'test', 'list']
         with requests_mock.Mocker() as m:
             assert expected
-            m.get(url, json=expected)
+            m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern=pattern)
         assert actual == expected
