@@ -71,8 +71,8 @@ class InstancesTest(unittest.TestCase):
         group = self.integs.instances()
         thisid = 123456
         expected = {'id': thisid}
-        with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/configFile/kubernetes' % thisid)
+        with requests_mock.Mocker(case_sensitive=True) as m:
+            url = group.api.compute_url('%s/configFile/Kubernetes' % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.get_kubernetes_configuration(uuid=thisid)
             assert actual == expected

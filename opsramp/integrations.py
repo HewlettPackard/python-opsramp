@@ -79,7 +79,7 @@ class Instances(ORapi):
         self.creator_api.chroot('install')
 
     def get_kubernetes_configuration(self, uuid):
-        return self.api.get('%s/configFile/kubernetes' % uuid)
+        return self.api.get('%s/configFile/Kubernetes' % uuid)
 
     def create(self, type_name, definition):
         resp = self.creator_api.post(type_name, json=definition)
