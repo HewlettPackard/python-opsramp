@@ -37,10 +37,10 @@ class ClassTest(unittest.TestCase):
         # test the setter and getter
         fake_session = MagicMock()
         aw.session = fake_session
-        assert aw.session == fake_session
+        assert aw.session is fake_session
         # put the real one back
         aw.session = original_session
-        assert aw.session == original_session
+        assert aw.session is original_session
 
     def test_get(self):
         ut_hdrs = {'fake-header': 'fake-value'}
