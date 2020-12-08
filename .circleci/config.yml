@@ -76,7 +76,7 @@ jobs:
 
 workflows:
   version: 2
-  workflow:
+  "CircleCI":
     jobs:
     - unit_py37
     - unit_py27
