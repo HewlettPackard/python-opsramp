@@ -30,6 +30,18 @@ class ClassTest(unittest.TestCase):
     def test_str(self):
         assert 'ApiWrapper' in str(self.testobj)
 
+    def test_session_property(self):
+        aw = self.testobj
+        original_session = aw.session
+        assert original_session
+        # test the setter and getter
+        fake_session = MagicMock()
+        aw.session = fake_session
+        assert aw.session == fake_session
+        # put the real one back
+        aw.session = original_session
+        assert aw.session == original_session
+
     def test_get(self):
         ut_hdrs = {'fake-header': 'fake-value'}
         expected = 'unit test get result'

@@ -150,8 +150,10 @@ class ApiObject(object):
             self.tracker = tracker
         else:
             self.tracker = PathTracker()
-
-        self.session = Helpers.session_add_retry_handler(session=session)
+        if session:
+            self.session = session
+        else:
+            self.session = Helpers.session_add_retry_handler()
 
     def __str__(self):
         return '%s "%s" "%s"' % (
@@ -320,6 +322,14 @@ class ApiWrapper(object):
 
     def __str__(self):
         return '%s %s' % (str(type(self)), self.api)
+
+    @property
+    def session(self):
+        return self.api.session
+
+    @session.setter
+    def session(self, value):
+        self.api.session = value
 
     def get(self, suffix=None, headers=None):
         return self.api.get(suffix, headers=headers)
