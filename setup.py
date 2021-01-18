@@ -29,6 +29,7 @@ with open('requirements.txt', 'r') as fh:
 
 setuptools.setup(
     name='python-opsramp',
+    python_requires='>=2.7',
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
     author='HPE GreenLake CSO',

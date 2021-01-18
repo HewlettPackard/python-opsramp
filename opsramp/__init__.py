@@ -21,4 +21,4 @@ if sys.version_info < (3,):
         "Please move to Python 3 because this module will drop support "
         "on {eod}.".format(
             eod='31-Jan-2021'
-        ), UserWarning)
+        ), DeprecationWarning)
