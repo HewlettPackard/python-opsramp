@@ -1,5 +1,5 @@
 <!---
-(c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+(c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,9 +49,10 @@ what the API gave us, or an equivalent Python object if it returned JSON.
 ### Runtime Environment
 This module is primarily designed for use on Python 3.
 
-We also run the unit tests against Python 2.7 and it *should* work correctly there
-too. Note however that Python 2 went end-of-life in late 2019 and we reserve
-the right to drop support for it in a future version of this module.
+Note that Python 2 formally went end-of-life at the end of 2019 and while this
+module currently still works on Python 2.7.18, we plan to stop supporting Python 2
+at the end of January 2021. Currently you will just get a deprecation
+warning but after that date it will not be installable on Python 2.
 
 ## Public Object Tree
 Following is a summary of the object tree currently available in this OpsRamp language binding. See
