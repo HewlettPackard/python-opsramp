@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@
 
 from __future__ import print_function
 import os
-import sys
+import logging
+import argparse
 
 import opsramp.binding
 
@@ -30,12 +31,26 @@ def connect():
     return opsramp.binding.connect(url, key, secret)
 
 
-def main():
-    if len(sys.argv) != 2:
-        print('usage: %s <new category name>' % sys.argv[0])
-        exit(2)
+def parse_argv():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-d', '--debug',
+        action='store_true'
+    )
+    parser.add_argument(
+        'category',
+        type=str
+    )
+    ns = parser.parse_args()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+    return ns
 
-    new_category_name = sys.argv[1]
+
+def main():
+    ns = parse_argv()
+    new_category_name = ns.category
 
     tenant_id = os.environ['OPSRAMP_TENANT_ID']
 
