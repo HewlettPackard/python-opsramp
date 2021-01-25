@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,21 +19,37 @@
 from __future__ import print_function
 import os
 import yaml
-import sys
 import logging
+import argparse
 
 import opsramp.binding
 
 
+def parse_argv():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-d', '--debug',
+        action='store_true'
+    )
+    parser.add_argument(
+        'suffix',
+        type=str
+    )
+    ns = parser.parse_args()
+    return ns
+
+
 def main():
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
+    ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+    suffix = ns.suffix
 
     endpoint = os.environ['OPSRAMP_URL']
     key = os.environ['OPSRAMP_KEY']
     secret = os.environ['OPSRAMP_SECRET']
 
-    suffix = sys.argv[1]
     ormp = opsramp.binding.connect(endpoint, key, secret)
     resp = ormp.get(suffix)
     print(yaml.dump(resp, default_flow_style=False))

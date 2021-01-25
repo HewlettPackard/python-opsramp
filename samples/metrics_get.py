@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 from __future__ import print_function
 import os
 import yaml
-import sys
 import logging
+import argparse
 
 import opsramp.binding
 
@@ -32,9 +32,26 @@ def connect():
     return opsramp.binding.connect(url, key, secret)
 
 
+def parse_argv():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-d', '--debug',
+        action='store_true'
+    )
+    parser.add_argument(
+        'query',
+        type=str
+    )
+    ns = parser.parse_args()
+    return ns
+
+
 def main():
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
+    ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+    qstring = ns.query
 
     ormp = connect()
     group = ormp.metrics()
@@ -42,7 +59,6 @@ def main():
     # examples of possible urls: (with correct client id)
     # 'tenants/client_1234/metrics/mysql.cluster.status/metricType'
     # 'search?tenant=client_1234&resource=abcdef&metric=mysql.cluster.status'
-    qstring = sys.argv[1]
     found = group.get(qstring)
     print(yaml.dump(found, default_flow_style=False))
 

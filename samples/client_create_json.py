@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ from __future__ import print_function
 import os
 import sys
 import json
+import logging
+import argparse
 
 import opsramp.binding
 
@@ -39,7 +41,22 @@ def connect():
     return opsramp.binding.connect(url, key, secret)
 
 
+def parse_argv():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-d', '--debug',
+        action='store_true'
+    )
+    ns = parser.parse_args()
+    return ns
+
+
 def main():
+    ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+
     partner_id = os.environ['OPSRAMP_TENANT_ID']
 
     jdata = json.load(sys.stdin)
