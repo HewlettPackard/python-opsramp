@@ -43,14 +43,14 @@ def parse_argv():
         type=str
     )
     ns = parser.parse_args()
-    if ns.debug:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
     return ns
 
 
 def main():
     ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
     qstring = ns.query
 
     ormp = connect()

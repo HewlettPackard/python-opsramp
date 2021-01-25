@@ -38,14 +38,14 @@ def parse_argv():
         action='store_true'
     )
     ns = parser.parse_args()
-    if ns.debug:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
     return ns
 
 
 def main():
-    parse_argv()
+    ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
 
     ormp = connect()
 

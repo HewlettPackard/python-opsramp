@@ -38,9 +38,6 @@ def parse_argv():
         action='store_true'
     )
     ns = parser.parse_args()
-    if ns.debug:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
     return ns
 
 
@@ -58,7 +55,10 @@ def walk(service_maps, map):
 
 
 def main():
-    parse_argv()
+    ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
 
     tnt_id = os.environ['OPSRAMP_TENANT_ID']
 

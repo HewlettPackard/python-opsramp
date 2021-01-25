@@ -42,9 +42,6 @@ def parse_argv():
         type=str
     )
     ns = parser.parse_args()
-    if ns.debug:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
     return ns
 
 
@@ -96,6 +93,9 @@ print('hello world')
 
 def main():
     ns = parse_argv()
+    if ns.debug:
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
     category_id = int(ns.uuid)
 
     tenant_id = os.environ['OPSRAMP_TENANT_ID']
