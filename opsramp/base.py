@@ -6,7 +6,7 @@
 # Containing various base classes used in other parts of the library
 # but not intended for direct use by callers.
 #
-# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
