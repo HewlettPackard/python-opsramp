@@ -22,6 +22,7 @@
 
 from __future__ import print_function
 import requests
+import logging
 try:
     # Python 3
     from urllib import parse as urlparse
@@ -30,6 +31,9 @@ except ImportError:
     # Python 2
     import urlparse
     JSONDecodeError = ValueError
+
+
+LOG = logging.getLogger(__name__)
 
 
 class Helpers(object):
@@ -250,7 +254,9 @@ class ApiObject(object):
         suffix = self.tracker.fullpath(suffix)
         if suffix:
             retval += suffix
-        return retval.rstrip('/')
+        retval = retval.rstrip('/')
+        LOG.debug(retval)
+        return retval
 
     def prep_headers(self, headers):
         if not headers:
@@ -268,6 +274,7 @@ class ApiObject(object):
                 url,
                 resp.content
             )
+            LOG.warning(msg)
             raise RuntimeError(msg)
         try:
             data = resp.json()
@@ -329,6 +336,7 @@ class ApiWrapper(object):
 
     @session.setter
     def session(self, value):
+        LOG.info(value)
         self.api.session = value
 
     def get(self, suffix=None, headers=None):
