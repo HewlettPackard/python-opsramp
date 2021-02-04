@@ -20,17 +20,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 import requests
 import logging
-try:
-    # Python 3
-    from urllib import parse as urlparse
-    from simplejson.errors import JSONDecodeError
-except ImportError:
-    # Python 2
-    import urlparse
-    JSONDecodeError = ValueError
+from urllib import parse as urlparse
+from simplejson.errors import JSONDecodeError
 
 
 LOG = logging.getLogger(__name__)

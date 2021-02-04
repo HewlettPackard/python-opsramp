@@ -1,6 +1,6 @@
 # python-opsramp CircleCI 2.0 configuration file
 #
-# (c) Copyright 2019 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,38 +45,9 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: coverage
-  unit_py27:
-    docker:
-      - image: circleci/python:2.7.15
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-py2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
-            - v1-dependencies-py2-
-      - run:
-          name: install dependencies
-          command: |
-            python -m virtualenv venv2
-            . venv2/bin/activate
-            pip install -r requirements.txt -r test-requirements.txt
-      - save_cache:
-          paths:
-            - ./venv2
-          key: v1-dependencies-py2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
-      - run:
-          name: run tests
-          command: |
-            . venv2/bin/activate
-            ./runtests.sh
-      - store_artifacts:
-          path: htmlcov
-          destination: coverage
 
 workflows:
   version: 2
   "CircleCI":
     jobs:
     - unit_py37
-    - unit_py27

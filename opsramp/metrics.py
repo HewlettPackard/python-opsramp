@@ -6,7 +6,7 @@
 # The OpsRamp metrics API is spread all over the place. This is a simple
 # initial class to expose the "get metric time series values" API.
 #
-# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 from opsramp.api import ORapi
 
 

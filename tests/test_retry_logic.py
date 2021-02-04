@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 import logging
 import socket
 import sys
@@ -27,13 +26,8 @@ import requests
 
 from opsramp.base import ApiObject, ApiWrapper
 
-try:
-    from http.server import BaseHTTPRequestHandler, HTTPServer
-    from io import StringIO
-except ImportError:
-    # Python 2.x support
-    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer  # noqa
-    from StringIO import StringIO  # noqa
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from io import StringIO
 
 # Define a list of "canned" responses here. These are used to test the retry
 # capability of the API client, so that when faced with a response containing a
