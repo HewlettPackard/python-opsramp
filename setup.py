@@ -29,7 +29,7 @@ with open('requirements.txt', 'r') as fh:
 
 setuptools.setup(
     name='python-opsramp',
-    python_requires='>=2.7',
+    python_requires='>=3.6',
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
     author='HPE GreenLake CSO',
@@ -45,7 +45,6 @@ setuptools.setup(
         'Development Status :: 4 - Beta ',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: Apache Software License',
         'Topic :: Software Development :: Libraries',
         'Operating System :: OS Independent',

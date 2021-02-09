@@ -20,7 +20,7 @@ TravisCI [![Build Status](https://travis-ci.org/HewlettPackard/python-opsramp.sv
 CircleCI [![CircleCI](https://circleci.com/gh/HewlettPackard/python-opsramp.svg?style=svg)](https://circleci.com/gh/HewlettPackard/python-opsramp)
 
 ## About
-This directory tree contains a Python module that provides a convenient way to
+This directory tree contains a Python 3 module that provides a convenient way to
 access the OpsRamp REST API programmatically. The OpsRamp API documentation is
 somewhat opaque and this binding hides some of the details for exactly that reason.
 I have also added "assert" statements in various places to guard against pitfalls
@@ -45,14 +45,6 @@ All functions in this binding return regular Python objects (not JSON strings).
 In general you will need to look at the OpsRamp API docs to see exactly what
 sort of object and/fields the response will contain; typically we return exactly
 what the API gave us, or an equivalent Python object if it returned JSON.
-
-### Runtime Environment
-This module is primarily designed for use on Python 3.
-
-Note that Python 2 formally went end-of-life at the end of 2019 and while this
-module currently still works on Python 2.7.18, we plan to stop supporting Python 2
-at the end of January 2021. Currently you will just get a deprecation
-warning but after that date it will not be installable on Python 2.
 
 ## Public Object Tree
 Following is a summary of the object tree currently available in this OpsRamp language binding. See
