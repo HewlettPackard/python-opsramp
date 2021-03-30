@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import unittest
 import base64
 from mock import MagicMock
@@ -32,7 +33,7 @@ class StaticsTest(unittest.TestCase):
 
     def test_base64(self):
         # a file that is guaranteed to be empty.
-        assert self.check64('/dev/null')
+        assert self.check64(os.devnull)
         # any non-empty file that we know will exist.
         assert self.check64('setup.py')
 
