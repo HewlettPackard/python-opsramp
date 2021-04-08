@@ -6,7 +6,7 @@
 # outside of this script using pip install -r test-requirements.txt and
 # that command is already folded into our tox.ini
 #
-# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,11 @@
 # limitations under the License.
 
 set -eux -o pipefail
-pip freeze
+windowsnewlines=$(file */*py | awk '/CRLF/ {print $0}')
+if [ -n "$windowsnewlines" ]; then
+  echo 'Windows newlines are not allowed in Python sources in this repo' >&2
+  exit 1
+fi
 flake8
 coverage run --include='opsramp/*' -m pytest -vvv
 coverage report
