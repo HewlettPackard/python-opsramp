@@ -125,7 +125,7 @@ class ApiTest(unittest.TestCase):
         expected = "sample text"
         with requests_mock.Mocker() as m:
             url = group.api.compute_url('files')
-            with open('testing.csv') as x:
+            with open('tests/testing.csv', 'rb') as x:
                 file = {'attachment': ('testing.csv', x, 'text/csv')}
                 data = {'test': 'fake'}
                 m.post(url, text=expected, complete_qs=True)

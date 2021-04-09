@@ -50,10 +50,11 @@ def main():
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
 
-    payload = {'metaData': '{"category": "ALERT_FIRST_RESPONSE_TRAINING",\
+    jsonstr = '{"category": "ALERT_FIRST_RESPONSE_TRAINING",\
                "properties": {"inputColumns":["resource.generalInfo.resourceType"],\
-               "outputColumns":["suppressed","snoozeDuration"]}}'}
-    with open('testing.csv', 'rb') as f:
+               "outputColumns":["suppressed","snoozeDuration"]}}'
+    payload = {'metaData': jsonstr}
+    with open('../tests/testing.csv', 'rb') as f:
         files = {'attachment': ('testing.csv', f, 'text/csv')}
         training_file_upload = tenant.model_training()
         resp = training_file_upload.file_upload(payload, files)
