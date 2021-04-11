@@ -96,3 +96,6 @@ class Tenant(ORapi):
 
     def first_response(self):
         return opsramp.first_response.First_Response(self)
+
+    def model_training(self):
+        return opsramp.first_response.ModelTraining(self)

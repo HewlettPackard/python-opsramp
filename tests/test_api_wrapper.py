@@ -98,8 +98,57 @@ class ClassTest(unittest.TestCase):
         )
         assert actual == expected
 
+    def five_variants(self, suffix, test_fn, mock_ao_fn):
+        ut_hdrs = {'fake-header': 'fake-value'}
+        ut_text = 'some unit test string'
+        ut_json = {'id': 'unit test'}
+        ut_file = {"attachment": "testing.csv"}
+        expected = 'unit test result'
+        mock_ao_fn.return_value = expected
+
+        # all defaults
+        actual = test_fn()
+        mock_ao_fn.assert_called_with(
+            None, headers=None,
+            data=None, json=None, files=None
+        )
+
+        # with suffix
+        actual = test_fn(suffix)
+        mock_ao_fn.assert_called_with(
+            suffix, headers=None,
+            data=None, json=None, files=None
+        )
+        # specific headers
+        actual = test_fn(suffix, headers=ut_hdrs)
+        mock_ao_fn.assert_called_with(
+            suffix, headers=ut_hdrs,
+            data=None, json=None, files=None
+        )
+        assert actual == expected
+        # specific text body
+        actual = test_fn(suffix, data=ut_text)
+        mock_ao_fn.assert_called_with(
+            suffix, headers=None,
+            data=ut_text, json=None, files=None
+        )
+        assert actual == expected
+        # specific json body
+        actual = test_fn(suffix, json=ut_json)
+        mock_ao_fn.assert_called_with(
+            suffix, headers=None,
+            data=None, json=ut_json, files=None
+        )
+        assert actual == expected
+        actual = test_fn(suffix, files=ut_file)
+        mock_ao_fn.assert_called_with(
+            suffix, headers=None,
+            data=None, json=None, files=ut_file
+        )
+        assert actual == expected
+
     def test_post(self):
-        self.four_variants(
+        self.five_variants(
             'eggs',
             self.testobj.post,
             self.mock_ao.post

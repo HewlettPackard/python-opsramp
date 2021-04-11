@@ -16,7 +16,6 @@
 
 import unittest
 import requests_mock
-
 import opsramp.binding
 
 
@@ -32,6 +31,9 @@ class ApiTest(unittest.TestCase):
 
         self.first_response = self.client.first_response()
         assert 'First_Response' in str(self.first_response)
+
+        self.model_training = self.client.model_training()
+        assert 'ModelTraining' in str(self.model_training)
 
     def test_search(self):
         group = self.first_response
@@ -108,3 +110,24 @@ class ApiTest(unittest.TestCase):
             m.post(url, json=expected, complete_qs=True)
             actual = group.disable(uuid=thisid)
             assert actual == expected
+
+    def test_model_training(self):
+        group = self.model_training
+        expected = "sample text"
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('train/ALERT_FIRST_RESPONSE_TRAINING')
+            m.post(url, text=expected, complete_qs=True)
+            actual = group.train_model()
+            assert actual == expected
+
+    def test_file_upload(self):
+        group = self.model_training
+        expected = "sample text"
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('files')
+            with open('tests/testing.csv', 'rb') as x:
+                file = {'attachment': ('testing.csv', x, 'text/csv')}
+                data = {'test': 'fake'}
+                m.post(url, text=expected, complete_qs=True)
+                actual = group.file_upload(data, file)
+                assert actual == expected

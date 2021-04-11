@@ -50,3 +50,14 @@ class First_Response(ORapi):
 
     def disable(self, uuid):
         return self.api.post('%s/disable' % uuid)
+
+
+class ModelTraining(ORapi):
+    def __init__(self, parent):
+        super(ModelTraining, self).__init__(parent.api, 'machineLearning')
+
+    def train_model(self):
+        return self.api.post('train/ALERT_FIRST_RESPONSE_TRAINING')
+
+    def file_upload(self, payload, files):
+        return self.api.post('files', data=payload, files=files)
