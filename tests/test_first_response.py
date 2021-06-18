@@ -131,3 +131,26 @@ class ApiTest(unittest.TestCase):
                 m.post(url, text=expected, complete_qs=True)
                 actual = group.file_upload(data, file)
                 assert actual == expected
+
+    def test_get_training_file(self):
+        group = self.model_training
+        expected = {
+            "results": [
+                {
+                    "name": "sample"
+                }
+            ],
+            "totalResults": 1,
+            "orderBy": "createdTime",
+            "pageNo": 1,
+            "pageSize": 100,
+            "totalPages": 1,
+            "nextPage": False,
+            "previousPageNo": 0,
+            "descendingOrder": True
+        }
+        with requests_mock.Mocker() as m:
+            url = group.api.compute_url('files')
+            m.get(url, json=expected, complete_qs=True)
+            actual = group.get_training_file()
+            assert actual == expected
