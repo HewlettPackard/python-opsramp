@@ -56,10 +56,12 @@ def main():
     group = tenant.model_training()
     found = group.get_training_file()
 
-    print(found['totalResults'],
-          'first response policies in tenant', tenant_id)
-    print(yaml.dump(found['results'], default_flow_style=False))
-
+    # There is only ever at most one result in the 'results'
+    # list returned.
+    if found['results']:
+        print(yaml.dump(found['results'], default_flow_style=False))
+    else:
+        print('no training file found in tenant.')
 
 if __name__ == "__main__":
     main()
