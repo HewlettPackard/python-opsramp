@@ -61,3 +61,6 @@ class ModelTraining(ORapi):
 
     def file_upload(self, payload, files):
         return self.api.post('files', data=payload, files=files)
+
+    def get_training_file(self):
+        return self.api.get('files')
