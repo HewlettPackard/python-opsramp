@@ -28,8 +28,8 @@ import opsramp.base
 
 
 class FakeResp(object):
-    def __init__(self, content, request):
-        self.status_code = http_status.OK
+    def __init__(self, content, request, status_code):
+        self.status_code = status_code
         self.content = content
         self.text = simplejson.dumps(self.content)
         self.json_fail = False
@@ -144,38 +144,53 @@ class ApiObjectTest(unittest.TestCase):
         expected.update(custom)
         assert actual == expected
 
-    def test_results(self):
-        # Test successful response
-
+    def test_result_ok(self):
         with requests_mock.mock() as m:
             expected = {'hello': 'world'}
             m.get(self.fake_url, json=expected, status_code=http_status.OK)
 
             faked_response = FakeResp(
                 content=expected,
-                request=self.ao.session.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request,
+                status_code=http_status.OK
             )
+
             actual = self.ao.process_result(self.fake_url, faked_response)
             assert type(actual) is dict
             assert actual == expected
 
-        # Test response where result is not valid JSON
+    def test_result_created(self):
+        with requests_mock.mock() as m:
+            expected = {'hello': 'world'}
+            m.get(self.fake_url, json=expected, status_code=http_status.OK)
+
+            faked_response = FakeResp(
+                content=expected,
+                request=self.ao.session.get(self.fake_url).request,
+                status_code=http_status.CREATED
+            )
+
+            actual = self.ao.process_result(self.fake_url, faked_response)
+            assert type(actual) is dict
+            assert actual == expected
+
+    def test_result_invalid_json(self):
         with requests_mock.mock() as m:
             expected = 'deliberately bad JSON for unit test purposes!!'
             m.get(self.fake_url, text=expected)
 
             faked_response = FakeResp(
                 content=['nothing'],
-                request=self.ao.session.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request,
+                status_code=http_status.OK
             )
-
             faked_response.json_fail = True
 
             actual = self.ao.process_result(self.fake_url, faked_response)
             assert type(actual) is str
             assert actual == expected
 
-        # Test that exception is thrown if unexpected HTTP status code returned
+    def test_result_failure(self):
         with requests_mock.mock() as m:
             m.get(
                 self.fake_url,
@@ -185,17 +200,12 @@ class ApiObjectTest(unittest.TestCase):
 
             faked_response = FakeResp(
                 content=['nothing'],
-                request=self.ao.session.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request,
+                status_code=http_status.BAD_REQUEST
             )
-            faked_response.status_code = http_status.BAD_REQUEST
 
-            failed = False
-            try:
-                actual = self.ao.process_result(self.fake_url, faked_response)
-            except RuntimeError as e:
-                print(e)
-                failed = True
-            assert failed
+            with self.assertRaises(RuntimeError):
+                self.ao.process_result(self.fake_url, faked_response)
 
     def test_paginated_results(self):
         # Define three pages of test data that return the following result
@@ -240,7 +250,8 @@ class ApiObjectTest(unittest.TestCase):
             # Build the initial (faked) response based on the above
             faked_response = FakeResp(
                 content=request_responses[0]['json'],
-                request=self.ao.session.get(self.fake_url).request
+                request=self.ao.session.get(self.fake_url).request,
+                status_code=http_status.OK
             )
             actual = self.ao.process_result(self.fake_url, faked_response)
             assert type(actual) is dict
