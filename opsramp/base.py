@@ -260,7 +260,8 @@ class ApiObject(object):
         return hdr
 
     def process_result(self, url, resp):
-        if resp.status_code != requests.codes.OK:
+        hstatus = int(resp.status_code)
+        if hstatus < 200 or hstatus >= 300:
             msg = '%s %s %s %s' % (
                 resp,
                 resp.request.method,
