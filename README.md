@@ -26,6 +26,10 @@ somewhat opaque and this binding hides some of the details for exactly that reas
 I have also added "assert" statements in various places to guard against pitfalls
 that I ran into that are not obvious from the API docs.
 
+### Build
+This repo includes standard Python packaging using pyproject.toml and setuptools.
+Source and wheel distributions can be built using `python3 -m build` in the usual way.
+
 ### Scope
 The basic framework of this library is in place and the
 scope has increased incrementally over time. The supplied samples

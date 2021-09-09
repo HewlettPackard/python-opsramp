@@ -28,27 +28,8 @@ with open('requirements.txt', 'r') as fh:
             requirements.append(line)
 
 setuptools.setup(
-    name='python-opsramp',
-    python_requires='>=3.6',
-    setup_requires=['setuptools_scm'],
-    use_scm_version=True,
-    author='HPE GreenLake CSO',
-    author_email='eemz@hpe.com',
-    description='Python language binding for the Opsramp API',
     long_description=long_description,
     long_description_content_type=long_description_content_type,
-    keywords='opsramp',
-    url='https://github.com/HewlettPackard/python-opsramp',
-    license='Apache 2.0',
-    packages=setuptools.find_packages(exclude=['contrib', 'docs', 'tests']),
-    classifiers=[
-        'Development Status :: 4 - Beta ',
-        'Intended Audience :: Developers',
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: Apache Software License',
-        'Topic :: Software Development :: Libraries',
-        'Operating System :: OS Independent',
-    ],
     install_requires=requirements,
     entry_points={
         'console_scripts': [
