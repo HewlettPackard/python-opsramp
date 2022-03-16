@@ -6,7 +6,7 @@
 # Containing various base classes used in other parts of the library
 # but not intended for direct use by callers.
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -268,7 +268,7 @@ class ApiObject(object):
                 url,
                 resp.content
             )
-            LOG.warning(msg)
+            LOG.debug(msg)
             raise RuntimeError(msg)
         try:
             data = resp.json()
@@ -330,7 +330,7 @@ class ApiWrapper(object):
 
     @session.setter
     def session(self, value):
-        LOG.info(value)
+        LOG.debug(value)
         self.api.session = value
 
     def get(self, suffix=None, headers=None):
