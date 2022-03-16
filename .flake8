@@ -1,4 +1,4 @@
-# (c) Copyright 2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,5 +13,8 @@
 # limitations under the License.
 [flake8]
 exclude=.git,__pycache__,.tox,.eggs,*.egg,venv,venv2,venv3
-ignore=none
-max-line-length=132
+# Take the advice of the "black" code formatter which has 88
+# as its standard linewidth because 80 is too restrictive.
+max-line-length=88
+# These warnings are not valid for the newest PEP8 standard.
+ignore=W503,E203
