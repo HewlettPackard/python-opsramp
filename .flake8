@@ -13,6 +13,7 @@
 # limitations under the License.
 [flake8]
 exclude=.git,__pycache__,.tox,.eggs,*.egg,venv,venv2,venv3
+import_order_style = google
 # Take the advice of the "black" code formatter which has 88
 # as its standard linewidth because 80 is too restrictive.
 max-line-length=88

@@ -5,7 +5,7 @@
 # tenant.py
 # Classes dealing directly with OpsRamp Tenants.
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,19 +20,19 @@
 # limitations under the License.
 
 from opsramp.api import ORapi
-import opsramp.rba
+import opsramp.devmgmt
+import opsramp.escalations
+import opsramp.first_response
+import opsramp.integrations
+import opsramp.kb
+import opsramp.mgmt_profiles
 import opsramp.monitoring
 import opsramp.msp
-import opsramp.devmgmt
-import opsramp.integrations
-import opsramp.roles
-import opsramp.escalations
-import opsramp.mgmt_profiles
-import opsramp.sites
-import opsramp.service_maps
-import opsramp.kb
+import opsramp.rba
 import opsramp.resources
-import opsramp.first_response
+import opsramp.roles
+import opsramp.service_maps
+import opsramp.sites
 
 
 class Tenant(ORapi):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import unittest
-from mock import MagicMock
 
+from mock import MagicMock
 from opsramp.base import ApiWrapper
 
 

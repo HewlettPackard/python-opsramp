@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
 # limitations under the License.
 
 import unittest
-from requests import codes as http_status
-from mock import MagicMock
-import requests_mock
 
+from mock import MagicMock
+import opsramp.base
+from requests import codes as http_status
+import requests_mock
 # Note we are deliberately using simplejson (instead of json) because
 # that's what the requests module uses and we want to raise the same
 # types of exceptions, not exceptions from the generic "json" module.
 import simplejson
-
-import opsramp.base
 
 
 class FakeResp(object):
