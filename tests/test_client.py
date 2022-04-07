@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import datetime
-import requests_mock
+import unittest
 
-from opsramp.msp import Clients
 import opsramp.binding
+from opsramp.msp import Clients
+import requests_mock
 
 
 class StaticsTest(unittest.TestCase):

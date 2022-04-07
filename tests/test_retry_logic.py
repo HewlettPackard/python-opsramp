@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from contextlib import contextmanager
+from copy import deepcopy
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from io import StringIO
 import logging
 import socket
 import sys
-import unittest
-from contextlib import contextmanager
-from copy import deepcopy
 from threading import Thread
-
-import requests
+import unittest
 
 from opsramp.base import ApiObject, ApiWrapper
-
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from io import StringIO
+import requests
 
 # Define a list of "canned" responses here. These are used to test the retry
 # capability of the API client, so that when faced with a response containing a

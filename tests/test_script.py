@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 # limitations under the License.
 
 import unittest
-import requests_mock
 
 from opsramp.api import ORapi
-from opsramp.rba import Category
 import opsramp.binding
+from opsramp.rba import Category
+import requests_mock
 
 
 class StaticsTest(unittest.TestCase):
