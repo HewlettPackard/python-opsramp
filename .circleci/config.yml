@@ -30,17 +30,17 @@ jobs:
             python3 -m pip install --upgrade pip
             pip install --upgrade build wheel flake8 tox yamllint
       - run:
-          name: PEP517 build
-          command: |
-            . venv2/bin/activate
-            rm -rf python_opsramp.egg-info
-            python3 -m build
-      - run:
           name: setuptools build as used by tox
           command: |
             . venv2/bin/activate
             rm -rf python_opsramp.egg-info
             python3 setup.py sdist bdist_wheel
+      - run:
+          name: PEP517 build
+          command: |
+            . venv2/bin/activate
+            rm -rf python_opsramp.egg-info
+            python3 -m build
   unit_py37:
     docker:
       - image: cimg/python:3.7.5
