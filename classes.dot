@@ -2,7 +2,7 @@
 # An input file for graphviz that produces a diagram of the relationship
 # between the various classes in the python-opsramp language binding.
 #
-# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 digraph {
   rankdir="LR";
   binding -> { tenant metrics_api globalconfig }
-  tenant -> { clients integrations rba kb monitoring permission_sets roles discovery policies escalations mgmt_profiles credential_sets sites service_maps resources first_response}
+  tenant -> { clients integrations rba kb monitoring permission_sets roles discovery policies escalations mgmt_profiles credential_sets sites service_maps resources first_response resource_groups}
   rba -> categories
   categories -> category
   monitoring -> templates
@@ -29,7 +29,7 @@ digraph {
   kb -> kbtemplates
 
   { rank=same globalconfig metrics_api }
-  { rank=same clients categories templates policies itypes instances discovery credential_sets permission_sets roles escalations mgmt_profiles sites service_maps resources first_response}
+  { rank=same clients categories templates policies itypes instances discovery credential_sets permission_sets roles escalations mgmt_profiles sites service_maps resources first_response resource_groups}
 
   binding [label="opsramp\nbinding"]
   tenant [label="tenant(tid)"]
@@ -49,5 +49,6 @@ digraph {
   kbarticles [style="filled" fillcolor="turquoise"]
   kbtemplates [style="filled" fillcolor="turquoise"]
   resources [style="filled" fillcolor="turquoise"]
+  resource_groups [style="filled" fillcolor="turquoise"]
   first_response [style="filled" fillcolor="turquoise"]
 }
