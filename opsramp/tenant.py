@@ -19,6 +19,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from opsramp.api import ORapi
 import opsramp.devmgmt
 import opsramp.escalations
@@ -29,6 +30,7 @@ import opsramp.mgmt_profiles
 import opsramp.monitoring
 import opsramp.msp
 import opsramp.rba
+import opsramp.resource_groups
 import opsramp.resources
 import opsramp.roles
 import opsramp.service_maps
@@ -99,3 +101,6 @@ class Tenant(ORapi):
 
     def model_training(self):
         return opsramp.first_response.ModelTraining(self)
+
+    def resource_groups(self):
+        return opsramp.resource_groups.ResourceGroups(self)
