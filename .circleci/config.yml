@@ -1,6 +1,6 @@
 # python-opsramp CircleCI 2.0 configuration file
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ version: 2.1
 jobs:
   packaging_py37:
     docker:
-      - image: circleci/python:3.7.5
+      - image: cimg/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -28,7 +28,7 @@ jobs:
             python3 -m venv venv2
             . venv2/bin/activate
             python3 -m pip install --upgrade pip
-            python3 -m pip install --upgrade build flake8 tox yamllint
+            pip install --upgrade build flake8 tox yamllint
       - run:
           name: build distribution packages
           command: |
@@ -36,25 +36,17 @@ jobs:
             python3 -m build
   unit_py37:
     docker:
-      - image: circleci/python:3.7.5
+      - image: cimg/python:3.7.5
     working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-py3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-py3-
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv3
             . venv3/bin/activate
+            python3 -m pip install --upgrade pip
             pip install -r requirements.txt -r test-requirements.txt
-      - save_cache:
-          paths:
-            - ./venv3
-          key: v1-dependencies-py3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
       - run:
           name: run tests
           command: |
