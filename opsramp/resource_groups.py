@@ -26,7 +26,6 @@ from opsramp.resources import list2ormp
 class ResourceGroups(ORapi):
     def __init__(self, parent):
         super(ResourceGroups, self).__init__(parent.api, 'deviceGroups')
-        print("Initialized")
 
     def get(self):
         temp_url = '/search'
