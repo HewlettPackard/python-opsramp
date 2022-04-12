@@ -3,11 +3,7 @@
 # start this container interactively and use -e to pass in the environment
 # variables it needs (see cli.py). Once inside you can run commands like:
 #
-# ormpcli tenant rba categories
-# ormpcli tenant agent script
-# ormpcli tenant monitoring templates
-#
-# (c) Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,16 +17,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM python:3.7.5-slim as build
-RUN pip install --upgrade pip
+FROM python:3.7.5-slim as baseimage
+
+FROM baseimage as build
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
     && rm -rf /var/lib/apt/lists/*
-# use artifact from previous build step in pipeline
-ADD . /build
-RUN pip install /build
+RUN pip install --upgrade pip
+RUN pip install --upgrade build
+WORKDIR /build
+ADD . .
+RUN rm -rf build dist *.egg-info .eggs
+RUN pip install .
 
-FROM python:3.7.5-slim as prod
+FROM baseimage as prod
 LABEL description="OpsRamp CLI"
 LABEL maintainer "HPE GreenLake CSO <eemz@hpe.com>"
 COPY --from=build /usr/local /usr/local
