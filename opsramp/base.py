@@ -60,24 +60,25 @@ class Helpers(object):
         except AttributeError:
             # it has a different name in older versions of urllib3
             http_verbs = set(Helpers.retryclass.DEFAULT_METHOD_WHITELIST)
-        http_verbs.add('POST')
+        http_verbs.add("POST")
         retry = Helpers.create_retry_handler(
             retries=7,
             backoff_factor=0.5,
             status_forcelist=(429,),
-            allowed_methods=http_verbs
+            allowed_methods=http_verbs,
         )
 
         adapter = requests.adapters.HTTPAdapter(max_retries=retry)
 
         session = session or requests.Session()
-        session.mount(prefix='http://', adapter=adapter)
-        session.mount(prefix='https://', adapter=adapter)
+        session.mount(prefix="http://", adapter=adapter)
+        session.mount(prefix="https://", adapter=adapter)
         return session
 
     @staticmethod
-    def create_retry_handler(retries, backoff_factor, status_forcelist,
-                             allowed_methods):
+    def create_retry_handler(
+        retries, backoff_factor, status_forcelist, allowed_methods
+    ):
         assert isinstance(retries, int)
         assert retries >= 0
         assert backoff_factor >= 0
@@ -88,7 +89,7 @@ class Helpers(object):
             read=retries,
             connect=retries,
             backoff_factor=backoff_factor,
-            status_forcelist=status_forcelist
+            status_forcelist=status_forcelist,
         )
 
 
@@ -97,7 +98,7 @@ class PathTracker(object):
         self.reset()
 
     def reset(self):
-        self.prefix = ''
+        self.prefix = ""
         self.stack = []
 
     def __str__(self):
@@ -110,13 +111,13 @@ class PathTracker(object):
         return new1
 
     def cd(self, path=None):
-        path = str(path or '/')
+        path = str(path or "/")
         # no support for '..' right now, maybe in the future
-        if path[0] == '/':
+        if path[0] == "/":
             self.prefix = path
         else:
-            self.prefix += '/' + path
-        self.prefix = self.prefix.strip('/')
+            self.prefix += "/" + path
+        self.prefix = self.prefix.strip("/")
         return self.prefix
 
     def pushd(self, path=None):
@@ -128,21 +129,21 @@ class PathTracker(object):
         return self.prefix
 
     def fullpath(self, suffix=None):
-        suffix = str(suffix or '')
-        if len(suffix) > 0 and suffix[0] == '/':
+        suffix = str(suffix or "")
+        if len(suffix) > 0 and suffix[0] == "/":
             retval = suffix
         else:
-            retval = ''
+            retval = ""
             if len(self.prefix) > 0:
-                retval += '/' + self.prefix
+                retval += "/" + self.prefix
             if len(suffix) > 0:
-                retval += '/' + suffix
+                retval += "/" + suffix
         return retval
 
 
 class ApiObject(object):
     def __init__(self, url, auth, tracker=None, session=None):
-        self.baseurl = url.rstrip('/')
+        self.baseurl = url.rstrip("/")
         self.auth = auth
         if tracker:
             self.tracker = tracker
@@ -154,17 +155,10 @@ class ApiObject(object):
             self.session = Helpers.session_add_retry_handler()
 
     def __str__(self):
-        return '%s "%s" "%s"' % (
-            str(type(self)), self.baseurl, self.tracker.fullpath()
-        )
+        return '%s "%s" "%s"' % (str(type(self)), self.baseurl, self.tracker.fullpath())
 
     def clone(self):
-        new1 = ApiObject(
-            self.baseurl,
-            self.auth,
-            self.tracker.clone(),
-            self.session
-        )
+        new1 = ApiObject(self.baseurl, self.auth, self.tracker.clone(), self.session)
         return new1
 
     def cd(self, path=None):
@@ -179,7 +173,7 @@ class ApiObject(object):
         self.tracker.popd()
         return self.compute_url()
 
-    def chroot(self, suffix=''):
+    def chroot(self, suffix=""):
         suffix = self.tracker.fullpath(suffix)
         if suffix:
             self.baseurl += suffix
@@ -207,8 +201,8 @@ class ApiObject(object):
                 # Get the next page full of data.
                 next_page = self.session.get(
                     get_request.url,
-                    params={'pageNo': int(data['pageNo']) + 1},
-                    headers=get_request.headers
+                    params={"pageNo": int(data["pageNo"]) + 1},
+                    headers=get_request.headers,
                 )
 
                 if not next_page.ok:
@@ -217,7 +211,7 @@ class ApiObject(object):
                     break
 
                 data = next_page.json()
-                collated_data = collated_data + data['results']
+                collated_data = collated_data + data["results"]
                 del next_page
 
             # Dismantle the URL to see if data was requested in descending
@@ -225,30 +219,32 @@ class ApiObject(object):
             query_params = dict(
                 urlparse.parse_qsl(urlparse.urlsplit(get_request.url).query)
             )
-            descending_order = 'isDescendingOrder' in query_params.keys() and \
-                query_params['isDescendingOrder']
+            descending_order = (
+                "isDescendingOrder" in query_params.keys()
+                and query_params["isDescendingOrder"]
+            )
 
             # Re-create the final data set as if it were a single page
             # containing all records to ensure that existing stuff that expects
             # this data structure doesn't fall over.
             return {
-                'results': collated_data,
-                'totalResults': len(collated_data),
-                'pageNo': 1,
-                'pageSize': len(collated_data),
-                'nextPage': False,
-                'previousPageNo': 0,
-                'descendingOrder': descending_order
+                "results": collated_data,
+                "totalResults": len(collated_data),
+                "pageNo": 1,
+                "pageSize": len(collated_data),
+                "nextPage": False,
+                "previousPageNo": 0,
+                "descendingOrder": descending_order,
             }
         else:
             return data
 
-    def compute_url(self, suffix=''):
+    def compute_url(self, suffix=""):
         retval = self.baseurl
         suffix = self.tracker.fullpath(suffix)
         if suffix:
             retval += suffix
-        retval = retval.rstrip('/')
+        retval = retval.rstrip("/")
         LOG.debug(retval)
         return retval
 
@@ -263,12 +259,7 @@ class ApiObject(object):
     def process_result(self, url, resp):
         hstatus = int(resp.status_code)
         if hstatus < 200 or hstatus >= 300:
-            msg = '%s %s %s %s' % (
-                resp,
-                resp.request.method,
-                url,
-                resp.content
-            )
+            msg = "%s %s %s %s" % (resp, resp.request.method, url, resp.content)
             LOG.debug(msg)
             raise RuntimeError(msg)
         try:
@@ -277,8 +268,11 @@ class ApiObject(object):
             # in one page, return just the contents of the "results" list,
             # otherwise, we need to do an assembly job to collate the entire
             # list of results from all pages and return the full list.
-            if resp.request.method == "GET" and isinstance(data, dict) and \
-                    data.get("nextPage", None):
+            if (
+                resp.request.method == "GET"
+                and isinstance(data, dict)
+                and data.get("nextPage", None)
+            ):
                 return self.collate_pages(resp.request, data=data)
             else:
                 return data
@@ -323,7 +317,7 @@ class ApiWrapper(object):
             self.api.chroot(suffix)
 
     def __str__(self):
-        return '%s %s' % (str(type(self)), self.api)
+        return "%s %s" % (str(type(self)), self.api)
 
     @property
     def session(self):

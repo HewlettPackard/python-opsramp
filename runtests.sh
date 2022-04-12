@@ -26,6 +26,7 @@ if [ -n "$windowsnewlines" ]; then
   echo 'Windows newlines are not allowed in Python sources in this repo' >&2
   exit 1
 fi
+black --check opsramp samples setup.py tests
 yamllint .
 flake8 .
 coverage run --include='opsramp/*' -m pytest -vvv

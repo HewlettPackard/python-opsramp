@@ -24,18 +24,15 @@ import opsramp.binding
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -46,14 +43,14 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
-    tid_list = [(tenant_id, '')]
+    tid_list = [(tenant_id, "")]
     if not tenant.is_client():
         children = tenant.clients().get()
-        cdata = [(x['uniqueId'], x['name']) for x in children]
+        cdata = [(x["uniqueId"], x["name"]) for x in children]
         tid_list.extend(cdata)
 
     for uuid, name in tid_list:
@@ -66,13 +63,9 @@ def main():
 
 
 def show_contents(categs, cdata, indent):
-    print('{0} category {1:05d} {2}'.format(
-        '..' * indent,
-        cdata['id'],
-        cdata['name']
-    ))
+    print("{0} category {1:05d} {2}".format(".." * indent, cdata["id"], cdata["name"]))
     # get the list of scripts in the category.
-    thiscat = categs.category(cdata['id'])
+    thiscat = categs.category(cdata["id"])
     try:
         scripts = thiscat.get()
     except RuntimeError as e:
@@ -81,17 +74,19 @@ def show_contents(categs, cdata, indent):
         scripts = []
     # print out a short description of each script.
     for s in scripts:
-        print('{0}. script {1:06d} {2} {3} "{4}" "{5}"'.format(
-            '..' * indent,
-            s['id'],
-            s['platforms'],
-            s['executionType'],
-            s['name'],
-            s['description']
-        ))
+        print(
+            '{0}. script {1:06d} {2} {3} "{4}" "{5}"'.format(
+                ".." * indent,
+                s["id"],
+                s["platforms"],
+                s["executionType"],
+                s["name"],
+                s["description"],
+            )
+        )
     # recurse into any embedded categories.
-    if 'childs' in cdata:
-        for child in cdata['childs']:
+    if "childs" in cdata:
+        for child in cdata["childs"]:
             show_contents(categs, child, indent + 1)
 
 

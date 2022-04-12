@@ -26,59 +26,60 @@ from opsramp.api import ORapi
 
 class Clients(ORapi):
     def __init__(self, parent):
-        super(Clients, self).__init__(parent.api, 'clients')
+        super(Clients, self).__init__(parent.api, "clients")
 
-    def get(self, suffix='/minimal'):
+    def get(self, suffix="/minimal"):
         return self.api.get(suffix)
 
-    def search(self, query_string=''):
+    def search(self, query_string=""):
         # For historical reasons the caller is allowed to omit the
         # queryString prefix, so add it if necessary.
-        key = 'queryString='
+        key = "queryString="
         if query_string and key not in query_string:
             query_string = key + query_string
-        return super(Clients, self).search(
-            pattern=query_string
-        )
+        return super(Clients, self).search(pattern=query_string)
 
     def create(self, definition):
-        assert 'name' in definition
-        assert 'address' in definition
-        assert 'timeZone' in definition
-        assert 'country' in definition
-        return self.api.post('', json=definition)
+        assert "name" in definition
+        assert "address" in definition
+        assert "timeZone" in definition
+        assert "country" in definition
+        return self.api.post("", json=definition)
 
     def update(self, uuid, definition):
-        return self.api.post('%s' % uuid, json=definition)
+        return self.api.post("%s" % uuid, json=definition)
 
     def activate(self, uuid):
-        return self.api.post('%s/activate' % uuid)
+        return self.api.post("%s/activate" % uuid)
 
     def suspend(self, uuid):
-        return self.api.post('%s/suspend' % uuid)
+        return self.api.post("%s/suspend" % uuid)
 
     def terminate(self, uuid):
-        return self.api.post('%s/terminate' % uuid)
+        return self.api.post("%s/terminate" % uuid)
 
     # Helper functions to create the complex structures that OpsRamp
     # uses to manipulate client definitions.
     @staticmethod
-    def mkHours(day_start=None,
-                day_end=None,
-                week_start=2, week_end=6,
-                sms_voice_notification=False):
+    def mkHours(
+        day_start=None,
+        day_end=None,
+        week_start=2,
+        week_end=6,
+        sms_voice_notification=False,
+    ):
         if not day_start:
             day_start = datetime.time(9, 0)
         if not day_end:
             day_end = datetime.time(17, 0)
         retval = {
-            'businessStartHour': day_start.hour,
-            'businessStartMin': day_start.minute,
-            'businessEndHour': day_end.hour,
-            'businessEndMin': day_end.minute,
-            'businessDayStart': int(week_start),
-            'businessDayEnd': int(week_end),
-            'smsVoiceNotification': bool(sms_voice_notification)
+            "businessStartHour": day_start.hour,
+            "businessStartMin": day_start.minute,
+            "businessEndHour": day_end.hour,
+            "businessEndMin": day_end.minute,
+            "businessDayStart": int(week_start),
+            "businessDayEnd": int(week_end),
+            "smsVoiceNotification": bool(sms_voice_notification),
         }
         return retval
 
@@ -86,16 +87,15 @@ class Clients(ORapi):
     # uses to define a new client. There are lots of optional fields and
     # potential gotchas here and we guard against *some* of them.
     @staticmethod
-    def mkClient(name, address, time_zone, country,
-                 hours=None):
+    def mkClient(name, address, time_zone, country, hours=None):
         retval = {
-            'name': name,
-            'address': address,
-            'timeZone': time_zone,
-            'country': country
+            "name": name,
+            "address": address,
+            "timeZone": time_zone,
+            "country": country,
         }
         if hours:
-            retval['clientDetails'] = hours
+            retval["clientDetails"] = hours
         # TODO there are lots and lots more optional fields that we
         # will probably need to cater for in the fullness of time.
         return retval

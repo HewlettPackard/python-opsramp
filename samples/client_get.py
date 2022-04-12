@@ -25,22 +25,16 @@ import opsramp.binding
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
-    parser.add_argument(
-        'uuid',
-        type=str
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("uuid", type=str)
     ns = parser.parse_args()
     return ns
 
@@ -52,12 +46,12 @@ def main():
         logging.getLogger().setLevel(logging.DEBUG)
     uniqueId = ns.uuid
 
-    partner_id = os.environ['OPSRAMP_TENANT_ID']
+    partner_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     partner = ormp.tenant(partner_id)
     if partner.is_client():
-        print(partner_id, 'is not a partner-level tenant')
+        print(partner_id, "is not a partner-level tenant")
         exit(2)
 
     group = partner.clients()

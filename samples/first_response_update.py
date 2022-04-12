@@ -25,22 +25,16 @@ import yaml
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
-    parser.add_argument(
-        'uuid',
-        type=str
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("uuid", type=str)
     ns = parser.parse_args()
     return ns
 
@@ -52,7 +46,7 @@ def main():
         logging.getLogger().setLevel(logging.DEBUG)
     uniqueId = ns.uuid
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
@@ -68,15 +62,15 @@ def main():
                     "filterType": "nativeAttributes",
                     "entityName": "host_name",
                     "operator": "Starts with",
-                    "entityValue": "test_first_r"
+                    "entityValue": "test_first_r",
                 },
                 {
                     "filterType": "nativeAttributes",
                     "entityName": "alert_subject",
                     "operator": "Contains",
-                    "entityValue": "test_fr"
-                }
-            ]
+                    "entityValue": "test_fr",
+                },
+            ],
         },
         "firstResponseType": "SUPPRESSION",
         "suppression": {
@@ -84,8 +78,8 @@ def main():
             "suppressByAttributes": "true",
             "autoSnooze": "true",
             "continuousLearning": "true",
-            "trainingFileId": "ml_alert_first_response_training"
-        }
+            "trainingFileId": "ml_alert_first_response_training",
+        },
     }
     frpolicy = tenant.first_response()
     resp = frpolicy.update(uniqueId, jdata)

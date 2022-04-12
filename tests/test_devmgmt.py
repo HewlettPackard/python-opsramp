@@ -22,11 +22,11 @@ import requests_mock
 
 class DevmgmtTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
@@ -36,20 +36,20 @@ class DevmgmtTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             # The search function in this class supports two search
             # syntaxes so test both.
-            display_name = 'whatever'
-            expected = {'id': 'abcdefg', 'name': display_name}
-            url = group.api.compute_url('search?name=%s' % display_name)
+            display_name = "whatever"
+            expected = {"id": "abcdefg", "name": display_name}
+            url = group.api.compute_url("search?name=%s" % display_name)
             m.get(url, json=expected, complete_qs=True)
             # The old simple search syntax.
             actual = group.search(display_name)
             assert actual == expected
             # The newer query syntax.
-            actual = group.search('name=%s' % display_name)
+            actual = group.search("name=%s" % display_name)
             assert actual == expected
 
         with requests_mock.Mocker() as m:
             thisid = 111111
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
@@ -57,7 +57,7 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 123456
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.put(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
@@ -65,15 +65,15 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 789012
-            expected = {'id': thisid}
-            url = group.api.compute_url('%s/action/run' % thisid)
+            expected = {"id": thisid}
+            url = group.api.compute_url("%s/action/run" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.run(uuid=thisid)
             assert actual == expected
 
         with requests_mock.Mocker() as m:
             thisid = 345678
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
@@ -85,20 +85,20 @@ class DevmgmtTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             # The search function in this class supports two search
             # syntaxes so test both.
-            display_name = 'whatever'
-            expected = {'id': 'abcdefg', 'name': display_name}
-            url = group.api.compute_url('search?name=%s' % display_name)
+            display_name = "whatever"
+            expected = {"id": "abcdefg", "name": display_name}
+            url = group.api.compute_url("search?name=%s" % display_name)
             m.get(url, json=expected, complete_qs=True)
             # The old simple search syntax.
             actual = group.search(display_name)
             assert actual == expected
             # The newer query syntax.
-            actual = group.search('name=%s' % display_name)
+            actual = group.search("name=%s" % display_name)
             assert actual == expected
 
         with requests_mock.Mocker() as m:
             thisid = 111111
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
@@ -106,7 +106,7 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 123456
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
             actual = group.update(definition=expected)
@@ -114,15 +114,15 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 789012
-            expected = {'id': thisid}
-            url = group.api.compute_url('action/scan/%s' % thisid)
+            expected = {"id": thisid}
+            url = group.api.compute_url("action/scan/%s" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.rescan(uuid=thisid)
             assert actual == expected
 
         with requests_mock.Mocker() as m:
             thisid = 345678
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)
@@ -133,7 +133,7 @@ class DevmgmtTest(unittest.TestCase):
         assert group
         with requests_mock.Mocker() as m:
             thisid = 111111
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url()
             m.get(url, json=expected, complete_qs=True)
             actual = group.get()
@@ -141,7 +141,7 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 222222
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
             actual = group.create(definition=expected)
@@ -149,7 +149,7 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 123456
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.get(uuid=thisid)
@@ -157,15 +157,15 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 789012
-            expected = {'id': thisid}
-            url = group.api.compute_url('%s/minimal' % thisid)
+            expected = {"id": thisid}
+            url = group.api.compute_url("%s/minimal" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.get(uuid=thisid, minimal=True)
             assert actual == expected
 
         with requests_mock.Mocker() as m:
             thisid = 345678
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.update(uuid=thisid, definition=expected)
@@ -173,7 +173,7 @@ class DevmgmtTest(unittest.TestCase):
 
         with requests_mock.Mocker() as m:
             thisid = 901234
-            expected = {'id': thisid}
+            expected = {"id": thisid}
             url = group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
             actual = group.delete(uuid=thisid)

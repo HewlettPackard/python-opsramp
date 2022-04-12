@@ -7,7 +7,7 @@
 # Service Maps are used to organise resources by any method and
 # create availability rules governing how they show problems.
 #
-# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,22 +26,22 @@ from opsramp.api import ORapi
 
 class ServiceMaps(ORapi):
     def __init__(self, parent):
-        super(ServiceMaps, self).__init__(parent.api, 'serviceGroups')
+        super(ServiceMaps, self).__init__(parent.api, "serviceGroups")
 
     def get(self, uuid=None, minimal=False):
         if uuid:
-            temp_url = '/%s/childs/search' % uuid
+            temp_url = "/%s/childs/search" % uuid
         else:
-            temp_url = '/search'
+            temp_url = "/search"
         if minimal:
-            temp_url = '/minimal'
+            temp_url = "/minimal"
         return self.api.get(temp_url)
 
     def create(self, definition):
-        return self.api.post('', json=definition)
+        return self.api.post("", json=definition)
 
     def update(self, uuid, definition):
-        return self.api.post('%s' % uuid, json=definition)
+        return self.api.post("%s" % uuid, json=definition)
 
     def delete(self, uuid):
-        return self.api.delete('%s' % uuid)
+        return self.api.delete("%s" % uuid)

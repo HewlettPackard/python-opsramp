@@ -25,18 +25,15 @@ import yaml
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -47,15 +44,15 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    partner_id = os.environ['OPSRAMP_TENANT_ID']
+    partner_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     partner = ormp.tenant(partner_id)
 
     group = partner.mgmt_profiles()
     resp = group.search()
-    print("%s management profiles" % resp['totalResults'])
-    pretty_set = yaml.dump(resp['results'])
+    print("%s management profiles" % resp["totalResults"])
+    pretty_set = yaml.dump(resp["results"])
     print(pretty_set)
 
     # The links are weird in this part of OpsRamp. A search at partner level
@@ -63,10 +60,10 @@ def main():
     # individual profile by ID from partner level. Instead you have to find
     # the ID of the *client* the profile is in, and then navigate down from
     # the top to that client object and use it to do the get().
-    profile0 = resp['results'][0]
-    clientid = profile0['client']['uniqueId']
+    profile0 = resp["results"][0]
+    clientid = profile0["client"]["uniqueId"]
 
-    obj = ormp.tenant(clientid).mgmt_profiles().get(profile0['id'])
+    obj = ormp.tenant(clientid).mgmt_profiles().get(profile0["id"])
     print(yaml.dump(obj))
 
 

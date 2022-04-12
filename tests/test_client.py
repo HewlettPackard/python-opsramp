@@ -25,67 +25,65 @@ import requests_mock
 class StaticsTest(unittest.TestCase):
     def setUp(self):
         self.hours = {
-            'businessStartHour': 10,
-            'businessStartMin': 40,
-            'businessEndHour': 19,
-            'businessEndMin': 23,
-            'businessDayStart': 1,
-            'businessDayEnd': 4,
-            'smsVoiceNotification': True
+            "businessStartHour": 10,
+            "businessStartMin": 40,
+            "businessEndHour": 19,
+            "businessEndMin": 23,
+            "businessDayStart": 1,
+            "businessDayEnd": 4,
+            "smsVoiceNotification": True,
         }
         self.client = {
-            'name': 'unit test client',
-            'address': 'Springfield',
-            'timeZone': 'America/Los_Angeles',
-            'country': 'United States',
+            "name": "unit test client",
+            "address": "Springfield",
+            "timeZone": "America/Los_Angeles",
+            "country": "United States",
         }
 
     def test_mkHours(self):
         actual = Clients.mkHours(
             day_start=datetime.time(
-                self.hours['businessStartHour'],
-                self.hours['businessStartMin']
+                self.hours["businessStartHour"], self.hours["businessStartMin"]
             ),
             day_end=datetime.time(
-                self.hours['businessEndHour'],
-                self.hours['businessEndMin']
+                self.hours["businessEndHour"], self.hours["businessEndMin"]
             ),
-            week_start=self.hours['businessDayStart'],
-            week_end=self.hours['businessDayEnd'],
-            sms_voice_notification=self.hours['smsVoiceNotification']
+            week_start=self.hours["businessDayStart"],
+            week_end=self.hours["businessDayEnd"],
+            sms_voice_notification=self.hours["smsVoiceNotification"],
         )
         assert actual == self.hours
 
     def test_mkClient(self):
         # use the default "hours" value first.
         actual = Clients.mkClient(
-            name=self.client['name'],
-            address=self.client['address'],
-            time_zone=self.client['timeZone'],
-            country=self.client['country']
+            name=self.client["name"],
+            address=self.client["address"],
+            time_zone=self.client["timeZone"],
+            country=self.client["country"],
         )
         assert actual == self.client
         # now a specific hours definition
-        self.client['clientDetails'] = self.hours
+        self.client["clientDetails"] = self.hours
         actual = Clients.mkClient(
-            name=self.client['name'],
-            address=self.client['address'],
-            time_zone=self.client['timeZone'],
-            country=self.client['country'],
-            hours=self.hours
+            name=self.client["name"],
+            address=self.client["address"],
+            time_zone=self.client["timeZone"],
+            country=self.client["country"],
+            hours=self.hours,
         )
         assert actual == self.client
         # remove the hours specifier again, for the next test.
-        del self.client['clientDetails']
+        del self.client["clientDetails"]
 
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_msp_id = 'msp_123456'
+        self.fake_msp_id = "msp_123456"
         self.msp = self.ormp.tenant(self.fake_msp_id)
         assert not self.msp.is_client()
 
@@ -94,44 +92,44 @@ class ApiTest(unittest.TestCase):
 
     def test_search(self):
         thisid = 444444
-        expected = {'id': thisid}
-        url = self.clients.api.compute_url('search?queryString=id:%s' % thisid)
+        expected = {"id": thisid}
+        url = self.clients.api.compute_url("search?queryString=id:%s" % thisid)
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
-            actual = self.clients.search('id:%s' % thisid)
+            actual = self.clients.search("id:%s" % thisid)
             assert actual == expected
 
     def test_minimal(self):
         thisid = 555555
-        expected = {'id': thisid}
-        url = self.clients.api.compute_url('minimal')
+        expected = {"id": thisid}
+        url = self.clients.api.compute_url("minimal")
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
             # specific suffix.
-            actual = self.clients.get('minimal')
+            actual = self.clients.get("minimal")
             assert actual == expected
             # default suffix should be the same.
             actual = self.clients.get()
             assert actual == expected
 
     def test_create_update(self):
-        bad_definition = {'bogus': 'dude'}
+        bad_definition = {"bogus": "dude"}
         with requests_mock.Mocker() as m:
             # the name field is missing so we should get an error.
-            assert 'name' not in bad_definition
+            assert "name" not in bad_definition
             with self.assertRaises(AssertionError):
                 actual = self.clients.create(definition=bad_definition)
             assert m.call_count == 0
         # now let's try a valid one.
         good_definition = {
-            'name': 'elvis',
-            'address': 'graceland',
-            'timeZone': 'UTC',
-            'country': 'US'
+            "name": "elvis",
+            "address": "graceland",
+            "timeZone": "UTC",
+            "country": "US",
         }
         thisid = 555555
         expected_send = good_definition
-        expected_receive = {'id': thisid}
+        expected_receive = {"id": thisid}
         url = self.clients.api.compute_url()
         with requests_mock.Mocker() as m:
             adapter = m.post(url, json=expected_receive, complete_qs=True)
@@ -142,17 +140,14 @@ class ApiTest(unittest.TestCase):
         url = self.clients.api.compute_url(thisid)
         with requests_mock.Mocker() as m:
             adapter = m.post(url, json=expected_receive, complete_qs=True)
-            actual = self.clients.update(
-                uuid=thisid,
-                definition=good_definition
-            )
+            actual = self.clients.update(uuid=thisid, definition=good_definition)
             assert adapter.last_request.json() == expected_send
             assert actual == expected_receive
 
     def test_suspend(self):
         thisid = 789012
-        expected = {'id': thisid}
-        url = self.clients.api.compute_url('%s/suspend' % thisid)
+        expected = {"id": thisid}
+        url = self.clients.api.compute_url("%s/suspend" % thisid)
         with requests_mock.Mocker() as m:
             m.post(url, json=expected, complete_qs=True)
             actual = self.clients.suspend(uuid=thisid)
@@ -160,8 +155,8 @@ class ApiTest(unittest.TestCase):
 
     def test_activate(self):
         thisid = 345678
-        expected = {'id': thisid}
-        url = self.clients.api.compute_url('%s/activate' % thisid)
+        expected = {"id": thisid}
+        url = self.clients.api.compute_url("%s/activate" % thisid)
         with requests_mock.Mocker() as m:
             m.post(url, json=expected, complete_qs=True)
             actual = self.clients.activate(uuid=thisid)
@@ -169,8 +164,8 @@ class ApiTest(unittest.TestCase):
 
     def test_terminate(self):
         thisid = 901234
-        expected = {'id': thisid}
-        url = self.clients.api.compute_url('%s/terminate' % thisid)
+        expected = {"id": thisid}
+        url = self.clients.api.compute_url("%s/terminate" % thisid)
         with requests_mock.Mocker() as m:
             m.post(url, json=expected, complete_qs=True)
             actual = self.clients.terminate(uuid=thisid)

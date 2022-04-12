@@ -25,24 +25,24 @@ import requests_mock
 
 class InstancesTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
         self.integs = self.client.integrations()
-        assert 'Integrations' in str(self.integs)
+        assert "Integrations" in str(self.integs)
 
     def test_itypes(self):
         group = self.integs.itypes()
         thisid = 111111
-        expected = {'id': thisid}
-        pattern = 'whatever'
+        expected = {"id": thisid}
+        pattern = "whatever"
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?%s' % pattern)
+            url = group.api.compute_url("search?%s" % pattern)
             m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
             assert actual == expected
@@ -54,10 +54,10 @@ class InstancesTest(unittest.TestCase):
     def test_instances(self):
         group = self.integs.instances()
         thisid = 222222
-        expected = {'id': thisid}
-        pattern = 'whatever'
+        expected = {"id": thisid}
+        pattern = "whatever"
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?%s' % pattern)
+            url = group.api.compute_url("search?%s" % pattern)
             m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
             assert actual == expected
@@ -69,9 +69,9 @@ class InstancesTest(unittest.TestCase):
     def test_instance_kubernetes_configuration(self):
         group = self.integs.instances()
         thisid = 123456
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/configFile/Kubernetes' % thisid)
+            url = group.api.compute_url("%s/configFile/Kubernetes" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = group.get_kubernetes_configuration(uuid=thisid)
             assert actual == expected
@@ -79,9 +79,9 @@ class InstancesTest(unittest.TestCase):
     def test_instance_create(self):
         group = self.integs.instances()
         thisid = 789012
-        expected = {'id': thisid}
-        name = 'unit-test-integration'
-        fake_defn = {'name': 'fr larry duff'}
+        expected = {"id": thisid}
+        name = "unit-test-integration"
+        fake_defn = {"name": "fr larry duff"}
         with requests_mock.Mocker() as m:
             url = group.creator_api.compute_url(name)
             m.post(url, json=expected, complete_qs=True)
@@ -91,8 +91,8 @@ class InstancesTest(unittest.TestCase):
     def test_instance_update(self):
         group = self.integs.instances()
         thisid = 123456
-        expected = {'id': thisid}
-        fake_defn = {'name': 'fr paul stone'}
+        expected = {"id": thisid}
+        fake_defn = {"name": "fr paul stone"}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.post(url, json=expected, complete_qs=True)
@@ -102,9 +102,9 @@ class InstancesTest(unittest.TestCase):
     def test_instance_enable(self):
         group = self.integs.instances()
         thisid = 789012
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/enable' % thisid)
+            url = group.api.compute_url("%s/enable" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.enable(uuid=thisid)
             assert actual == expected
@@ -112,9 +112,9 @@ class InstancesTest(unittest.TestCase):
     def test_instance_disable(self):
         group = self.integs.instances()
         thisid = 345678
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/disable' % thisid)
+            url = group.api.compute_url("%s/disable" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.disable(uuid=thisid)
             assert actual == expected
@@ -122,9 +122,9 @@ class InstancesTest(unittest.TestCase):
     def test_instance_delete(self):
         group = self.integs.instances()
         thisid = 999999
-        url = group.api.compute_url('%s' % thisid)
+        url = group.api.compute_url("%s" % thisid)
 
-        expected_response = {'id': thisid}
+        expected_response = {"id": thisid}
 
         # Test that the delete function inserts a default reason
         # if we don't provide one.
@@ -136,24 +136,21 @@ class InstancesTest(unittest.TestCase):
             assert actual_response == expected_response
 
         # Test that the delete function sends the reason we specified.
-        delete_reason = 'Totally fake reason to delete something'
+        delete_reason = "Totally fake reason to delete something"
         expected_send = {"uninstallReason": delete_reason}
         with requests_mock.Mocker() as m:
             adapter = m.delete(url, json=expected_response, complete_qs=True)
-            actual_response = group.delete(
-                uuid=thisid,
-                uninstall_reason=delete_reason
-            )
+            actual_response = group.delete(uuid=thisid, uninstall_reason=delete_reason)
             assert adapter.last_request.json() == expected_send
             assert actual_response == expected_response
 
     def test_instance_notifier(self):
         group = self.integs.instances()
         thisid = 901234
-        expected = {'id': thisid}
-        fake_defn = {'name': 'fr fintan stack'}
+        expected = {"id": thisid}
+        fake_defn = {"name": "fr fintan stack"}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/notifier' % thisid)
+            url = group.api.compute_url("%s/notifier" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.notifier(uuid=thisid, definition=fake_defn)
             assert actual == expected
@@ -161,52 +158,41 @@ class InstancesTest(unittest.TestCase):
     def test_instance_auth_type(self):
         group = self.integs.instances()
         thisid = 567890
-        url = group.api.compute_url('%s/inbound/authentication' % thisid)
-        for key in 'OAUTH2', 'WEBHOOK', 'BASIC':
-            expected = {'type': key}
+        url = group.api.compute_url("%s/inbound/authentication" % thisid)
+        for key in "OAUTH2", "WEBHOOK", "BASIC":
+            expected = {"type": key}
             with requests_mock.Mocker() as m:
                 m.post(url, json=expected, complete_qs=True)
                 actual = group.set_auth_type(uuid=thisid, auth_type=key)
                 assert actual == expected
         with requests_mock.Mocker() as m:
             with self.assertRaises(AssertionError):
-                group.set_auth_type(uuid=thisid, auth_type='unit test value')
+                group.set_auth_type(uuid=thisid, auth_type="unit test value")
             assert m.call_count == 0
 
     def base_display_name(self, fn):
         with self.assertRaises(AssertionError):
             fn(display_name=None)
-        testname = 'Unit test 1'
+        testname = "Unit test 1"
         actual = fn(display_name=testname)
-        expected = {
-            'displayName': testname
-        }
+        expected = {"displayName": testname}
         assert actual == expected
 
     def base_logo(self, fn):
-        testname = 'Unit test 2'
-        testfile = 'README.md'
+        testname = "Unit test 2"
+        testfile = "README.md"
         with self.assertRaises(IOError):
-            fn(
-                display_name=testname,
-                logo_fname=testfile + '.that.doesnt.exist'
-            )
-        actual = fn(
-            display_name=testname,
-            logo_fname=testfile
-        )
-        encoded = actual['logo']['file']
+            fn(display_name=testname, logo_fname=testfile + ".that.doesnt.exist")
+        actual = fn(display_name=testname, logo_fname=testfile)
+        encoded = actual["logo"]["file"]
         cleartext = base64.b64decode(encoded)
-        with open(testfile, 'rb') as f:
+        with open(testfile, "rb") as f:
             content = f.read()
         assert content == cleartext
 
         expected = {
-            'displayName': testname,
-            'logo': {
-                'name': testfile,
-                'file': encoded
-            }
+            "displayName": testname,
+            "logo": {"name": testfile, "file": encoded},
         }
         assert actual == expected
 
@@ -223,26 +209,19 @@ class InstancesTest(unittest.TestCase):
         self.base_logo(Instances.mkCustom)
         with self.assertRaises(AssertionError):
             Instances.mkCustom(
-                display_name='bad auth type',
-                inbound_auth_type='BAD UNIT TEST VALUE'
+                display_name="bad auth type", inbound_auth_type="BAD UNIT TEST VALUE"
             )
         # Now a variant that should work.
-        testname = 'Custom integration unit test'
-        fakeuuid = 'deadbeef'
-        auth_type = 'OAUTH2'
+        testname = "Custom integration unit test"
+        fakeuuid = "deadbeef"
+        auth_type = "OAUTH2"
         actual = Instances.mkCustom(
-            display_name=testname,
-            parent_uuid=fakeuuid,
-            inbound_auth_type=auth_type
+            display_name=testname, parent_uuid=fakeuuid, inbound_auth_type=auth_type
         )
         expected = {
-            'displayName': testname,
-            'parentIntg': {
-                'id': fakeuuid
-            },
-            'inboundConfig': {
-                'authentication': {'authType': auth_type}
-            }
+            "displayName": testname,
+            "parentIntg": {"id": fakeuuid},
+            "inboundConfig": {"authentication": {"authType": auth_type}},
         }
         assert actual == expected
         # exercise the auth_type helper while we have a suitable struct.
@@ -250,150 +229,133 @@ class InstancesTest(unittest.TestCase):
         assert atypes == (auth_type, None)
 
     def test_ARM(self):
-        testname = 'Azure ARM integration unit test'
-        subscription_id = '123456789'
-        tenant_id = 'Some random Azure tenant'
-        client_id = 'Azure client shtuff'
-        secret_key = 'Open Sesame I Say!'
+        testname = "Azure ARM integration unit test"
+        subscription_id = "123456789"
+        tenant_id = "Some random Azure tenant"
+        client_id = "Azure client shtuff"
+        secret_key = "Open Sesame I Say!"
         actual = Instances.mkAzureARM(
             display_name=testname,
             arm_subscription_id=subscription_id,
             arm_tenant_id=tenant_id,
             arm_client_id=client_id,
-            arm_secret_key=secret_key
+            arm_secret_key=secret_key,
         )
         expected = {
-            'displayName': testname,
-            'credential': {
-                'credentialType': 'AZURE',
-                'AzureType': 'ARM',
-                'SubscriptionId': subscription_id,
-                'TenantId': tenant_id,
-                'ClientID': client_id,
-                'SecretKey': secret_key
-            }
+            "displayName": testname,
+            "credential": {
+                "credentialType": "AZURE",
+                "AzureType": "ARM",
+                "SubscriptionId": subscription_id,
+                "TenantId": tenant_id,
+                "ClientID": client_id,
+                "SecretKey": secret_key,
+            },
         }
         assert actual == expected
 
     def test_ASM(self):
-        testname = 'Azure ASM integration unit test'
-        subscription_id = 'ABCDEFGHIJKLMNOP'
-        mgmt_cert = 'Azure management cert'
-        keystore_pass = 'Abrakedabra'
+        testname = "Azure ASM integration unit test"
+        subscription_id = "ABCDEFGHIJKLMNOP"
+        mgmt_cert = "Azure management cert"
+        keystore_pass = "Abrakedabra"
         actual = Instances.mkAzureASM(
             display_name=testname,
             arm_subscription_id=subscription_id,
             arm_mgmt_cert=mgmt_cert,
-            arm_keystore_pass=keystore_pass
+            arm_keystore_pass=keystore_pass,
         )
         expected = {
-            'displayName': testname,
-            'credential': {
-                'credentialType': 'AZURE',
-                'AzureType': 'ASM',
-                'SubscriptionId': subscription_id,
-                'ManagementCertificate': mgmt_cert,
-                'KeystorePassword': keystore_pass
-            }
+            "displayName": testname,
+            "credential": {
+                "credentialType": "AZURE",
+                "AzureType": "ASM",
+                "SubscriptionId": subscription_id,
+                "ManagementCertificate": mgmt_cert,
+                "KeystorePassword": keystore_pass,
+            },
         }
         assert actual == expected
 
     def test_valuemap(self):
         expected = [
-            {
-                'attrValue': 'client_113',
-                'tenantAttrValue': '22cdbc5bb401d737b088c9'
-            },
-            {
-                'attrValue': 'client_843',
-                'tenantAttrValue': '66cdbc5bb401d737b088c9'
-            }
+            {"attrValue": "client_113", "tenantAttrValue": "22cdbc5bb401d737b088c9"},
+            {"attrValue": "client_843", "tenantAttrValue": "66cdbc5bb401d737b088c9"},
         ]
         actual = Instances.mkValueMap(
-            ('attrValue', 'tenantAttrValue'),
-            (('client_113', '22cdbc5bb401d737b088c9'),
-             ('client_843', '66cdbc5bb401d737b088c9'))
+            ("attrValue", "tenantAttrValue"),
+            (
+                ("client_113", "22cdbc5bb401d737b088c9"),
+                ("client_843", "66cdbc5bb401d737b088c9"),
+            ),
         )
         assert actual == expected
 
         expected = [
-            {
-                'attrValue': 'Fido',
-                'thirdPartyAttrValue': 'His Royal Fidoness'
-            },
-            {
-                'attrValue': 'brown',
-                'thirdPartyAttrValue': 'Autumn Sunset'
-            }
+            {"attrValue": "Fido", "thirdPartyAttrValue": "His Royal Fidoness"},
+            {"attrValue": "brown", "thirdPartyAttrValue": "Autumn Sunset"},
         ]
         actual = Instances.mkValueMap(
-            ('attrValue', 'thirdPartyAttrValue'),
-            (('Fido', 'His Royal Fidoness'),
-             ('brown', 'Autumn Sunset'))
+            ("attrValue", "thirdPartyAttrValue"),
+            (("Fido", "His Royal Fidoness"), ("brown", "Autumn Sunset")),
         )
         assert actual == expected
 
     def test_basenotifier(self):
         expected = {
-            'type': 'REST_API',
-            'baseURI': 'www.example.com',
-            'authType': 'OAUTH2',
-            'grantType': 'CLIENT_CREDENTIALS',
-            'accessTokenURI': 'www.example.com/creds',
-            'apiKey': '6h67PAAFscVPMwhQZFcshpcqN5b6pyU9',
-            'apiSecret': 'totalandcompletenonsense'
+            "type": "REST_API",
+            "baseURI": "www.example.com",
+            "authType": "OAUTH2",
+            "grantType": "CLIENT_CREDENTIALS",
+            "accessTokenURI": "www.example.com/creds",
+            "apiKey": "6h67PAAFscVPMwhQZFcshpcqN5b6pyU9",
+            "apiSecret": "totalandcompletenonsense",
         }
         actual = Instances.mkBaseNotifier(
-            expected['type'], expected['baseURI'],
-            access_token_uri=expected['accessTokenURI'],
-            api_key=expected['apiKey'],
-            api_secret=expected['apiSecret']
+            expected["type"],
+            expected["baseURI"],
+            access_token_uri=expected["accessTokenURI"],
+            api_key=expected["apiKey"],
+            api_secret=expected["apiSecret"],
         )
         assert actual == expected
 
         expected = {
-            'type': 'SOAP_API',
-            'baseURI': 'www.example.com',
-            'authType': 'NONE'
+            "type": "SOAP_API",
+            "baseURI": "www.example.com",
+            "authType": "NONE",
         }
         actual = Instances.mkBaseNotifier(
-            expected['type'], expected['baseURI'],
-            auth_type=expected['authType']
+            expected["type"], expected["baseURI"], auth_type=expected["authType"]
         )
         assert actual == expected
 
         expected = {
-            'type': 'REST_API',
-            'baseURI': 'www.example.com/whatevs',
-            'authType': 'BASIC',
-            'grantType': 'PASSWORD',
-            'userName': 'elvis',
-            'password': 'graceland'
+            "type": "REST_API",
+            "baseURI": "www.example.com/whatevs",
+            "authType": "BASIC",
+            "grantType": "PASSWORD",
+            "userName": "elvis",
+            "password": "graceland",
         }
         actual = Instances.mkBaseNotifier(
-            expected['type'], expected['baseURI'],
-            auth_type=expected['authType'],
-            grant_type=expected['grantType'],
-            user_name=expected['userName'],
-            password=expected['password']
+            expected["type"],
+            expected["baseURI"],
+            auth_type=expected["authType"],
+            grant_type=expected["grantType"],
+            user_name=expected["userName"],
+            password=expected["password"],
         )
         assert actual == expected
 
     def test_redaction(self):
         original = {
-            'inboundConfig': {
-                'authentication': {
-                    'token': 'shakespeare'
+            "inboundConfig": {"authentication": {"token": "shakespeare"}},
+            "outboundConfig": {
+                "authentication": {
+                    "apiKeyPairs": [{"char1": "juliet", "char2": "goneril"}]
                 }
             },
-            'outboundConfig': {
-                'authentication': {
-                    'apiKeyPairs': [{
-                        'char1': 'juliet',
-                        'char2': 'goneril'
-                    }]
-                }
-            }
         }
         # make a copy and check that it really is a copy.
         tvalues = copy.deepcopy(original)
@@ -403,11 +365,12 @@ class InstancesTest(unittest.TestCase):
         result = Instances.redact_response(tvalues)
         assert result is tvalues
         # check the redaction did what we expected.
-        original['inboundConfig']['authentication'][
-            'token'] = 'REDACTED'
-        original['outboundConfig']['authentication'][
-            'apiKeyPairs'][0]['char1'] = 'REDACTED'
-        original['outboundConfig']['authentication'][
-            'apiKeyPairs'][0]['char2'] = 'REDACTED'
+        original["inboundConfig"]["authentication"]["token"] = "REDACTED"
+        original["outboundConfig"]["authentication"]["apiKeyPairs"][0][
+            "char1"
+        ] = "REDACTED"
+        original["outboundConfig"]["authentication"]["apiKeyPairs"][0][
+            "char2"
+        ] = "REDACTED"
         assert result is not original
         assert result == original

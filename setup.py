@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 import setuptools
 
-with open('README.md', 'r') as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
-    long_description_content_type = 'text/markdown'
+    long_description_content_type = "text/markdown"
 
-with open('requirements.txt', 'r') as fh:
+with open("requirements.txt", "r") as fh:
     requirements = []
     for line in fh.readlines():
         line = line.strip()
-        if line[0] != '#':
+        if line[0] != "#":
             requirements.append(line)
 
 setuptools.setup(
@@ -32,8 +32,8 @@ setuptools.setup(
     long_description_content_type=long_description_content_type,
     install_requires=requirements,
     entry_points={
-        'console_scripts': [
-            'ormpcli=opsramp.cli:main',
+        "console_scripts": [
+            "ormpcli=opsramp.cli:main",
         ],
-    }
+    },
 )

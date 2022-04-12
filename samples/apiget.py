@@ -26,14 +26,8 @@ import yaml
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
-    parser.add_argument(
-        'suffix',
-        type=str
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("suffix", type=str)
     ns = parser.parse_args()
     return ns
 
@@ -45,9 +39,9 @@ def main():
         logging.getLogger().setLevel(logging.DEBUG)
     suffix = ns.suffix
 
-    endpoint = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    endpoint = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
 
     ormp = opsramp.binding.connect(endpoint, key, secret)
     resp = ormp.get(suffix)

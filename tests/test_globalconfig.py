@@ -22,27 +22,27 @@ import requests_mock
 
 class GlobalConfigTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
         self.gconfig = self.ormp.config()
-        assert 'GlobalConfig' in str(self.gconfig)
+        assert "GlobalConfig" in str(self.gconfig)
 
     def test_simple_urls(self):
         fnmap = {
-            '/alertTypes': self.gconfig.get_alert_types,
-            '/cfg/countries': self.gconfig.get_countries,
-            '/cfg/timezones': self.gconfig.get_timezones,
-            '/cfg/alertTechnologies': self.gconfig.get_alert_technologies,
-            '/cfg/tenants/channels': self.gconfig.get_channels,
-            '/cfg/devices/types': self.gconfig.get_device_types
+            "/alertTypes": self.gconfig.get_alert_types,
+            "/cfg/countries": self.gconfig.get_countries,
+            "/cfg/timezones": self.gconfig.get_timezones,
+            "/cfg/alertTechnologies": self.gconfig.get_alert_technologies,
+            "/cfg/tenants/channels": self.gconfig.get_channels,
+            "/cfg/devices/types": self.gconfig.get_device_types,
         }
         for suffix, fn in fnmap.items():
             with requests_mock.Mocker() as m:
                 url = self.ormp.api.compute_url(suffix)
                 # all these methods return lists so create a nonsense one.
-                expected = ['unit', 'test']
-                expected.extend(suffix.split('/'))
+                expected = ["unit", "test"]
+                expected.extend(suffix.split("/"))
                 assert expected
                 m.get(url, json=expected, complete_qs=True)
                 actual = fn()
@@ -51,16 +51,14 @@ class GlobalConfigTest(unittest.TestCase):
     # Test the bizarre special cases around NOT FOUND that are
     # documented in the definitiom of get_nocs.
     def test_irregular_urls(self):
-        fnmap = {
-            '/cfg/tenants/nocs': self.gconfig.get_nocs
-        }
+        fnmap = {"/cfg/tenants/nocs": self.gconfig.get_nocs}
         for suffix, fn in fnmap.items():
             with requests_mock.Mocker() as m:
                 # rig the mock to raise an exception on "get"
                 url = self.ormp.api.compute_url(suffix)
-                expected = 'nonsense unit test value'
+                expected = "nonsense unit test value"
                 for eclass in (RuntimeError, AssertionError, Exception):
-                    m.get(url, exc=eclass('omg the sky is falling'))
+                    m.get(url, exc=eclass("omg the sky is falling"))
                     with self.assertRaises(eclass):
                         actual = fn()
                 # now try the special case exception that fn() *should* handle.

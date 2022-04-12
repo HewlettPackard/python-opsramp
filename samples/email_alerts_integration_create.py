@@ -25,18 +25,15 @@ import yaml
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -47,7 +44,7 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
@@ -55,65 +52,58 @@ def main():
 
     # Create new Email Alerts Integration...
     jdata = {
-        'displayName': 'Test Email Alerts integration',
-        'emailProps': [{
-            'name': 'logz.io email alert',
-            'identifier': '^\\[Alert\\]',
-            'identifierSource': 'EMAIL_SUBJECT',
-            'properties': [{
-                'name': 'Alert State',
-                'defaultValue': 'OK',
-                'condition': {
-                    'contentSource': 'EMAIL_SUBJECT',
-                    'operator': 'BETWEEN',
-                    'startValue': '\\(',
-                    'endValue': ' severity\\)'
-                },
-                'propertyMappings': {
-                    'attrValues': [{
-                        'attrValue': 'Critical',
-                        'thirdPartyAttrValue': 'Severe'
+        "displayName": "Test Email Alerts integration",
+        "emailProps": [
+            {
+                "name": "logz.io email alert",
+                "identifier": "^\\[Alert\\]",
+                "identifierSource": "EMAIL_SUBJECT",
+                "properties": [
+                    {
+                        "name": "Alert State",
+                        "defaultValue": "OK",
+                        "condition": {
+                            "contentSource": "EMAIL_SUBJECT",
+                            "operator": "BETWEEN",
+                            "startValue": "\\(",
+                            "endValue": " severity\\)",
+                        },
+                        "propertyMappings": {
+                            "attrValues": [
+                                {
+                                    "attrValue": "Critical",
+                                    "thirdPartyAttrValue": "Severe",
+                                },
+                                {"attrValue": "Warning", "thirdPartyAttrValue": "High"},
+                                {
+                                    "attrValue": "Observed",
+                                    "thirdPartyAttrValue": "Medium",
+                                },
+                                {"attrValue": "Info", "thirdPartyAttrValue": "Low"},
+                                {"attrValue": "Ok", "thirdPartyAttrValue": "Info"},
+                            ]
+                        },
                     },
-                        {
-                        'attrValue': 'Warning',
-                        'thirdPartyAttrValue': 'High'
+                    {
+                        "name": "Service Name",
+                        "defaultValue": "whatever",
+                        "condition": {"contentSource": "DEFAULT_VALUE"},
                     },
-                        {
-                        'attrValue': 'Observed',
-                        'thirdPartyAttrValue': 'Medium'
+                    {
+                        "name": "Device Host Name",
+                        "defaultValue": "whatever",
+                        "condition": {"contentSource": "DEFAULT_VALUE"},
                     },
-                        {
-                        'attrValue': 'Info',
-                        'thirdPartyAttrValue': 'Low'
-                    },
-                        {
-                        'attrValue': 'Ok',
-                        'thirdPartyAttrValue': 'Info'
-                    }]
-                }
-            },
-                {
-                'name': 'Service Name',
-                'defaultValue': 'whatever',
-                'condition': {
-                    'contentSource': 'DEFAULT_VALUE'
-                }
-            },
-                {
-                'name': 'Device Host Name',
-                'defaultValue': 'whatever',
-                'condition': {
-                    'contentSource': 'DEFAULT_VALUE'
-                }
-            }]
-        }]
+                ],
+            }
+        ],
     }
 
-    print('create integration using this payload')
+    print("create integration using this payload")
     print(yaml.dump(jdata, default_flow_style=False))
 
-    resp = group.create('Email Alerts', jdata)
-    print('result:')
+    resp = group.create("Email Alerts", jdata)
+    print("result:")
     print(yaml.dump(resp, default_flow_style=False))
 
 

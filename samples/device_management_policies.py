@@ -25,18 +25,15 @@ import opsramp.binding
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -47,8 +44,8 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    partner_id = os.environ['OPSRAMP_TENANT_ID']
-    dmp_name = os.environ['OPSRAMP_DMP_NAME']
+    partner_id = os.environ["OPSRAMP_TENANT_ID"]
+    dmp_name = os.environ["OPSRAMP_DMP_NAME"]
 
     ormp = connect()
     partner = ormp.tenant(partner_id)

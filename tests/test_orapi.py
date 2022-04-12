@@ -24,7 +24,7 @@ from opsramp.api import ORapi
 
 class StaticsTest(unittest.TestCase):
     def check64(self, testfile):
-        with open(testfile, 'rb') as f:
+        with open(testfile, "rb") as f:
             content_raw = f.read()
         content_64 = ORapi.b64encode_payload(testfile)
         # decode this result and check against the actual content.
@@ -35,7 +35,7 @@ class StaticsTest(unittest.TestCase):
         # a file that is guaranteed to be empty.
         assert self.check64(os.devnull)
         # any non-empty file that we know will exist.
-        assert self.check64('setup.py')
+        assert self.check64("setup.py")
 
 
 class ClassTest(unittest.TestCase):
@@ -45,7 +45,7 @@ class ClassTest(unittest.TestCase):
         self.testobj = ORapi(self.mock_ao)
 
     def test_str(self):
-        assert 'ORapi' in str(self.testobj)
+        assert "ORapi" in str(self.testobj)
 
     def test_session_property(self):
         # The session property is defined in the base class but we
@@ -63,34 +63,34 @@ class ClassTest(unittest.TestCase):
         assert aw.session is original_session
 
     def test_get(self):
-        hdrs = {'fake-header': 'fake-value'}
-        expected = 'unit test get result'
+        hdrs = {"fake-header": "fake-value"}
+        expected = "unit test get result"
         self.mock_ao.get.return_value = expected
 
-        suffix = 'milk'
+        suffix = "milk"
         actual = self.testobj.get(suffix, headers=hdrs)
         self.mock_ao.get.assert_called_with(suffix, headers=hdrs)
         assert actual == expected
 
     def test_search(self):
-        hdrs = {'fake-header': 'fake-value'}
-        expected = 'unit test search result'
+        hdrs = {"fake-header": "fake-value"}
+        expected = "unit test search result"
         self.mock_ao.get.return_value = expected
 
         # the leading ? character is optional so try both.
-        qstring = '?name=marmaduke'
+        qstring = "?name=marmaduke"
         qs2 = qstring[1:]
 
         # default suffix should be "search"
         actual = self.testobj.search(pattern=qstring)
-        self.mock_ao.get.assert_called_with('search' + qstring, headers=None)
+        self.mock_ao.get.assert_called_with("search" + qstring, headers=None)
         assert actual == expected
         actual = self.testobj.search(pattern=qs2, headers=hdrs)
-        self.mock_ao.get.assert_called_with('search' + qstring, headers=hdrs)
+        self.mock_ao.get.assert_called_with("search" + qstring, headers=hdrs)
         assert actual == expected
 
         # try a different suffix
-        suffix = 'toraiocht'
+        suffix = "toraiocht"
         actual = self.testobj.search(pattern=qstring, suffix=suffix)
         self.mock_ao.get.assert_called_with(suffix + qstring, headers=None)
         assert actual == expected

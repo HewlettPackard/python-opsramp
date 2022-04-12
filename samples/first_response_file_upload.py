@@ -25,18 +25,15 @@ import yaml
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -47,16 +44,16 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
 
     jsonstr = '{"category": "ALERT_FIRST_RESPONSE_TRAINING",\
                "properties": {"inputColumns":["resource.generalInfo.resourceType"],\
                "outputColumns":["suppressed","snoozeDuration"]}}'
-    payload = {'metaData': jsonstr}
-    with open('../tests/testing.csv', 'rb') as f:
-        files = {'attachment': ('testing.csv', f, 'text/csv')}
+    payload = {"metaData": jsonstr}
+    with open("../tests/testing.csv", "rb") as f:
+        files = {"attachment": ("testing.csv", f, "text/csv")}
         training_file_upload = tenant.model_training()
         resp = training_file_upload.file_upload(payload, files)
         print(yaml.dump(resp, default_flow_style=False))

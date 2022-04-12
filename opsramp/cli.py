@@ -25,10 +25,10 @@ import opsramp.binding
 
 
 # TODO make these optional command line parameters
-OPSRAMP_URL = os.environ['OPSRAMP_URL']
-OPSRAMP_KEY = os.environ['OPSRAMP_KEY']
-OPSRAMP_SECRET = os.environ['OPSRAMP_SECRET']
-OPSRAMP_TENANT_ID = os.environ['OPSRAMP_TENANT_ID']
+OPSRAMP_URL = os.environ["OPSRAMP_URL"]
+OPSRAMP_KEY = os.environ["OPSRAMP_KEY"]
+OPSRAMP_SECRET = os.environ["OPSRAMP_SECRET"]
+OPSRAMP_TENANT_ID = os.environ["OPSRAMP_TENANT_ID"]
 
 
 def do_auth():
@@ -48,16 +48,17 @@ def do_auth():
 # ormpcli tenant rba categories
 # ormpcli tenant monitoring templates
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(description='HPE cli for OpsRamp')
-    parser.add_argument('subtree')
-    parser.add_argument('area')
-    parser.add_argument('action')
+    parser = argparse.ArgumentParser(description="HPE cli for OpsRamp")
+    parser.add_argument("subtree")
+    parser.add_argument("area")
+    parser.add_argument("action")
     return parser.parse_args()
 
 
 def do_tenant_rba_action(rba, action):
-    if action == 'categories':
+    if action == "categories":
         clist = rba.categories().get()
         print(json.dumps(clist))
     else:
@@ -65,22 +66,22 @@ def do_tenant_rba_action(rba, action):
 
 
 def do_tenant_monitoring_action(monitoring, action):
-    if action == 'templates':
+    if action == "templates":
         tplates = monitoring.templates()
         resp = tplates.search()
-        print(resp['totalResults'], 'monitoring templates found')
+        print(resp["totalResults"], "monitoring templates found")
     else:
         raise ValueError(monitoring, action)
 
 
 def do_tenant_action(tenant, area, action):
-    if area == 'rba':
+    if area == "rba":
         subapi = tenant.rba()
         return do_tenant_rba_action(subapi, action)
-    elif area == 'monitoring':
+    elif area == "monitoring":
         subapi = tenant.monitoring()
         return do_tenant_monitoring_action(subapi, action)
-    elif area == 'agent' and action == 'script':
+    elif area == "agent" and action == "script":
         contents = tenant.get_agent_script()
         print(contents)
     else:
@@ -88,7 +89,7 @@ def do_tenant_action(tenant, area, action):
 
 
 def do_action(ormp, subtree, area, action):
-    if subtree == 'tenant':
+    if subtree == "tenant":
         tenant = ormp.tenant(OPSRAMP_TENANT_ID)
         return do_tenant_action(tenant, area, action)
     else:

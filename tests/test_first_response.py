@@ -22,28 +22,28 @@ import requests_mock
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
         self.first_response = self.client.first_response()
-        assert 'First_Response' in str(self.first_response)
+        assert "First_Response" in str(self.first_response)
 
         self.model_training = self.client.model_training()
-        assert 'ModelTraining' in str(self.model_training)
+        assert "ModelTraining" in str(self.model_training)
 
     def test_search(self):
         group = self.first_response
         for pattern, expected in (
-            ('', ['unit', 'test', 'results']),
-            ('pageNo=1&pageSize=100&is&sortName=id', ['more', 'nonsense'])
+            ("", ["unit", "test", "results"]),
+            ("pageNo=1&pageSize=100&is&sortName=id", ["more", "nonsense"]),
         ):
             if pattern:
-                url = group.api.compute_url('?' + pattern)
+                url = group.api.compute_url("?" + pattern)
             else:
                 url = group.api.compute_url()
             with requests_mock.Mocker() as m:
@@ -54,7 +54,7 @@ class ApiTest(unittest.TestCase):
     def test_policy_detail(self):
         group = self.first_response
         thisid = 789012
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.get(url, json=expected, complete_qs=True)
@@ -63,8 +63,8 @@ class ApiTest(unittest.TestCase):
 
     def test_create(self):
         group = self.first_response
-        expected = {'id': 345678}
-        fake_defn = {'name': 'dougal'}
+        expected = {"id": 345678}
+        fake_defn = {"name": "dougal"}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
@@ -74,8 +74,8 @@ class ApiTest(unittest.TestCase):
     def test_update(self):
         group = self.first_response
         thisid = 123456
-        expected = {'id': thisid}
-        fake_defn = {'name': 'ted'}
+        expected = {"id": thisid}
+        fake_defn = {"name": "ted"}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.post(url, json=expected, complete_qs=True)
@@ -85,7 +85,7 @@ class ApiTest(unittest.TestCase):
     def test_delete(self):
         group = self.first_response
         thisid = 789012
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
@@ -95,9 +95,9 @@ class ApiTest(unittest.TestCase):
     def test_enable(self):
         group = self.first_response
         thisid = 345678
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/enable' % thisid)
+            url = group.api.compute_url("%s/enable" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.enable(uuid=thisid)
             assert actual == expected
@@ -105,9 +105,9 @@ class ApiTest(unittest.TestCase):
     def test_disable(self):
         group = self.first_response
         thisid = 901234
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/disable' % thisid)
+            url = group.api.compute_url("%s/disable" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.disable(uuid=thisid)
             assert actual == expected
@@ -116,7 +116,7 @@ class ApiTest(unittest.TestCase):
         group = self.model_training
         expected = "sample text"
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('train/ALERT_FIRST_RESPONSE_TRAINING')
+            url = group.api.compute_url("train/ALERT_FIRST_RESPONSE_TRAINING")
             m.post(url, text=expected, complete_qs=True)
             actual = group.train_model()
             assert actual == expected
@@ -125,10 +125,10 @@ class ApiTest(unittest.TestCase):
         group = self.model_training
         expected = "sample text"
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('files')
-            with open('tests/testing.csv', 'rb') as x:
-                file = {'attachment': ('testing.csv', x, 'text/csv')}
-                data = {'test': 'fake'}
+            url = group.api.compute_url("files")
+            with open("tests/testing.csv", "rb") as x:
+                file = {"attachment": ("testing.csv", x, "text/csv")}
+                data = {"test": "fake"}
                 m.post(url, text=expected, complete_qs=True)
                 actual = group.file_upload(data, file)
                 assert actual == expected
@@ -136,11 +136,7 @@ class ApiTest(unittest.TestCase):
     def test_get_training_file(self):
         group = self.model_training
         expected = {
-            "results": [
-                {
-                    "name": "sample"
-                }
-            ],
+            "results": [{"name": "sample"}],
             "totalResults": 1,
             "orderBy": "createdTime",
             "pageNo": 1,
@@ -148,10 +144,10 @@ class ApiTest(unittest.TestCase):
             "totalPages": 1,
             "nextPage": False,
             "previousPageNo": 0,
-            "descendingOrder": True
+            "descendingOrder": True,
         }
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('files')
+            url = group.api.compute_url("files")
             m.get(url, json=expected, complete_qs=True)
             actual = group.get_training_file()
             assert actual == expected

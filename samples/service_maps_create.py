@@ -22,22 +22,19 @@ import os
 
 import opsramp.binding
 
-tnt_id = os.environ['OPSRAMP_TENANT_ID']
+tnt_id = os.environ["OPSRAMP_TENANT_ID"]
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -52,107 +49,108 @@ def main():
     tnt = ormp.tenant(tnt_id)
     service_maps = tnt.service_maps()
 
-    top_level_json = [{
-        "name": "Finance Inventory",
-        "createdDate": "2018-06-20T11:33:08+0000",
-        "updatedDate": "2018-06-20T11:33:08+0000",
-        "childType": "SERVICE",
-        "frequency": 5,
-        "thresholdType": "count",
-        "thresholdLimit": 1,
-        "monitorNames": ["service.availability.metric"],
-        "include": "ALL",
-        "type": "alert",
-        "alertType": 2,
-        "alert": False,
-        "metrics": []
-    }]
+    top_level_json = [
+        {
+            "name": "Finance Inventory",
+            "createdDate": "2018-06-20T11:33:08+0000",
+            "updatedDate": "2018-06-20T11:33:08+0000",
+            "childType": "SERVICE",
+            "frequency": 5,
+            "thresholdType": "count",
+            "thresholdLimit": 1,
+            "monitorNames": ["service.availability.metric"],
+            "include": "ALL",
+            "type": "alert",
+            "alertType": 2,
+            "alert": False,
+            "metrics": [],
+        }
+    ]
 
     resp = service_maps.create(top_level_json)
 
-    top_level_sgid = resp[0]['id']
+    top_level_sgid = resp[0]["id"]
 
     # Now create two sub-maps attached to the top level one above.
 
-    second_level_json_dept_a = [{
-        "name": "Department A",
-        "createdDate": "2018-06-20T11:33:08+0000",
-        "updatedDate": "2018-06-20T11:33:08+0000",
-        "childType": "SERVICE",
-        "frequency": 5,
-        "thresholdType": "count",
-        "thresholdLimit": 1,
-        "monitorNames": ["service.availability.metric"],
-        "include": "ALL",
-        "type": "alert",
-        "alertType": 2,
-        "alert": False,
-        "metrics": [],
-        "parent": {
-                "id": top_level_sgid
+    second_level_json_dept_a = [
+        {
+            "name": "Department A",
+            "createdDate": "2018-06-20T11:33:08+0000",
+            "updatedDate": "2018-06-20T11:33:08+0000",
+            "childType": "SERVICE",
+            "frequency": 5,
+            "thresholdType": "count",
+            "thresholdLimit": 1,
+            "monitorNames": ["service.availability.metric"],
+            "include": "ALL",
+            "type": "alert",
+            "alertType": 2,
+            "alert": False,
+            "metrics": [],
+            "parent": {"id": top_level_sgid},
         }
-    }]
+    ]
 
-    second_level_json_dept_b = [{
-        "name": "Department B",
-        "createdDate": "2018-06-20T11:33:08+0000",
-        "updatedDate": "2018-06-20T11:33:08+0000",
-        "childType": "SERVICE",
-        "frequency": 5,
-        "thresholdType": "count",
-        "thresholdLimit": 1,
-        "monitorNames": ["service.availability.metric"],
-        "include": "ALL",
-        "type": "alert",
-        "alertType": 2,
-        "alert": False,
-        "metrics": [],
-        "parent": {
-            "id": top_level_sgid
+    second_level_json_dept_b = [
+        {
+            "name": "Department B",
+            "createdDate": "2018-06-20T11:33:08+0000",
+            "updatedDate": "2018-06-20T11:33:08+0000",
+            "childType": "SERVICE",
+            "frequency": 5,
+            "thresholdType": "count",
+            "thresholdLimit": 1,
+            "monitorNames": ["service.availability.metric"],
+            "include": "ALL",
+            "type": "alert",
+            "alertType": 2,
+            "alert": False,
+            "metrics": [],
+            "parent": {"id": top_level_sgid},
         }
-    }]
+    ]
 
     resp = service_maps.create(second_level_json_dept_a)
-    second_level_sgid_dept_a = resp[0]['id']
+    second_level_sgid_dept_a = resp[0]["id"]
 
     resp = service_maps.create(second_level_json_dept_b)
-    second_level_sgid_dept_b = resp[0]['id']
+    second_level_sgid_dept_b = resp[0]["id"]
 
-    print("dept a %s dept b %s" %
-          (second_level_sgid_dept_a, second_level_sgid_dept_b))
+    print("dept a %s dept b %s" % (second_level_sgid_dept_a, second_level_sgid_dept_b))
 
-    vm_map_json = [{
-        "name": "Warehouse Inventory",
-        "createdDate": "2018-06-20T11:33:08+0000",
-        "updatedDate": "2018-06-20T11:33:08+0000",
-        "childType": "DEVICE",
-        "frequency": 5,
-        "thresholdType": "count",
-        "thresholdLimit": 1,
-        "monitorNames": [
-            "service.availability.metric"
-        ],
-        "include": "ALL",
-        "type": "alert",
-        "alertType": 2,
-        "alert": False,
-        "metrics": [],
-        "filterCriteria": {
-            "matchType": "ANY",
-            "rules": [{
-                "key": "Device Name",
-                "operator": "Contains",
-                "value": "Linux",
-                "resourceType": "DEVICE"
-            }]
-        },
-        "parent": {
-            "id": second_level_sgid_dept_b
+    vm_map_json = [
+        {
+            "name": "Warehouse Inventory",
+            "createdDate": "2018-06-20T11:33:08+0000",
+            "updatedDate": "2018-06-20T11:33:08+0000",
+            "childType": "DEVICE",
+            "frequency": 5,
+            "thresholdType": "count",
+            "thresholdLimit": 1,
+            "monitorNames": ["service.availability.metric"],
+            "include": "ALL",
+            "type": "alert",
+            "alertType": 2,
+            "alert": False,
+            "metrics": [],
+            "filterCriteria": {
+                "matchType": "ANY",
+                "rules": [
+                    {
+                        "key": "Device Name",
+                        "operator": "Contains",
+                        "value": "Linux",
+                        "resourceType": "DEVICE",
+                    }
+                ],
+            },
+            "parent": {"id": second_level_sgid_dept_b},
         }
-    }]
+    ]
 
     resp = service_maps.create(vm_map_json)
-    vm_map_sgid = resp[0]['id']
+    vm_map_sgid = resp[0]["id"]
 
     print("vm map sgid %s" % vm_map_sgid)
 

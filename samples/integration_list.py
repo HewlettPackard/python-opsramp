@@ -24,18 +24,15 @@ import opsramp.binding
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -46,7 +43,7 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
@@ -54,13 +51,17 @@ def main():
 
     group = integs.instances()
     found = group.search()
-    for idata in found['results']:
+    for idata in found["results"]:
         in_auth, out_auth = group.auth_type(idata)
         print(
-            idata['id'],
-            'type', idata['integration']['id'],
-            'in_auth', in_auth, 'out_auth', out_auth,
-            'name \"%s\"' % idata.get('displayName', '<unnamed>')
+            idata["id"],
+            "type",
+            idata["integration"]["id"],
+            "in_auth",
+            in_auth,
+            "out_auth",
+            out_auth,
+            'name "%s"' % idata.get("displayName", "<unnamed>"),
         )
 
 
