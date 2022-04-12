@@ -6,7 +6,7 @@
 # OpsRamp-specific variant of ApiWrapper base class as a container for
 # some methods and helpers that are common to multiple parts of that API.
 #
-# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ from opsramp.base import ApiWrapper
 
 
 class ORapi(ApiWrapper):
-    '''OpsRamp-specific variant of ApiWrapper base class as a container for
-    some methods and helpers that are common to multiple parts of that API.'''
+    """OpsRamp-specific variant of ApiWrapper base class as a container for
+    some methods and helpers that are common to multiple parts of that API."""
 
     # Returns a string containing a base64 encoded version of the
     # content of the specified file. It was quite finicky to come
@@ -35,13 +35,13 @@ class ORapi(ApiWrapper):
     # don't modify this, or test carefully if you do.
     @staticmethod
     def b64encode_payload(fname):
-        with open(fname, 'rb') as f:
+        with open(fname, "rb") as f:
             content = base64.b64encode(f.read())
         return content.decode()
 
-    def search(self, pattern='', headers=None, suffix='search'):
+    def search(self, pattern="", headers=None, suffix="search"):
         if pattern:
-            if pattern[0] != '?':
-                pattern = '?' + pattern
+            if pattern[0] != "?":
+                pattern = "?" + pattern
             suffix += pattern
         return super(ORapi, self).get(suffix, headers)

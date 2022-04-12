@@ -25,14 +25,14 @@ from opsramp.resources import list2ormp
 
 class ResourceGroups(ORapi):
     def __init__(self, parent):
-        super(ResourceGroups, self).__init__(parent.api, 'deviceGroups')
+        super(ResourceGroups, self).__init__(parent.api, "deviceGroups")
 
     def get(self):
-        temp_url = '/search'
+        temp_url = "/search"
         return self.api.get(temp_url)
 
     def create(self, definition):
-        url_suffix = ''
+        url_suffix = ""
         return self.api.post(url_suffix, json=definition)
 
     def update(self, uuid, definition):
@@ -43,18 +43,16 @@ class ResourceGroups(ORapi):
         url_suffix = uuid
         return self.api.delete(url_suffix)
 
-    def search(self, pattern=''):
-        '''returns *verbose* details about resource groups on this tenant'''
+    def search(self, pattern=""):
+        """returns *verbose* details about resource groups on this tenant"""
         simple_list = super(ResourceGroups, self).search(
-            pattern=pattern,
-            suffix='search'
+            pattern=pattern, suffix="search"
         )
         return list2ormp(simple_list)
 
-    def minimal(self, pattern=''):
-        '''returns * minimal * details about resource groups on this tenant'''
+    def minimal(self, pattern=""):
+        """returns * minimal * details about resource groups on this tenant"""
         simple_list = super(ResourceGroups, self).search(
-            pattern=pattern,
-            suffix='minimal'
+            pattern=pattern, suffix="minimal"
         )
         return list2ormp(simple_list)

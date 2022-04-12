@@ -22,31 +22,31 @@ import requests_mock
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
         self.group = self.client.mgmt_profiles()
-        assert 'Profiles' in str(self.group)
+        assert "Profiles" in str(self.group)
 
     def test_search(self):
         thisid = 111111
-        expected = {'id': thisid}
-        pattern = 'whatever'
+        expected = {"id": thisid}
+        pattern = "whatever"
         with requests_mock.Mocker() as m:
-            url = self.group.api.compute_url('search?%s' % pattern)
+            url = self.group.api.compute_url("search?%s" % pattern)
             m.get(url, json=expected, complete_qs=True)
             actual = self.group.search(pattern)
             assert actual == expected
 
     def test_create(self):
         thisid = 345678
-        expected = {'id': thisid}
-        fake_defn = {'name': 'jack'}
+        expected = {"id": thisid}
+        fake_defn = {"name": "jack"}
         with requests_mock.Mocker() as m:
             url = self.group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
@@ -55,8 +55,8 @@ class ApiTest(unittest.TestCase):
 
     def test_update(self):
         thisid = 123456
-        expected = {'id': thisid}
-        fake_defn = {'name': 'mrs doyle'}
+        expected = {"id": thisid}
+        fake_defn = {"name": "mrs doyle"}
         with requests_mock.Mocker() as m:
             url = self.group.api.compute_url(thisid)
             m.post(url, json=expected, complete_qs=True)
@@ -65,7 +65,7 @@ class ApiTest(unittest.TestCase):
 
     def test_delete(self):
         thisid = 789012
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             url = self.group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
@@ -74,27 +74,27 @@ class ApiTest(unittest.TestCase):
 
     def test_attach(self):
         thisid = 345678
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = self.group.api.compute_url('%s/attach' % thisid)
+            url = self.group.api.compute_url("%s/attach" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = self.group.attach(uuid=thisid)
             assert actual == expected
 
     def test_detach(self):
         thisid = 901234
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = self.group.api.compute_url('%s/detach' % thisid)
+            url = self.group.api.compute_url("%s/detach" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = self.group.detach(uuid=thisid)
             assert actual == expected
 
     def test_reconnect(self):
         thisid = 901234
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = self.group.api.compute_url('%s/reconnectTunnel' % thisid)
+            url = self.group.api.compute_url("%s/reconnectTunnel" % thisid)
             m.get(url, json=expected, complete_qs=True)
             actual = self.group.reconnect(uuid=thisid)
             assert actual == expected

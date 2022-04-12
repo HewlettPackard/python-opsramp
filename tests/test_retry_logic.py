@@ -32,22 +32,10 @@ import requests
 # HTTP 429 (Too Many Requests) status code, it should keep retrying until some
 # maximum limit is reached.
 CANNED_RESPONSES = [
-    {
-        'code': 429,
-        'message': b"Failed attempt #1"
-    },
-    {
-        'code': 429,
-        'message': b"Failed attempt #2"
-    },
-    {
-        'code': 429,
-        'message': b"Failed attempt #3"
-    },
-    {
-        'code': 200,
-        'message': b"Succeeded on fourth attempt"
-    },
+    {"code": 429, "message": b"Failed attempt #1"},
+    {"code": 429, "message": b"Failed attempt #2"},
+    {"code": 429, "message": b"Failed attempt #3"},
+    {"code": 200, "message": b"Succeeded on fourth attempt"},
 ]
 
 
@@ -69,11 +57,7 @@ class MockServerRequestHandler(BaseHTTPRequestHandler, object):
         # server instance's copies of the canned responses live; a new request
         # handler is generated for each request so they can't live here.
         self.http_server = server
-        super(MockServerRequestHandler, self).__init__(
-            request,
-            client_address,
-            server
-        )
+        super(MockServerRequestHandler, self).__init__(request, client_address, server)
 
     def do_GET(self):
         logging.debug("running do_GET()")
@@ -84,17 +68,16 @@ class MockServerRequestHandler(BaseHTTPRequestHandler, object):
             logging.debug("Sending response: %s" % response)
 
             # Send the header including the status code
-            self.send_response(code=response['code'])
+            self.send_response(code=response["code"])
             self.send_header("Content-type", "text/plain")
             self.end_headers()
 
             # Write the message body to self.wfile
-            self.wfile.write(response['message'])
+            self.wfile.write(response["message"])
 
             # self.canned_responses = self.canned_responses[1:]
             logging.debug(
-                "%d responses remain" %
-                len(self.http_server.canned_responses)
+                "%d responses remain" % len(self.http_server.canned_responses)
             )
         else:
             # If we run out of canned responses just send back a HTTP 500
@@ -112,26 +95,18 @@ class MockServerRequestHandler(BaseHTTPRequestHandler, object):
 
 
 class MockHttpServer(HTTPServer, object):
-    def __init__(
-        self,
-        server_address,
-        RequestHandlerClass,
-        canned_responses
-    ):
+    def __init__(self, server_address, RequestHandlerClass, canned_responses):
         # Need to subclass HTTPServer so that I can define a set of canned
         # responses that will be consumed by MockServerRequestHandler.
         logging.warning("Standing up HTTP Server")
         self.canned_responses = canned_responses
-        super(MockHttpServer, self).__init__(
-            server_address,
-            RequestHandlerClass
-        )
+        super(MockHttpServer, self).__init__(server_address, RequestHandlerClass)
 
 
 class MockWebClient:
-    """Minimal web client to generate requests against our mock web server
-    """
-    def __init__(self, host='localhost', port=80):
+    """Minimal web client to generate requests against our mock web server"""
+
+    def __init__(self, host="localhost", port=80):
         self.host = host
         self.port = port
 
@@ -144,9 +119,9 @@ class TestMockServer(unittest.TestCase):
         self.server_port = self.get_free_port()
         logging.info("Creating HTTP server on port %d" % self.server_port)
         self.mock_server = MockHttpServer(
-            ('localhost', self.server_port),
+            ("localhost", self.server_port),
             MockServerRequestHandler,
-            deepcopy(CANNED_RESPONSES)
+            deepcopy(CANNED_RESPONSES),
         )
 
         # Create the server in a separate thread so that it can run in parallel
@@ -171,33 +146,33 @@ class TestMockServer(unittest.TestCase):
             int -- Available TCP Port number
         """
         s = socket.socket(socket.AF_INET, type=socket.SOCK_STREAM)
-        s.bind(('localhost', 0))
+        s.bind(("localhost", 0))
         _, port = s.getsockname()
         s.close()
         return port
 
     def test__mock_server_works(self):
         # Test that the web server returns all canned responses, in order.
-        client = MockWebClient(host='localhost', port=self.server_port)
+        client = MockWebClient(host="localhost", port=self.server_port)
 
         for expected in CANNED_RESPONSES:
             response = client.get()
 
-            self.assertEqual(response.status_code, expected['code'])
-            self.assertEqual(response.content, expected['message'])
+            self.assertEqual(response.status_code, expected["code"])
+            self.assertEqual(response.content, expected["message"])
 
     def test__apiwrapper_retry_logic(self):
-        fake_url = 'http://localhost:%d/' % self.server_port
-        fake_token = 'ffffffffffffffff'
+        fake_url = "http://localhost:%d/" % self.server_port
+        fake_token = "ffffffffffffffff"
         fake_auth = {
-            'Authorization': 'Bearer %s' % fake_token,
-            'Accept': 'application/json'
+            "Authorization": "Bearer %s" % fake_token,
+            "Accept": "application/json",
         }
 
         api_object = ApiObject(fake_url, fake_auth.copy())
-        assert 'ApiObject' in str(api_object)
+        assert "ApiObject" in str(api_object)
 
-        api_stub = 'whatevs'
+        api_stub = "whatevs"
         api_wrapper = ApiWrapper(api_object, api_stub)
 
         api_endpoint = "foo"
@@ -206,9 +181,7 @@ class TestMockServer(unittest.TestCase):
 
         expected_requests = []
         for resp in CANNED_RESPONSES:
-            req = '"GET /%s/%s HTTP/1.1" %d' % (
-                api_stub, api_endpoint, resp['code']
-            )
+            req = '"GET /%s/%s HTTP/1.1" %d' % (api_stub, api_endpoint, resp["code"])
             expected_requests.append(req)
 
         lines = err.getvalue().splitlines()

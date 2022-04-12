@@ -22,19 +22,19 @@ import requests_mock
 
 class Metrics(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
     def test_get_metrics(self):
         examples = (
-            'tenants/client_1234/metrics/mysql.cluster.status/metricType',
-            'search?tenant=client_1234&resource=abcdef&metric=mysql.cluster.status'
+            "tenants/client_1234/metrics/mysql.cluster.status/metricType",
+            "search?tenant=client_1234&resource=abcdef&metric=mysql.cluster.status",
         )
         group = self.ormp.metrics()
         for target in examples:
             url = group.api.compute_url(target)
-            expected_receive = 'fake unit test value ' + target
+            expected_receive = "fake unit test value " + target
             with requests_mock.Mocker() as m:
                 m.get(url, text=expected_receive, complete_qs=True)
                 actual = group.get(target)

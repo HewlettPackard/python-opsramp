@@ -27,31 +27,33 @@ from opsramp.tenant import Tenant
 
 
 def connect(url, key, secret):
-    auth_url = url + '/auth/oauth/token'
+    auth_url = url + "/auth/oauth/token"
     auth_hdrs = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json,application/xml'
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json,application/xml",
     }
-    body = 'grant_type=client_credentials&' \
-           'client_id=%s&' \
-           'client_secret=%s' % (key, secret)
+    body = (
+        "grant_type=client_credentials&"
+        "client_id=%s&"
+        "client_secret=%s" % (key, secret)
+    )
     ao = ApiObject(auth_url, auth_hdrs)
     auth_resp = ao.post(data=body)
-    token = auth_resp['access_token']
+    token = auth_resp["access_token"]
     return Opsramp(url, token)
 
 
 class Opsramp(ORapi):
     def __init__(self, url, token):
         self.auth = {
-            'Authorization': 'Bearer ' + token,
-            'Accept': 'application/json,application/xml'
+            "Authorization": "Bearer " + token,
+            "Accept": "application/json,application/xml",
         }
-        apiobject = ApiObject(url + '/api/v2', self.auth)
+        apiobject = ApiObject(url + "/api/v2", self.auth)
         super(Opsramp, self).__init__(apiobject)
 
     def __str__(self):
-        return '%s %s' % (str(type(self)), self.api)
+        return "%s %s" % (str(type(self)), self.api)
 
     def config(self):
         return GlobalConfig(self)

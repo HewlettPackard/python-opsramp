@@ -39,11 +39,11 @@ import opsramp.sites
 
 class Tenant(ORapi):
     def __init__(self, parent, uuid):
-        super(Tenant, self).__init__(parent.api, 'tenants/%s' % uuid)
+        super(Tenant, self).__init__(parent.api, "tenants/%s" % uuid)
         self.uuid = uuid
 
     def is_client(self):
-        return self.uuid[:7] == 'client_'
+        return self.uuid[:7] == "client_"
 
     def rba(self):
         return opsramp.rba.Rba(self)
@@ -66,8 +66,8 @@ class Tenant(ORapi):
 
     def get_agent_script(self):
         assert self.is_client()
-        hdr = {'Accept': 'application/octet-stream,application/xml'}
-        return self.api.get('agents/deployAgentsScript', headers=hdr)
+        hdr = {"Accept": "application/octet-stream,application/xml"}
+        return self.api.get("agents/deployAgentsScript", headers=hdr)
 
     def credential_sets(self):
         return opsramp.devmgmt.CredentialSets(self)

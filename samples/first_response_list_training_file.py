@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,18 +25,15 @@ import yaml
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -47,7 +44,7 @@ def main():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
 
@@ -58,10 +55,10 @@ def main():
 
     # There is only ever at most one result in the 'results'
     # list returned.
-    if found['results']:
-        print(yaml.dump(found['results'], default_flow_style=False))
+    if found["results"]:
+        print(yaml.dump(found["results"], default_flow_style=False))
     else:
-        print('no training file found in tenant.')
+        print("no training file found in tenant.")
 
 
 if __name__ == "__main__":

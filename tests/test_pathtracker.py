@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,28 +22,28 @@ from opsramp.base import PathTracker
 class TrackerTest(unittest.TestCase):
     def setUp(self):
         self.trkr = PathTracker()
-        assert 'PathTracker' in str(self.trkr)
+        assert "PathTracker" in str(self.trkr)
 
     def test_cd(self):
         progression = (
-            ('/tmp', '/tmp'),
-            ('bossa', '/tmp/bossa'),
-            ('nova', '/tmp/bossa/nova'),
-            ('george/dragon', '/tmp/bossa/nova/george/dragon'),
-            ('/wardrobe/narnia', '/wardrobe/narnia'),
-            ('/', '')
+            ("/tmp", "/tmp"),
+            ("bossa", "/tmp/bossa"),
+            ("nova", "/tmp/bossa/nova"),
+            ("george/dragon", "/tmp/bossa/nova/george/dragon"),
+            ("/wardrobe/narnia", "/wardrobe/narnia"),
+            ("/", ""),
         )
         for pshort, pfull in progression:
             self.trkr.cd(pshort)
             assert self.trkr.fullpath() == pfull
 
     def test_pushpop(self):
-        self.trkr.cd('/themoon')
+        self.trkr.cd("/themoon")
         home = self.trkr.fullpath()
 
-        city = '/europe/germany/berlin'
-        street = 'Alexanderplatz'
-        both = city + '/' + street
+        city = "/europe/germany/berlin"
+        street = "Alexanderplatz"
+        both = city + "/" + street
 
         a_pushd = 1
         a_popd = 2
@@ -52,10 +52,10 @@ class TrackerTest(unittest.TestCase):
             (a_pushd, street, both),
             (a_popd, None, city),
             (a_pushd, street, both),
-            (a_pushd, '/logs', '/logs'),
+            (a_pushd, "/logs", "/logs"),
             (a_popd, None, both),
             (a_popd, None, city),
-            (a_popd, None, home)
+            (a_popd, None, home),
         )
         assert self.trkr.fullpath() == home
         for action, pshort, pfull in progression:
@@ -65,34 +65,34 @@ class TrackerTest(unittest.TestCase):
                 assert not pshort
                 self.trkr.popd()
             else:
-                raise AssertionError('unexpected action %s' % action)
+                raise AssertionError("unexpected action %s" % action)
             assert self.trkr.fullpath() == pfull
 
     def test_reset(self):
-        self.trkr.cd('/solarsystems/milkyway')
+        self.trkr.cd("/solarsystems/milkyway")
         self.trkr.reset()
-        assert self.trkr.fullpath() == ''
+        assert self.trkr.fullpath() == ""
 
     def test_clone(self):
-        place1 = '/saturn/atmosphere'
+        place1 = "/saturn/atmosphere"
         self.trkr.cd(place1)
         # check that cd in a clone doesn't affect the original.
         other = self.trkr.clone()
-        place2 = '/jupiter/satellites/moons/ganymede'
+        place2 = "/jupiter/satellites/moons/ganymede"
         other.cd(place2)
         assert self.trkr.fullpath() == place1
         assert other.fullpath() == place2
 
     def test_fullpath(self):
         # check that it doesn't "cd" to the specified suffix, just appends it.
-        self.trkr.cd('my/hovercraft')
+        self.trkr.cd("my/hovercraft")
         original = self.trkr.fullpath()
-        suffix = 'is/full/of/eels'
+        suffix = "is/full/of/eels"
         other = self.trkr.fullpath(suffix)
-        assert other == original + '/' + suffix
+        assert other == original + "/" + suffix
         assert self.trkr.fullpath() == original
         # test with a / at the start, which should not append (nor cd there).
-        suffix = '/full/path/not/relative'
+        suffix = "/full/path/not/relative"
         other = self.trkr.fullpath(suffix)
         assert other == suffix
         assert self.trkr.fullpath() == original

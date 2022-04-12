@@ -5,7 +5,7 @@
 # escalations.py
 # Classes dealing directly with OpsRamp Alert Escalation Policies.
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,19 +24,19 @@ from opsramp.api import ORapi
 
 class Escalations(ORapi):
     def __init__(self, parent):
-        super(Escalations, self).__init__(parent.api, 'escalations')
+        super(Escalations, self).__init__(parent.api, "escalations")
 
     def create(self, definition):
-        return self.api.post('', json=definition)
+        return self.api.post("", json=definition)
 
     def update(self, uuid, definition):
-        return self.api.post('%s' % uuid, json=definition)
+        return self.api.post("%s" % uuid, json=definition)
 
     def delete(self, uuid):
-        return self.api.delete('%s' % uuid)
+        return self.api.delete("%s" % uuid)
 
     def enable(self, uuid):
-        return self.api.post('%s/enable' % uuid)
+        return self.api.post("%s/enable" % uuid)
 
     def disable(self, uuid):
-        return self.api.post('%s/disable' % uuid)
+        return self.api.post("%s/disable" % uuid)

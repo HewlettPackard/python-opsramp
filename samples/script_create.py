@@ -24,22 +24,16 @@ import opsramp.binding
 
 
 def connect():
-    url = os.environ['OPSRAMP_URL']
-    key = os.environ['OPSRAMP_KEY']
-    secret = os.environ['OPSRAMP_SECRET']
+    url = os.environ["OPSRAMP_URL"]
+    key = os.environ["OPSRAMP_KEY"]
+    secret = os.environ["OPSRAMP_SECRET"]
     return opsramp.binding.connect(url, key, secret)
 
 
 def parse_argv():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-d', '--debug',
-        action='store_true'
-    )
-    parser.add_argument(
-        'uuid',
-        type=str
-    )
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("uuid", type=str)
     ns = parser.parse_args()
     return ns
 
@@ -50,40 +44,40 @@ def create_command_script(targetcat):
     # you run this script in the UI and will pass the value in as $1
     # which you can see being used in the "payload" below.
     p1 = targetcat.mkParameter(
-        name='venue',
-        description='Where am I today?',
-        datatype='STRING'
+        name="venue", description="Where am I today?", datatype="STRING"
     )
     s1 = targetcat.mkScript(
-        name='Hello <venue>',
-        description='Stereotypical rock star intro',
-        platforms=['LINUX'],
-        execution_type='COMMAND',
+        name="Hello <venue>",
+        description="Stereotypical rock star intro",
+        platforms=["LINUX"],
+        execution_type="COMMAND",
         payload='echo "hello $1"',
-        parameters=[p1]
+        parameters=[p1],
     )
-    print('creating new COMMAND script...')
+    print("creating new COMMAND script...")
     print(s1)
     resp = targetcat.create(s1)
     return resp
 
 
 def create_python_script(targetcat):
-    scriptfile = '/tmp/whatever-%s.py' % os.getpid()
-    with open(scriptfile, 'w') as f:
-        f.write('''#! /usr/bin/env python
+    scriptfile = "/tmp/whatever-%s.py" % os.getpid()
+    with open(scriptfile, "w") as f:
+        f.write(
+            """#! /usr/bin/env python
 from __future__ import print_function
 print('hello world')
-''')
+"""
+        )
     s1 = targetcat.mkScript(
-        name='Python hello',
-        description='Hello from Python land',
-        platforms=['LINUX'],
-        execution_type='PYTHON',
+        name="Python hello",
+        description="Hello from Python land",
+        platforms=["LINUX"],
+        execution_type="PYTHON",
         script_name=os.path.basename(scriptfile),
-        payload_file=scriptfile
+        payload_file=scriptfile,
     )
-    print('creating new PYTHON script...')
+    print("creating new PYTHON script...")
     print(s1)
     resp = targetcat.create(s1)
     os.remove(scriptfile)
@@ -97,7 +91,7 @@ def main():
         logging.getLogger().setLevel(logging.DEBUG)
     category_id = int(ns.uuid)
 
-    tenant_id = os.environ['OPSRAMP_TENANT_ID']
+    tenant_id = os.environ["OPSRAMP_TENANT_ID"]
 
     ormp = connect()
     tenant = ormp.tenant(tenant_id)

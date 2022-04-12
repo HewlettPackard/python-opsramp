@@ -5,7 +5,7 @@
 # monitoring.py
 # Classes related to monitoring templates and similar things.
 #
-# (c) Copyright 2019-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ from opsramp.api import ORapi
 
 class Monitoring(ORapi):
     def __init__(self, parent):
-        super(Monitoring, self).__init__(parent.api, 'monitoring')
+        super(Monitoring, self).__init__(parent.api, "monitoring")
 
     def templates(self):
         return Templates(self)
@@ -32,4 +32,4 @@ class Monitoring(ORapi):
 
 class Templates(ORapi):
     def __init__(self, parent):
-        super(Templates, self).__init__(parent.api, 'templates')
+        super(Templates, self).__init__(parent.api, "templates")

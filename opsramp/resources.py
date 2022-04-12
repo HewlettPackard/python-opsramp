@@ -5,7 +5,7 @@
 # resources.py
 # Resource classes.
 #
-# (c) Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,35 +23,35 @@ from opsramp.api import ORapi
 
 
 def list2ormp(result_obj):
-    '''Bizarrely, OpsRamp sometimes returns a simple list for
-    Resources API calls instead of its usual results struct.'''
+    """Bizarrely, OpsRamp sometimes returns a simple list for
+    Resources API calls instead of its usual results struct."""
     if isinstance(result_obj, dict):
-        assert 'results' in result_obj
-        assert 'totalResults' in result_obj
+        assert "results" in result_obj
+        assert "totalResults" in result_obj
         return result_obj
     # Wrap it up in a fake of the typical OpsRamp results struct
     # so that callers don't have to special case it.
     assert isinstance(result_obj, list)
     count = len(result_obj)
     retval = {
-        'totalResults': count,
-        'pageSize': count,
-        'totalPages': 1,
-        'pageNo': 1,
-        'previousPageNo': 0,
-        'nextPage': False,
-        'descendingOrder': False,
-        'results': result_obj
+        "totalResults": count,
+        "pageSize": count,
+        "totalPages": 1,
+        "pageNo": 1,
+        "previousPageNo": 0,
+        "nextPage": False,
+        "descendingOrder": False,
+        "results": result_obj,
     }
     return retval
 
 
 class Resources(ORapi):
     def __init__(self, parent):
-        super(Resources, self).__init__(parent.api, 'resources')
+        super(Resources, self).__init__(parent.api, "resources")
 
     def create(self, definition):
-        url_suffix = ''
+        url_suffix = ""
         return self.api.post(url_suffix, json=definition)
 
     def update(self, uuid, definition):
@@ -62,35 +62,29 @@ class Resources(ORapi):
         url_suffix = uuid
         return self.api.delete(url_suffix)
 
-    def search(self, pattern=''):
-        '''returns *verbose* details about resources on this tenant'''
-        simple_list = super(Resources, self).search(
-            pattern=pattern,
-            suffix='search'
-        )
+    def search(self, pattern=""):
+        """returns *verbose* details about resources on this tenant"""
+        simple_list = super(Resources, self).search(pattern=pattern, suffix="search")
         return list2ormp(simple_list)
 
-    def minimal(self, pattern=''):
-        '''returns *minimal* details about resources on this tenant'''
-        simple_list = super(Resources, self).search(
-            pattern=pattern,
-            suffix='minimal'
-        )
+    def minimal(self, pattern=""):
+        """returns *minimal* details about resources on this tenant"""
+        simple_list = super(Resources, self).search(pattern=pattern, suffix="minimal")
         return list2ormp(simple_list)
 
     def applications(self, uuid):
-        url_suffix = '{0}/applications'.format(uuid)
+        url_suffix = "{0}/applications".format(uuid)
         simple_list = self.api.get(url_suffix)
         return list2ormp(simple_list)
 
     def availability(self, uuid, start_epoch, end_epoch):
-        url_suffix = '{0}/availability?startTime={1}&endTime={2}'.format(
+        url_suffix = "{0}/availability?startTime={1}&endTime={2}".format(
             uuid, start_epoch, end_epoch
         )
         return self.api.get(url_suffix)
 
     def get_templates(self, uuid, pattern=None):
-        url_suffix = '{0}/templates'.format(uuid)
+        url_suffix = "{0}/templates".format(uuid)
         self.api.pushd(url_suffix)
         resp = super(Resources, self).search(pattern)
         resp = self.search(pattern)

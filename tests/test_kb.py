@@ -22,28 +22,28 @@ import requests_mock
 
 class KBtest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
         self.kb = self.client.kb()
-        assert 'KnowledgeBase' in str(self.kb)
+        assert "KnowledgeBase" in str(self.kb)
 
 
 class CategoriesTest(KBtest):
     def setUp(self):
         super(CategoriesTest, self).setUp()
         self.categories = self.kb.categories()
-        assert 'KBcategories' in str(self.categories)
+        assert "KBcategories" in str(self.categories)
 
     def test_create(self):
         group = self.categories
-        url = group.api.compute_url('create')
-        expected = {'id': 345678}
+        url = group.api.compute_url("create")
+        expected = {"id": 345678}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -53,8 +53,8 @@ class CategoriesTest(KBtest):
     def test_update(self):
         group = self.categories
         thisid = 123456
-        url = group.api.compute_url('update/%s' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("update/%s" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -64,8 +64,8 @@ class CategoriesTest(KBtest):
     def test_delete(self):
         group = self.categories
         thisid = 789012
-        url = group.api.compute_url('delete/%s' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("delete/%s" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.delete(url, json=expected, complete_qs=True)
@@ -75,8 +75,8 @@ class CategoriesTest(KBtest):
     def test_restore(self):
         group = self.categories
         thisid = 345678
-        url = group.api.compute_url('restore/%s' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("restore/%s" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -87,7 +87,7 @@ class CategoriesTest(KBtest):
         group = self.categories
         thisid = 345678
         url = group.api.compute_url(thisid)
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
@@ -97,8 +97,8 @@ class CategoriesTest(KBtest):
         group = self.categories
         thisid = 901234
         # searches happen at the "kb" level
-        url = self.kb.api.compute_url('categorylist/%s' % thisid)
-        expected = ['unit', 'test', 'list']
+        url = self.kb.api.compute_url("categorylist/%s" % thisid)
+        expected = ["unit", "test", "list"]
         with requests_mock.Mocker() as m:
             assert expected
             m.get(url, json=expected, complete_qs=True)
@@ -107,10 +107,10 @@ class CategoriesTest(KBtest):
 
     def test_search(self):
         group = self.categories
-        pattern = 'whatever'
+        pattern = "whatever"
         # searches happen at the "kb" level
-        url = self.kb.api.compute_url('categorylist?%s' % pattern)
-        expected = ['unit', 'test', 'list']
+        url = self.kb.api.compute_url("categorylist?%s" % pattern)
+        expected = ["unit", "test", "list"]
         with requests_mock.Mocker() as m:
             assert expected
             m.get(url, json=expected, complete_qs=True)
@@ -122,12 +122,12 @@ class ArticlesTest(KBtest):
     def setUp(self):
         super(ArticlesTest, self).setUp()
         self.articles = self.kb.articles()
-        assert 'KBarticles' in str(self.articles)
+        assert "KBarticles" in str(self.articles)
 
     def test_create(self):
         group = self.articles
         url = group.api.compute_url()
-        expected = {'id': 345678}
+        expected = {"id": 345678}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -137,8 +137,8 @@ class ArticlesTest(KBtest):
     def test_update(self):
         group = self.articles
         thisid = 123456
-        url = group.api.compute_url('%s' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -148,8 +148,8 @@ class ArticlesTest(KBtest):
     def test_delete(self):
         group = self.articles
         thisid = 789012
-        url = group.api.compute_url('%s/delete' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s/delete" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.delete(url, json=expected, complete_qs=True)
@@ -159,8 +159,8 @@ class ArticlesTest(KBtest):
     def test_share(self):
         group = self.articles
         thisid = 789012
-        url = group.api.compute_url('%s/share' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s/share" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -171,7 +171,7 @@ class ArticlesTest(KBtest):
         group = self.articles
         thisid = 345678
         url = group.api.compute_url(thisid)
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
@@ -180,8 +180,8 @@ class ArticlesTest(KBtest):
     def test_comments(self):
         group = self.articles
         thisid = 567890
-        url = group.api.compute_url('%s/comments/' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s/comments/" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
             actual = group.comments(thisid)
@@ -189,10 +189,10 @@ class ArticlesTest(KBtest):
 
     def test_search(self):
         group = self.articles
-        pattern = 'whatever'
+        pattern = "whatever"
         # searches happen at the "kb" level
-        url = self.kb.api.compute_url('articles/search?%s' % pattern)
-        expected = ['unit', 'test', 'list']
+        url = self.kb.api.compute_url("articles/search?%s" % pattern)
+        expected = ["unit", "test", "list"]
         with requests_mock.Mocker() as m:
             assert expected
             m.get(url, json=expected, complete_qs=True)
@@ -204,12 +204,12 @@ class TemplatesTest(KBtest):
     def setUp(self):
         super(TemplatesTest, self).setUp()
         self.templates = self.kb.templates()
-        assert 'KBtemplates' in str(self.templates)
+        assert "KBtemplates" in str(self.templates)
 
     def test_create(self):
         group = self.templates
         url = group.api.compute_url()
-        expected = {'id': 345678}
+        expected = {"id": 345678}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -219,8 +219,8 @@ class TemplatesTest(KBtest):
     def test_update(self):
         group = self.templates
         thisid = 123456
-        url = group.api.compute_url('%s' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.post(url, json=expected, complete_qs=True)
@@ -230,8 +230,8 @@ class TemplatesTest(KBtest):
     def test_delete(self):
         group = self.templates
         thisid = 789012
-        url = group.api.compute_url('%s/delete' % thisid)
-        expected = {'id': thisid}
+        url = group.api.compute_url("%s/delete" % thisid)
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             assert expected
             m.delete(url, json=expected, complete_qs=True)
@@ -242,7 +242,7 @@ class TemplatesTest(KBtest):
         group = self.templates
         thisid = 345678
         url = group.api.compute_url(thisid)
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             m.get(url, json=expected, complete_qs=True)
             actual = group.get(thisid)
@@ -250,10 +250,10 @@ class TemplatesTest(KBtest):
 
     def test_search(self):
         group = self.templates
-        pattern = 'whatever'
+        pattern = "whatever"
         # searches happen at the "kb" level
-        url = self.kb.api.compute_url('templatesList?%s' % pattern)
-        expected = ['unit', 'test', 'list']
+        url = self.kb.api.compute_url("templatesList?%s" % pattern)
+        expected = ["unit", "test", "list"]
         with requests_mock.Mocker() as m:
             assert expected
             m.get(url, json=expected, complete_qs=True)

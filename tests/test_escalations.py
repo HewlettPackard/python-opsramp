@@ -22,24 +22,24 @@ import requests_mock
 
 class ApiTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        self.fake_client_id = 'client_for_unit_test'
+        self.fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(self.fake_client_id)
         assert self.client.is_client()
 
         self.escalations = self.client.escalations()
-        assert 'Escalations' in str(self.escalations)
+        assert "Escalations" in str(self.escalations)
 
     def test_search(self):
         group = self.escalations
         thisid = 123456
-        expected = {'id': thisid}
-        pattern = 'queryString=name:Test+allList:true'
+        expected = {"id": thisid}
+        pattern = "queryString=name:Test+allList:true"
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('search?%s' % pattern)
+            url = group.api.compute_url("search?%s" % pattern)
             m.get(url, json=expected, complete_qs=True)
             actual = group.search(pattern)
             assert actual == expected
@@ -47,8 +47,8 @@ class ApiTest(unittest.TestCase):
     def test_create(self):
         group = self.escalations
         thisid = 345678
-        expected = {'id': thisid}
-        fake_definition = {'name': 'elvis'}
+        expected = {"id": thisid}
+        fake_definition = {"name": "elvis"}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url()
             m.post(url, json=expected, complete_qs=True)
@@ -58,8 +58,8 @@ class ApiTest(unittest.TestCase):
     def test_update(self):
         group = self.escalations
         thisid = 123456
-        expected = {'id': thisid}
-        fake_definition = {'name': 'elvis'}
+        expected = {"id": thisid}
+        fake_definition = {"name": "elvis"}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.post(url, json=expected, complete_qs=True)
@@ -69,7 +69,7 @@ class ApiTest(unittest.TestCase):
     def test_delete(self):
         group = self.escalations
         thisid = 789012
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
             url = group.api.compute_url(thisid)
             m.delete(url, json=expected, complete_qs=True)
@@ -79,9 +79,9 @@ class ApiTest(unittest.TestCase):
     def test_enable(self):
         group = self.escalations
         thisid = 345678
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/enable' % thisid)
+            url = group.api.compute_url("%s/enable" % thisid)
             m.post(url, json=expected, complete_qs=True)
             actual = group.enable(uuid=thisid)
             assert actual == expected
@@ -89,9 +89,9 @@ class ApiTest(unittest.TestCase):
     def test_disable(self):
         group = self.escalations
         thisid = 901234
-        expected = {'id': thisid}
+        expected = {"id": thisid}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url('%s/disable' % thisid)
+            url = group.api.compute_url("%s/disable" % thisid)
             m.post(url, json=expected)
             actual = group.disable(uuid=thisid)
             assert actual == expected

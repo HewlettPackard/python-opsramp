@@ -22,22 +22,22 @@ import requests_mock
 
 class TenantTest(unittest.TestCase):
     def setUp(self):
-        fake_url = 'mock://api.example.com'
-        fake_token = 'unit-test-fake-token'
+        fake_url = "mock://api.example.com"
+        fake_token = "unit-test-fake-token"
         self.ormp = opsramp.binding.Opsramp(fake_url, fake_token)
 
-        fake_client_id = 'client_for_unit_test'
+        fake_client_id = "client_for_unit_test"
         self.client = self.ormp.tenant(fake_client_id)
         assert self.client.is_client()
 
-        fake_msp_id = 'msp_for_unit_test'
+        fake_msp_id = "msp_for_unit_test"
         self.msp = self.ormp.tenant(fake_msp_id)
         assert not self.msp.is_client()
 
     def test_agent_script(self):
         with requests_mock.Mocker() as m:
-            url = self.client.api.compute_url('agents/deployAgentsScript')
-            expected = 'unit test fake agent content'
+            url = self.client.api.compute_url("agents/deployAgentsScript")
+            expected = "unit test fake agent content"
             m.get(url, text=expected, complete_qs=True)
             actual = self.client.get_agent_script()
             assert actual == expected
