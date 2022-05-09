@@ -17,17 +17,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup
+      - name: set up environment
         run: |
           set -eux
-          pwd
-          git remote -v
-          git status
-          git log -1
           python3 --version
-          python3 -m venv venv2
-          . venv2/bin/activate
           python3 -m pip --version
           python3 -m pip install --upgrade pip
           pip --version
-          pip install --upgrade build wheel flake8 tox yamllint
+          pip install --upgrade build wheel
+          pip install --upgrade yamllint flake8 tox
+          pip freeze
+
+      - name: check environment
+        run: |
+          set -eux
+          pwd
+          git status
+          git log -1
+          ls -l
+          python3 -m pip --version
+          pip freeze
