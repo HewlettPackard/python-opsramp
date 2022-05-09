@@ -16,8 +16,10 @@
 
 import unittest
 
+import mock
 from mock import MagicMock
 import opsramp.base
+import requests
 from requests import codes as http_status
 import requests_mock
 import simplejson
@@ -52,6 +54,21 @@ class ApiObjectTest(unittest.TestCase):
         }
         self.ao = opsramp.base.ApiObject(self.fake_url, self.fake_auth.copy())
         assert "ApiObject" in str(self.ao)
+
+    def test_default_verbs(self):
+        dv = opsramp.base.Helpers.default_retry_verbs()
+        assert isinstance(dv, frozenset)
+        assert dv == requests.packages.urllib3.util.Retry.DEFAULT_ALLOWED_METHODS
+
+    @mock.patch("opsramp.base.Helpers.retryclass")
+    def test_default_verbs_fallback(self, mock_retryclass):
+        # mock that the new name is missing, but the old one exists.
+        del mock_retryclass.DEFAULT_ALLOWED_METHODS
+        fake_whitelist = ["unit", "test", "stuff"]
+        mock_retryclass.DEFAULT_METHOD_WHITELIST = fake_whitelist
+        # check that the Helpers class uses the old name.
+        dv = opsramp.base.Helpers.default_retry_verbs()
+        assert dv == fake_whitelist
 
     def test_shared_session(self):
         """All clones should share the requests session"""
