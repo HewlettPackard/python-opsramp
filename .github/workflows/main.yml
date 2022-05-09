@@ -1,0 +1,33 @@
+# (c) Copyright 2022 Hewlett Packard Enterprise Development LP
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: |
+          set -eux
+          pwd
+          git remote -v
+          git status
+          git log -1
+          python3 --version
+          python3 -m venv venv2
+          . venv2/bin/activate
+          python3 -m pip --version
+          python3 -m pip install --upgrade pip
+          pip --version
+          pip install --upgrade build wheel flake8 tox yamllint
