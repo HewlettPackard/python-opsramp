@@ -43,6 +43,19 @@ class StaticsTest(unittest.TestCase):
         result = opsramp.resources.list2ormp(list_form)
         assert result == canonical_form
 
+    def test_list2ormp_empty_conversion(self):
+        result = opsramp.resources.list2ormp("")
+        assert result == {
+            "totalResults": 0,
+            "pageSize": 0,
+            "totalPages": 1,
+            "pageNo": 1,
+            "previousPageNo": 0,
+            "nextPage": False,
+            "descendingOrder": False,
+            "results": [],
+        }
+
     def test_list2ormp_invalid(self):
         bad_ones = (
             3.14159,
