@@ -29,6 +29,12 @@ def list2ormp(result_obj):
         assert "results" in result_obj
         assert "totalResults" in result_obj
         return result_obj
+
+    # If there are no results, the response may be completely
+    # empty, which maps to `result_obj` being an empty string here.
+    if result_obj == "":
+        result_obj = []
+
     # Wrap it up in a fake of the typical OpsRamp results struct
     # so that callers don't have to special case it.
     assert isinstance(result_obj, list)
