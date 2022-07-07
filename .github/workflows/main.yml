@@ -14,12 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: GitHub Actions
+name: Test head
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
   workflow_dispatch:
