@@ -27,10 +27,11 @@ class StaticsTest(unittest.TestCase):
         result = opsramp.resources.list2ormp(good1)
         assert result is good1
 
-    def test_list2ormp_conversion(self):
-        list_form = [1, 2, 3, 4, 5, 6, 7, 8]
-        count = len(list_form)
-        canonical_form = {
+    @staticmethod
+    def _canonical_response_struct(lst: list) -> dict:
+        assert isinstance(lst, list), lst
+        count: int = len(lst)
+        return {
             "totalResults": count,
             "pageSize": count,
             "totalPages": 1,
@@ -38,23 +39,19 @@ class StaticsTest(unittest.TestCase):
             "previousPageNo": 0,
             "nextPage": False,
             "descendingOrder": False,
-            "results": list_form,
+            "results": lst,
         }
-        result = opsramp.resources.list2ormp(list_form)
-        assert result == canonical_form
+
+    def test_list2ormp_conversion(self):
+        list_form: list = [1, 2, 3, 4, 5, 6, 7, 8]
+        canonical_form: dict = self._canonical_response_struct(list_form)
+        actual = opsramp.resources.list2ormp(list_form)
+        assert actual == canonical_form
 
     def test_list2ormp_empty_conversion(self):
-        result = opsramp.resources.list2ormp("")
-        assert result == {
-            "totalResults": 0,
-            "pageSize": 0,
-            "totalPages": 1,
-            "pageNo": 1,
-            "previousPageNo": 0,
-            "nextPage": False,
-            "descendingOrder": False,
-            "results": [],
-        }
+        expected: dict = self._canonical_response_struct([])
+        actual = opsramp.resources.list2ormp("")
+        assert actual == expected
 
     def test_list2ormp_invalid(self):
         bad_ones = (
