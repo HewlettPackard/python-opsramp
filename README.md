@@ -16,8 +16,8 @@ limitations under the License.
 # python-opsramp
 A Python language binding for the OpsRamp API
 
-TravisCI [![Build Status](https://travis-ci.org/HewlettPackard/python-opsramp.svg?branch=master)](https://travis-ci.org/HewlettPackard/python-opsramp)
 CircleCI [![CircleCI](https://circleci.com/gh/HewlettPackard/python-opsramp.svg?style=svg)](https://circleci.com/gh/HewlettPackard/python-opsramp)
+GitHub Actions [![GHA](https://github.com/HewlettPackard/python-opsramp/actions/workflows/main.yml/badge.svg)](https://github.com/HewlettPackard/python-opsramp/actions)
 
 ## About
 This directory tree contains a Python 3 module that provides a convenient way to
