@@ -64,7 +64,7 @@ class ApiTest(unittest.TestCase):
         fake_update_json = {"os": "Ubuntu 18.04.4 LTS"}
         fake_result = {"id": fake_resource_id}
         with requests_mock.Mocker() as m:
-            url = group.api.compute_url(fake_resource_id)
+            url = group.api.compute_url("")
             m.post(url, json=fake_result, complete_qs=True)
             actual = group.update(uuid=fake_resource_id, definition=fake_update_json)
             assert actual == fake_result
