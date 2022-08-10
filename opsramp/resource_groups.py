@@ -36,8 +36,7 @@ class ResourceGroups(ORapi):
         return self.api.post(url_suffix, json=definition)
 
     def update(self, uuid, definition):
-        # Specify the UUID in the request body.
-        definition["id"] = uuid
+        # The UUID(s) already specified in the request body(ies).
         return self.api.post("", json=definition)
 
     def delete(self, uuid):

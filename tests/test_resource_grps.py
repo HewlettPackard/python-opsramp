@@ -42,16 +42,16 @@ class ApiTest(unittest.TestCase):
 
     def test_create(self):
         group = self.client.resource_groups()
-        fake_create_json = {
+        fake_create_json = [{
             "resourceName": "ABBY-PC",
             "hostName": "ABBY-PC",
             "aliasName": "Server PC",
             "resourceType": "server",
             "os": "Ubuntu 14.04.6 LTS",
             "serialNumber": "1234-5678-901234",
-        }
+        }]
         thisid = 333333
-        fake_result = {"id": thisid}
+        fake_result = [{"id": thisid}]
         with requests_mock.Mocker() as m:
             url = group.api.compute_url()
             m.post(url, json=fake_result, complete_qs=True)
@@ -61,12 +61,12 @@ class ApiTest(unittest.TestCase):
     def test_update(self):
         group = self.client.resource_groups()
         fake_resource_id = "123456"
-        fake_update_json = {"os": "Ubuntu 18.04.4 LTS"}
-        fake_result = {"id": fake_resource_id}
+        fake_update_json = [{"id": fake_resource_id, "os": "Ubuntu 18.04.4 LTS"}]
+        fake_result = fake_update_json
         with requests_mock.Mocker() as m:
             url = group.api.compute_url("")
             m.post(url, json=fake_result, complete_qs=True)
-            actual = group.update(uuid=fake_resource_id, definition=fake_update_json)
+            actual = group.update(uuid="", definition=fake_update_json)
             assert actual == fake_result
 
     def test_delete(self):
