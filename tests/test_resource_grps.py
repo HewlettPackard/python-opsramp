@@ -42,14 +42,16 @@ class ApiTest(unittest.TestCase):
 
     def test_create(self):
         group = self.client.resource_groups()
-        fake_create_json = [{
-            "resourceName": "ABBY-PC",
-            "hostName": "ABBY-PC",
-            "aliasName": "Server PC",
-            "resourceType": "server",
-            "os": "Ubuntu 14.04.6 LTS",
-            "serialNumber": "1234-5678-901234",
-        }]
+        fake_create_json = [
+            {
+                "resourceName": "ABBY-PC",
+                "hostName": "ABBY-PC",
+                "aliasName": "Server PC",
+                "resourceType": "server",
+                "os": "Ubuntu 14.04.6 LTS",
+                "serialNumber": "1234-5678-901234",
+            }
+        ]
         thisid = 333333
         fake_result = [{"id": thisid}]
         with requests_mock.Mocker() as m:
