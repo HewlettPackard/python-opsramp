@@ -35,9 +35,9 @@ class ResourceGroups(ORapi):
         url_suffix = ""
         return self.api.post(url_suffix, json=definition)
 
-    def update(self, uuid, definition):
-        url_suffix = uuid
-        return self.api.post(url_suffix, json=definition)
+    def update(self, definition):
+        # UUID(s) specified in the request body(ies).
+        return self.api.post(json=definition)
 
     def delete(self, uuid):
         url_suffix = uuid
