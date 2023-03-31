@@ -69,7 +69,10 @@ class Helpers(object):
         retry = Helpers.create_retry_handler(
             retries=7,
             backoff_factor=0.5,
-            status_forcelist=(429,),
+            status_forcelist=(
+                400,
+                429,
+            ),
             allowed_methods=http_verbs,
         )
 
@@ -160,10 +163,16 @@ class ApiObject(object):
             self.session = Helpers.session_add_retry_handler()
 
     def __str__(self):
-        return '%s "%s" "%s"' % (str(type(self)), self.baseurl, self.tracker.fullpath())
+        return '%s "%s" "%s"' % (
+            str(type(self)),
+            self.baseurl,
+            self.tracker.fullpath(),
+        )
 
     def clone(self):
-        new1 = ApiObject(self.baseurl, self.auth, self.tracker.clone(), self.session)
+        new1 = ApiObject(
+            self.baseurl, self.auth, self.tracker.clone(), self.session
+        )
         return new1
 
     def cd(self, path=None):
@@ -264,7 +273,12 @@ class ApiObject(object):
     def process_result(self, url, resp):
         hstatus = int(resp.status_code)
         if hstatus < 200 or hstatus >= 300:
-            msg = "%s %s %s %s" % (resp, resp.request.method, url, resp.content)
+            msg = "%s %s %s %s" % (
+                resp,
+                resp.request.method,
+                url,
+                resp.content,
+            )
             LOG.debug(msg)
             raise RuntimeError(msg)
         try:
@@ -290,10 +304,14 @@ class ApiObject(object):
         resp = self.session.get(url, headers=hdr)
         return self.process_result(url, resp)
 
-    def post(self, suffix=None, headers=None, data=None, json=None, files=None):
+    def post(
+        self, suffix=None, headers=None, data=None, json=None, files=None
+    ):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = self.session.post(url, headers=hdr, data=data, json=json, files=files)
+        resp = self.session.post(
+            url, headers=hdr, data=data, json=json, files=files
+        )
         return self.process_result(url, resp)
 
     def put(self, suffix=None, headers=None, data=None, json=None):
@@ -336,8 +354,12 @@ class ApiWrapper(object):
     def get(self, suffix=None, headers=None):
         return self.api.get(suffix, headers=headers)
 
-    def post(self, suffix=None, headers=None, data=None, json=None, files=None):
-        return self.api.post(suffix, headers=headers, data=data, json=json, files=files)
+    def post(
+        self, suffix=None, headers=None, data=None, json=None, files=None
+    ):
+        return self.api.post(
+            suffix, headers=headers, data=data, json=json, files=files
+        )
 
     def put(self, suffix=None, headers=None, data=None, json=None):
         return self.api.put(suffix, headers=headers, data=data, json=json)
