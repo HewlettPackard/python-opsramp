@@ -170,9 +170,7 @@ class ApiObject(object):
         )
 
     def clone(self):
-        new1 = ApiObject(
-            self.baseurl, self.auth, self.tracker.clone(), self.session
-        )
+        new1 = ApiObject(self.baseurl, self.auth, self.tracker.clone(), self.session)
         return new1
 
     def cd(self, path=None):
@@ -304,14 +302,10 @@ class ApiObject(object):
         resp = self.session.get(url, headers=hdr)
         return self.process_result(url, resp)
 
-    def post(
-        self, suffix=None, headers=None, data=None, json=None, files=None
-    ):
+    def post(self, suffix=None, headers=None, data=None, json=None, files=None):
         url = self.compute_url(suffix)
         hdr = self.prep_headers(headers)
-        resp = self.session.post(
-            url, headers=hdr, data=data, json=json, files=files
-        )
+        resp = self.session.post(url, headers=hdr, data=data, json=json, files=files)
         return self.process_result(url, resp)
 
     def put(self, suffix=None, headers=None, data=None, json=None):
@@ -354,12 +348,8 @@ class ApiWrapper(object):
     def get(self, suffix=None, headers=None):
         return self.api.get(suffix, headers=headers)
 
-    def post(
-        self, suffix=None, headers=None, data=None, json=None, files=None
-    ):
-        return self.api.post(
-            suffix, headers=headers, data=data, json=json, files=files
-        )
+    def post(self, suffix=None, headers=None, data=None, json=None, files=None):
+        return self.api.post(suffix, headers=headers, data=data, json=json, files=files)
 
     def put(self, suffix=None, headers=None, data=None, json=None):
         return self.api.put(suffix, headers=headers, data=data, json=json)
