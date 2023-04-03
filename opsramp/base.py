@@ -6,7 +6,7 @@
 # Containing various base classes used in other parts of the library
 # but not intended for direct use by callers.
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2023 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,7 +69,10 @@ class Helpers(object):
         retry = Helpers.create_retry_handler(
             retries=7,
             backoff_factor=0.5,
-            status_forcelist=(429,),
+            status_forcelist=(
+                400,
+                429,
+            ),
             allowed_methods=http_verbs,
         )
 
@@ -160,7 +163,11 @@ class ApiObject(object):
             self.session = Helpers.session_add_retry_handler()
 
     def __str__(self):
-        return '%s "%s" "%s"' % (str(type(self)), self.baseurl, self.tracker.fullpath())
+        return '%s "%s" "%s"' % (
+            str(type(self)),
+            self.baseurl,
+            self.tracker.fullpath(),
+        )
 
     def clone(self):
         new1 = ApiObject(self.baseurl, self.auth, self.tracker.clone(), self.session)
@@ -264,7 +271,12 @@ class ApiObject(object):
     def process_result(self, url, resp):
         hstatus = int(resp.status_code)
         if hstatus < 200 or hstatus >= 300:
-            msg = "%s %s %s %s" % (resp, resp.request.method, url, resp.content)
+            msg = "%s %s %s %s" % (
+                resp,
+                resp.request.method,
+                url,
+                resp.content,
+            )
             LOG.debug(msg)
             raise RuntimeError(msg)
         try:
