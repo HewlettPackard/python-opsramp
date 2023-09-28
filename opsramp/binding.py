@@ -27,7 +27,7 @@ from opsramp.tenant import Tenant
 
 
 def connect(url, key, secret):
-    auth_url = url + "/auth/oauth/token"
+    auth_url = url + "/tenancy/auth/oauth/token"
     auth_hdrs = {
         "Content-Type": "application/x-www-form-urlencoded",
         "Accept": "application/json,application/xml",
