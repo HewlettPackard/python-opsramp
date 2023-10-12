@@ -27,7 +27,7 @@ class BindingTest(unittest.TestCase):
         secret = "thereisnospoon"
         token = "fake-unit-test-token"
 
-        url = endpoint + "/auth/oauth/token"
+        url = endpoint + "/tenancy/auth/oauth/token"
         hshake = "grant_type=client_credentials&client_id=%s&client_secret=%s"
         expected_send = hshake % (key, secret)
         expected_receive = {"access_token": token}
