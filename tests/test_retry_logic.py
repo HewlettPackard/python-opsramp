@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -127,7 +127,10 @@ class TestMockServer(unittest.TestCase):
         # Create the server in a separate thread so that it can run in parallel
         # with the client (i.e. tests) being run against it.
         self.mock_server_thread = Thread(target=self.mock_server.serve_forever)
-        self.mock_server_thread.setDaemon(True)
+        if hasattr(self.mock_server_thread, "daemon"):
+            self.mock_server_thread.daemon = True
+        else:
+            self.mock_server_thread.setDaemon(True)
         self.mock_server_thread.start()
 
     def tearDown(self):
