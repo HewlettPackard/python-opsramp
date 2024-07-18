@@ -84,7 +84,7 @@ class Instances(ORapi):
         resp = self.creator_api.post(type_name, json=definition)
         return resp
 
-    def delete(self, uuid, uninstall_reason="<Not specified>"):
+    def delete(self, uuid, uninstall_reason="Not specified"):
         json_payload = {"uninstallReason": uninstall_reason}
         return self.api.delete(suffix=uuid, json=json_payload)
 
