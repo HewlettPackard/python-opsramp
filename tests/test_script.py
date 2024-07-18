@@ -48,7 +48,7 @@ class StaticsTest(unittest.TestCase):
                 name="pname",
                 description="pdesc",
                 datatype="STRING",
-                optional=True
+                optional=True,
                 # deliberately missing default value
             )
 

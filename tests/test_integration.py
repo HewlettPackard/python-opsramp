@@ -128,7 +128,7 @@ class InstancesTest(unittest.TestCase):
 
         # Test that the delete function inserts a default reason
         # if we don't provide one.
-        expected_send = {"uninstallReason": "<Not specified>"}
+        expected_send = {"uninstallReason": "Not specified"}
         with requests_mock.Mocker() as m:
             adapter = m.delete(url, json=expected_response, complete_qs=True)
             actual_response = group.delete(uuid=thisid)
