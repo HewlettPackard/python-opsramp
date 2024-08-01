@@ -3,7 +3,7 @@
 # start this container interactively and use -e to pass in the environment
 # variables it needs (see cli.py). Once inside you can run commands like:
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2024 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM python:3.7.5-slim as baseimage
+FROM python:3.9.19-slim AS baseimage
 
-FROM baseimage as build
+FROM baseimage AS build
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
     && rm -rf /var/lib/apt/lists/*
@@ -30,9 +30,9 @@ ADD . .
 RUN rm -rf build dist *.egg-info .eggs
 RUN pip install .
 
-FROM baseimage as prod
+FROM baseimage AS prod
 LABEL description="OpsRamp CLI"
-LABEL maintainer "HPE GreenLake CSO <eemz@hpe.com>"
+LABEL maintainer="HPE GreenLake CSO <eemz@hpe.com>"
 COPY --from=build /usr/local /usr/local
 
 ENTRYPOINT ["/bin/bash"]
