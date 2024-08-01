@@ -1,6 +1,6 @@
 # python-opsramp CircleCI 2.0 configuration file
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2024 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 #
 version: 2.1
 jobs:
-  packaging_py37:
+  packaging_py39:
     docker:
-      - image: cimg/python:3.7.5
+      - image: cimg/python:3.9.19
     working_directory: ~/repo
     steps:
       - checkout
@@ -41,9 +41,9 @@ jobs:
             . venv2/bin/activate
             rm -rf python_opsramp.egg-info
             python3 -m build
-  unit_py37:
+  unit_py39:
     docker:
-      - image: cimg/python:3.7.5
+      - image: cimg/python:3.9.19
     working_directory: ~/repo
     steps:
       - checkout
@@ -67,5 +67,5 @@ workflows:
   version: 2
   "CircleCI":
     jobs:
-      - unit_py37
-      - packaging_py37
+      - unit_py39
+      - packaging_py39
