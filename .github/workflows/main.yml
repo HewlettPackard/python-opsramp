@@ -59,3 +59,12 @@ jobs:
           set -eux
           pip install --upgrade -r requirements.txt -r test-requirements.txt
           ./runtests.sh
+
+      - name: docker build
+        run: |
+          set -eux
+          if which docker; then
+              if [ -e Dockerfile ]; then
+                  docker build --build-arg http_proxy --build-arg https_proxy .
+              fi
+          fi
