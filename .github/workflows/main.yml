@@ -1,6 +1,6 @@
 # python-opsramp GitHub Actions file
 #
-# (c) Copyright 2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2022-2024 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Test head
+name: Unit test
 
 on:
+  pull_request:
+  merge_group:
   push:
     branches: [ master ]
 
@@ -24,10 +26,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Deliberately run on Python 3.10 rather than "latest".
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
 
       - name: set up environment
         run: |
