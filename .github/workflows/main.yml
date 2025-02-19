@@ -1,6 +1,6 @@
 # python-opsramp GitHub Actions file
 #
-# (c) Copyright 2022-2024 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2022-2025 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
