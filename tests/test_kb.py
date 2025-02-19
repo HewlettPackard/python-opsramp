@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2020-2025 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -191,7 +191,7 @@ class ArticlesTest(KBtest):
         group = self.articles
         pattern = "whatever"
         # searches happen at the "kb" level
-        url = self.kb.api.compute_url("articles/search?%s" % pattern)
+        url = self.kb.api.compute_url("articlesList?%s" % pattern)
         expected = ["unit", "test", "list"]
         with requests_mock.Mocker() as m:
             assert expected

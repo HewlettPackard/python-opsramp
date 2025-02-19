@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2019-2024 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2025 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ def connect():
 def parse_argv():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("-v", "--verbose", action="store_true")
     ns = parser.parse_args()
     return ns
 
@@ -48,24 +49,28 @@ def main():
     ormp = connect()
     tenant = ormp.tenant(tenant_id)
 
-    categs = tenant.kb().categories()
-    print(categs)
-    clist = categs.search()
-    print(clist)
+    kb = tenant.kb()
+    categs = kb.categories()
+    articles = kb.articles()
+
+    allcats = categs.search()
+    clist = allcats["results"]
+    print(f"{len(clist)} categories")
     # for each category
     for cdata in clist:
-        print("category", cdata["id"], cdata["name"])
-        thiscat = categs.category(cdata["id"])
-        # for each script in this category
-        for s in thiscat.get():
+        categ_id = cdata["id"]
+        categ_name = cdata["name"]
+        print("category", categ_id, f'"{categ_name}"')
+        # for each article in this category
+        alist = articles.search(f"categoryId={categ_id}")
+        for s in alist["results"]:
             print(
-                "... script",
+                ". article",
                 s["id"],
-                s["platforms"],
-                s["executionType"],
-                '"%s"' % s["name"],
-                '"%s"' % s["description"],
+                s["subject"],
             )
+            if ns.verbose:
+                print(f'.. content "{s["content"]}"')
 
 
 if __name__ == "__main__":
