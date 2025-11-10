@@ -5,7 +5,7 @@
 # binding.py
 # Defines the primary entry points for callers of this library.
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2025 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ def connect(url, key, secret):
 
 
 class Opsramp(ORapi):
-    def __init__(self, url, token):
+    def __init__(self, url: str, token: str):
         self.auth = {
             "Authorization": "Bearer " + token,
             "Accept": "application/json,application/xml",
@@ -54,6 +54,16 @@ class Opsramp(ORapi):
 
     def __str__(self):
         return "%s %s" % (str(type(self)), self.api)
+
+    @property
+    def token(self) -> str:
+        hdr: str = self.auth.get("Authorization", "")
+        return hdr.partition(" ")[-1]
+
+    @token.setter
+    def token(self, newtok: str) -> str:
+        self.auth.update({"Authorization": f"Bearer {newtok}"})
+        return newtok
 
     def config(self):
         return GlobalConfig(self)
