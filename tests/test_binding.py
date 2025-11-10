@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2025 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ class BindingTest(unittest.TestCase):
             assert adapter.last_request.text == expected_send
             assert type(self.ormp) is opsramp.binding.Opsramp
             assert self.ormp.auth == expected_auth
+            assert self.ormp.token == token
 
     def test_str(self):
         assert "Opsramp" in str(self.ormp)
@@ -53,3 +54,13 @@ class BindingTest(unittest.TestCase):
     def test_tenant(self):
         obj = self.ormp.tenant("unit-test")
         assert "Tenant" in str(obj)
+
+    def test_token_property(self):
+        tok: str = self.ormp.token
+        assert tok
+        newtok: str = "horry patter"
+        assert tok != newtok
+        # now change it
+        self.ormp.token = newtok
+        assert self.ormp.token == newtok
+        assert self.ormp.auth["Authorization"] == "Bearer " + newtok
