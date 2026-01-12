@@ -22,6 +22,8 @@ import os
 
 import opsramp.binding
 
+LOG = logging.getLogger(__name__)
+
 
 def connect():
     url = os.environ["OPSRAMP_URL"]
@@ -53,10 +55,16 @@ def main():
     found = group.search()
     for idata in found["results"]:
         in_auth, out_auth = group.auth_type(idata)
+        if "integration" in idata:
+            intg_id = idata["integration"]["id"]
+        else:
+            intg_id = None
         print(
             idata["id"],
+            "category",
+            idata["category"],
             "type",
-            idata["integration"]["id"],
+            intg_id,
             "in_auth",
             in_auth,
             "out_auth",
