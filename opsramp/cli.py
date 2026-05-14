@@ -3,7 +3,7 @@
 # A command line interface to OpsRamp that illustrates how to use
 # this language binding as well as being useful in its own right.
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2026 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import json
 import os
 
 import opsramp.binding
-
 
 # TODO make these optional command line parameters
 OPSRAMP_URL = os.environ["OPSRAMP_URL"]

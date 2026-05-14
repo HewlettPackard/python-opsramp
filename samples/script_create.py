@@ -2,7 +2,7 @@
 #
 # Exercise the opsramp module as an illustration of how to use it.
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2026 Hewlett Packard Enterprise Development LP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,12 +63,10 @@ def create_command_script(targetcat):
 def create_python_script(targetcat):
     scriptfile = "/tmp/whatever-%s.py" % os.getpid()
     with open(scriptfile, "w") as f:
-        f.write(
-            """#! /usr/bin/env python
+        f.write("""#! /usr/bin/env python
 from __future__ import print_function
 print('hello world')
-"""
-        )
+""")
     s1 = targetcat.mkScript(
         name="Python hello",
         description="Hello from Python land",
