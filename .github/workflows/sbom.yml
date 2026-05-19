@@ -52,7 +52,7 @@ jobs:
         env:
           SYFT_PYTHON_GUESS_UNPINNED_REQUIREMENTS: "true"
         with:
-          path: ./frozen-packages.txt
+          path: frozen-packages.txt
           format: 'cyclonedx-json'
           output-file: 'sbom.cyclonedx.json'
 
