@@ -36,7 +36,6 @@ jobs:
         uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.10'
-          cache: 'baseline'
 
       - name: Install dependencies
         run: |
