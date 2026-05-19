@@ -46,6 +46,7 @@ jobs:
 
       - name: Freeze Active Environment
         run: |
+          mkdir -pv frozen
           pip freeze --all | grep -v "file:" > frozen/requirements.txt
 
       - name: Generate CycloneDX SBOM
