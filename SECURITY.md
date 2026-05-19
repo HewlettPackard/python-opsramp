@@ -26,7 +26,7 @@ To report a vulnerability affecting `python-opsramp`, please use the official
 corporate reporting channel managed by the **HPE Product Security Response Team
 (PSRT)**:
 
-1. **Submission Portal:** Visit the [HPE Product Security Vulnerability Report Form](https://hpe.com).
+1. **Submission Portal:** Visit the [HPE Product Security Vulnerability Report Form](https://www.hpe.com/h41268/live/index_e.aspx?qid=11503).
 2. **Direct Email:** If the portal is unavailable, contact `security@hpe.com` directly.
 3. **Information to Include:**
    * A detailed description of the vulnerability.
