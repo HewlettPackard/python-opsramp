@@ -45,14 +45,14 @@ jobs:
 
       - name: Freeze Active Environment
         run: |
-          pip freeze > exact-packages.txt
+          pip freeze --all | grep -v "file:" > frozen-packages.txt
 
       - name: Generate CycloneDX SBOM
         uses: anchore/sbom-action@v0.24.0
         env:
           SYFT_PYTHON_GUESS_UNPINNED_REQUIREMENTS: "true"
         with:
-          path: ./exact-packages.txt
+          path: ./frozen-packages.txt
           format: 'cyclonedx-json'
           output-file: 'sbom.cyclonedx.json'
 
