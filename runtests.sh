@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# (c) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (c) Copyright 2019-2026 Hewlett Packard Enterprise Development LP
 #
 # runtests.sh
 # This script runs the actual test commands and assumes that the required
@@ -26,6 +26,7 @@ if [ -n "$windowsnewlines" ]; then
   echo 'Windows newlines are not allowed in Python sources in this repo' >&2
   exit 1
 fi
+ruff check
 black --check opsramp samples setup.py tests
 yamllint .
 flake8 .
